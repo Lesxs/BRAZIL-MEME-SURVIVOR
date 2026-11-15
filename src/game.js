@@ -7,6 +7,17 @@ const ui = {
   gameover: document.querySelector("#gameover-screen"), upgrades: document.querySelector("#upgrade-list"),
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill")
 };
+const chestUpgrades = [
+  {name:"ESPETO DE AÇO",desc:"+35% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
+  {name:"CALDO DE CANA",desc:"+30% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
+  {name:"FARofa REFORÇADA",desc:"+35 de vida máxima e recupera 35.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
+  {name:"CHURRASCO DE RESPEITO",desc:"+60% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
+  {name:"GÁS DO BOTIJÃO",desc:"+45% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
+  {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{p.coinBonus+=2}},
+  {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 60.",rarity:"ÉPICO",apply:p=>{p.maxHp+=60;p.hp=p.maxHp}},
+  {name:"CHINELO LENDÁRIO",desc:"+75% de velocidade e +35% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.75;p.damage*=1.35}},
+  {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.coins+=15;p.fireRate*=.75}}
+];
 const upgrades = [
   {name:"PESO DE RESPEITO",desc:"+25% de dano nos ataques.",apply:p=>p.damage*=1.25},
   {name:"CHINELO TURBO",desc:"+18% de velocidade de movimento.",apply:p=>p.speed*=1.18},
@@ -21,10 +32,11 @@ class Arena extends Phaser.Scene {
     this.makeTextures();this.drawArena();
     this.player=this.physics.add.image(W/2,H/2,"player").setDepth(3).setCollideWorldBounds(true);
     this.player.body.setCircle(11,5,5);
-    this.enemyGroup=this.physics.add.group();this.bulletGroup=this.physics.add.group();this.orbGroup=this.physics.add.group();
+    this.enemyGroup=this.physics.add.group();this.bulletGroup=this.physics.add.group();this.orbGroup=this.physics.add.group();this.chestGroup=this.physics.add.group();
     this.physics.add.overlap(this.bulletGroup,this.enemyGroup,this.hitEnemy,null,this);
     this.physics.add.overlap(this.player,this.enemyGroup,this.hitPlayer,null,this);
     this.physics.add.overlap(this.player,this.orbGroup,this.collectOrb,null,this);
+    this.physics.add.overlap(this.player,this.chestGroup,this.collectChest,null,this);
     this.keys=this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT");
     this.resetRun();this.scene.pause();
   }
@@ -39,6 +51,7 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0x2d3748);g.fillRoundedRect(5,9,22,19,5);g.fillStyle(0xffd166);g.fillRoundedRect(7,2,18,12,5);g.fillStyle(0x263142);g.fillRect(7,11,18,3);g.fillStyle(0xe8edf5);g.fillCircle(12,20,2);g.fillCircle(21,20,2);g.generateTexture("motoboy",32,32);g.clear();
     g.fillStyle(0xb65e36);g.fillEllipse(16,19,23,16);g.fillStyle(0x5b3024);g.fillCircle(8,9,6);g.fillCircle(24,9,6);g.fillStyle(0xffd166);g.fillRect(10,5,12,5);g.fillStyle(0x241b19);g.fillCircle(11,17,2);g.fillCircle(21,17,2);g.fillRect(12,24,8,3);g.generateTexture("churrasco",32,32);g.clear();
     g.fillStyle(0x6f273b);g.fillRoundedRect(2,2,36,36,9);g.fillStyle(0xffd166);g.fillCircle(12,14,3);g.fillCircle(28,14,3);g.fillStyle(0x1c1720);g.fillRect(13,25,14,4);g.generateTexture("boss",40,40);g.clear();
+    g.fillStyle(0x9b6237);g.fillRoundedRect(2,8,28,20,4);g.fillStyle(0xe0ad58);g.fillRect(2,14,28,4);g.fillStyle(0xf6d98b);g.fillRect(13,8,6,20);g.fillStyle(0x5b3826);g.fillRect(13,15,6,4);g.generateTexture("chest",32,32);g.clear();
     g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.generateTexture("orb",12,12);g.clear();
     g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.generateTexture("bullet",12,12);g.destroy();
   }
@@ -52,7 +65,7 @@ class Arena extends Phaser.Scene {
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;
     this.playerStats={hp:100,maxHp:100,speed:220,damage:1,fireRate:650,bulletSpeed:430,coinBonus:0};
     this.player.setPosition(W/2,H/2).setAlpha(1);
-    [this.enemyGroup,this.bulletGroup,this.orbGroup].forEach(g=>g.clear(true,true));
+    [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();
   }
   startRun(){this.resetRun();this.active=true;ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
@@ -98,12 +111,32 @@ class Arena extends Phaser.Scene {
   }
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;if(e.isBoss)this.updateHud();
-    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss)this.spawnChest(x,y);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
     if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.updateHud();
     if(!e.isBoss){e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);}
     if(this.playerStats.hp<=0)this.endRun();
+  }
+  spawnChest(x,y){const chest=this.chestGroup.create(x,y,"chest").setDepth(2).setScale(1.25);chest.setImmovable(true);chest.opened=false;this.time.delayedCall(30000,()=>{if(chest.active)chest.destroy();});}
+  collectChest(p,chest){if(!this.active||!chest.active||chest.opened)return;chest.opened=true;chest.destroy();this.showChestRewards();}
+  showChestRewards(){
+    this.active=false;this.physics.pause();ui.levelScreen.classList.remove("hidden");
+    const heading=ui.levelScreen.querySelector("h2"),description=ui.levelScreen.querySelector("p:not(.eyebrow)");
+    heading.textContent="BAÚ DO CHURRASCO!";
+    description.textContent="Escolha uma recompensa. Quanto maior a raridade, maior o prêmio.";
+    ui.upgrades.innerHTML="";
+    const choices=[];
+    const available=[...chestUpgrades];
+    for(let i=0;i<3&&available.length;i++){
+      const roll=Math.random()*100,rarity=roll<10?"ÉPICO":roll<40?"RARO":"COMUM";
+      let pool=available.filter(item=>item.rarity===rarity);
+      if(!pool.length)pool=available;
+      const selected=Phaser.Utils.Array.GetRandom(pool);
+      choices.push(selected);available.splice(available.indexOf(selected),1);
+    }
+    for(const item of choices){const btn=document.createElement("button");btn.className="upgrade-card rarity-"+item.rarity.toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"");btn.innerHTML=`<small>${item.rarity}</small><b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?8:15;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
+    this.updateHud();
   }
   collectOrb(p,o){if(!o.active)return;this.xp+=o.value;o.destroy();this.processLevelUps();this.updateHud();}
   processLevelUps(){if(this.xp<this.xpNeed)return;this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.38+2);this.showLevelUp();}
