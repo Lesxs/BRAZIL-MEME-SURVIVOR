@@ -30,7 +30,7 @@ assert.ok(resetRunBody.includes("this.nextBossAt=90;"), "Temporizador do chefe n
 assert.ok(!game.includes("this.nextBossAt=90;this.nextBossAt=90;"), "Temporizador do chefe duplicado");
 assert.ok(!game.includes("this.nextBossAt=90;this.nextBossAt=90;"), "Inicialização duplicada do chefe encontrada");
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
-assert.ok(game.includes("e.isBoss?14:e.isVendor?5"), "Recompensa especial do chefe não encontrada");
+assert.ok(game.includes("orb.value=e.isBoss?14:e.isElite?6:e.isVendor?5"), "Recompensa especial do chefe não encontrada");
 
 assert.ok(!html.includes("meme-wall") && !html.includes("meme-sticker"), "Tela inicial antiga com mural de emojis ainda está presente");
 assert.ok(html.includes('class="title-screen-art"'), "Arte cenográfica da nova tela inicial não encontrada");
