@@ -36,9 +36,9 @@ const upgrades = [
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.4",{frameWidth:48,frameHeight:48});
-    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.4",{frameWidth:80,frameHeight:80});
-    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.4",{frameWidth:40,frameHeight:40});
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.5",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.5",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.5",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -363,8 +363,27 @@ class Arena extends Phaser.Scene {
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();this.damageEnemy(e,b.damage);
   }
+  showDamageNumber(x,y,damage,isCritical=false){
+    const amount=Math.max(1,Math.round(damage));
+    const color=isCritical?"#ffe36e":damage>=20?"#ff9c52":"#fff4d6";
+    const label=this.add.text(x+Phaser.Math.Between(-9,9),y-13,isCritical?amount+"!":String(amount),{
+      fontFamily:"Press Start 2P, monospace",fontSize:isCritical?"15px":damage>=20?"13px":"11px",
+      color,stroke:"#241a20",strokeThickness:isCritical?5:4,
+      shadow:{offsetX:0,offsetY:2,color:"#000000",blur:4,fill:true}
+    }).setOrigin(.5).setDepth(9).setScale(isCritical?1.25:1);
+    this.tweens.add({targets:label,y:label.y-(isCritical?54:38),alpha:0,scale:isCritical?1.55:1.2,duration:isCritical?760:620,ease:"Cubic.Out",onComplete:()=>label.destroy()});
+    if(isCritical){
+      const burst=this.add.circle(x,y,5,0xffd85e,.85).setDepth(8);
+      this.tweens.add({targets:burst,scale:3.2,alpha:0,duration:240,ease:"Cubic.Out",onComplete:()=>burst.destroy()});
+    }
+  }
   damageEnemy(e,damage){
-    if(!e.active)return;e.hp-=damage;e.setTintFill(0xffffff);this.time.delayedCall(65,()=>{if(e.active)e.clearTint();});if(e.isBoss)this.updateHud();
+    if(!e.active)return;
+    const isCritical=Math.random()<.10;
+    const finalDamage=isCritical?damage*1.75:damage;
+    e.hp-=finalDamage;
+    this.showDamageNumber(e.x,e.y,finalDamage,isCritical);
+    e.setTintFill(isCritical?0xffdf72:0xffffff);this.time.delayedCall(65,()=>{if(e.active)e.clearTint();});if(e.isBoss)this.updateHud();
     if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:e.isElite?3:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?14:e.isElite?6:e.isVendor?5:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco||e.isSaci||e.isBoiBumba||e.isEt?3:2;orb.body.setCircle(6);this.updateHud();}
   }
   triggerAbility(){

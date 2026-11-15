@@ -168,7 +168,7 @@ body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(ellipse a
 .upgrade-card.rarity-comum{border-color:#94a9b5}.upgrade-card.rarity-comum::before{background:#aab4bc}.upgrade-card.rarity-raro{border-color:#54b8ee}.upgrade-card.rarity-raro::before{background:linear-gradient(90deg,#4fd5ff,#568bff)}.upgrade-card.rarity-epico{border-color:#d6a1ff}.upgrade-card.rarity-epico::before{background:linear-gradient(90deg,#f3c66b,#e17cff,#7ddcff)}
 
 
-/* 0.10.4 — controles táteis e legibilidade em celulares */
+/* 0.10.5 — controles táteis e legibilidade em celulares */
 .mobile-controls{z-index:4;bottom:max(14px,env(safe-area-inset-bottom));left:max(14px,env(safe-area-inset-left))}
 .dpad{gap:5px;filter:drop-shadow(0 3px 7px #0008)}
 .dpad>div{gap:5px}
