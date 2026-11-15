@@ -94,13 +94,14 @@ class Arena extends Phaser.Scene {
     e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);
     if(this.playerStats.hp<=0)this.endRun();
   }
-  collectOrb(p,o){if(!o.active)return;this.xp+=o.value;o.destroy();while(this.xp>=this.xpNeed){this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.38+2);this.showLevelUp();}this.updateHud();}
+  collectOrb(p,o){if(!o.active)return;this.xp+=o.value;o.destroy();this.processLevelUps();this.updateHud();}
+  processLevelUps(){if(this.xp<this.xpNeed)return;this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.38+2);this.showLevelUp();}
   moveBullets(){this.bulletGroup.children.each(b=>{if(b.active&&(b.x<0||b.x>W||b.y<0||b.y>H))b.destroy();});}
   moveOrbs(d){this.orbGroup.children.each(o=>{if(!o.active)return;const dist=Phaser.Math.Distance.Between(o.x,o.y,this.player.x,this.player.y);if(dist<105)this.physics.moveToObject(o,this.player,210);});}
   showLevelUp(){
     this.active=false;this.physics.pause();ui.levelScreen.classList.remove("hidden");ui.upgrades.innerHTML="";
     const choices=Phaser.Utils.Array.Shuffle([...upgrades]).slice(0,3);
-    for(const item of choices){const btn=document.createElement("button");btn.className="upgrade-card";btn.innerHTML=`<b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);ui.levelScreen.classList.add("hidden");this.active=true;this.physics.resume();this.updateHud();},{once:true});ui.upgrades.append(btn);}
+    for(const item of choices){const btn=document.createElement("button");btn.className="upgrade-card";btn.innerHTML=`<b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);ui.levelScreen.classList.add("hidden");this.updateHud();if(this.xp>=this.xpNeed){this.processLevelUps();}else{this.active=true;this.physics.resume();}},{once:true});ui.upgrades.append(btn);}
     this.updateHud();
   }
   updateHud(){
