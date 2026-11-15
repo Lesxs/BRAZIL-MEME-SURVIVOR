@@ -115,8 +115,8 @@ assert.ok(game.includes('coinBonus:profile.coinBonus||0'), "Passivas não são c
 assert.ok(game.includes('Math.random()<this.playerStats.dodgeChance'), "Esquiva do Saci não está aplicada ao receber dano");
 assert.ok(game.includes('e.damage*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
 assert.ok(html.includes('+8% dano · Espeto') && html.includes('+1 moeda por eliminação · Chinelo') && html.includes('20% menos dano · Estilingue') && html.includes('15% de esquiva · Redemoinho'), "Passivas não estão descritas nos cartões");
-assert.ok(html.includes('VERSÃO 0.6.0'), "Versão não foi atualizada para 0.6.0");
-console.log("Versão 0.6.0: passivas exclusivas dos quatro personagens conferidas.");
+assert.ok(html.includes('VERSÃO 0.7.0'), "Versão não foi atualizada para 0.7.0");
+console.log("Versão 0.7.0: passivas exclusivas dos quatro personagens conferidas.");
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
 
