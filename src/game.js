@@ -346,7 +346,7 @@ class Arena extends Phaser.Scene {
     ui.abilityButton.classList.toggle("ready",ready&&this.active);
   }
   hitPlayer(p,e){
-    if(!this.active||this.invuln>0||!e.active)return;if(this.playerStats.dodgeChance>0&&Math.random()<this.playerStats.dodgeChance){this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0);return;}this.playerStats.hp-=e.damage*(1-(this.playerStats.damageReduction||0));this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
+    if(!this.active||this.invuln>0||!e.active)return;if(this.playerStats.dodgeChance>0&&Math.random()<this.playerStats.dodgeChance){this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0);return;}this.playerStats.hp-=e.damage*(1-(this.playerStats.damageReduction||0));this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
     if(!e.isBoss){this.damageEnemy(e,e.hp);}
     if(this.playerStats.hp<=0)this.endRun();
   }
