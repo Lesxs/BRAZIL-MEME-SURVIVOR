@@ -18,7 +18,7 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Vendedor do centro:** inimigo especial, forte e resistente.
 - **Fiscal do Pix:** chefe que aparece a cada 60 segundos, possui barra de vida própria e oferece recompensa especial. Apenas um Fiscal do Pix pode ficar ativo por vez.
 - **Baú do churrasco:** surge quando um chefe é derrotado. Aproxime-se para escolher uma entre três recompensas de raridade comum, rara ou épica. O baú desaparece após 30 segundos se não for coletado.
-- **Evolução de arma:** a Pipoca de Cinema libera três projéteis por disparo; o Canhão de Festa Junina libera cinco. As evoluções podem ser encontradas nos baús e são cumulativas até o nível máximo.
+- **Evolução de arma:** a Pipoca de Cinema libera três projéteis por disparo; o Canhão de Festa Junina libera cinco. As evoluções podem ser encontradas nos baús e são cumulativas até o nível máximo. O baú não oferece evoluções de arma quando ela já está no nível máximo; o Pix do Milhão concede oito moedas imediatamente.
 
 Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura popular ou situações do cotidiano. Evitar personagens genéricos sem identidade temática.
 
