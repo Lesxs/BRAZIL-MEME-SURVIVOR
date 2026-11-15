@@ -16,7 +16,9 @@ const chestUpgrades = [
   {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{p.coinBonus+=2}},
   {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 60.",rarity:"ÉPICO",apply:p=>{p.maxHp+=60;p.hp=p.maxHp}},
   {name:"CHINELO LENDÁRIO",desc:"+75% de velocidade e +35% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.75;p.damage*=1.35}},
-  {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.fireRate*=.75}}
+  {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.fireRate*=.75}},
+  {name:"PIPOCA DE CINEMA",desc:"Evolui o ataque para três projéteis por disparo.",rarity:"RARO",apply:p=>p.weaponLevel=Math.min(3,p.weaponLevel+1)},
+  {name:"CANHÃO DE FESTA JUNINA",desc:"Evolui o ataque para cinco projéteis por disparo.",rarity:"ÉPICO",apply:p=>p.weaponLevel=3}
 ];
 const upgrades = [
   {name:"PESO DE RESPEITO",desc:"+25% de dano nos ataques.",apply:p=>p.damage*=1.25},
@@ -63,7 +65,7 @@ class Arena extends Phaser.Scene {
   }
   resetRun(){
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;
-    this.playerStats={hp:100,maxHp:100,speed:220,damage:1,fireRate:650,bulletSpeed:430,coinBonus:0};
+    this.playerStats={hp:100,maxHp:100,speed:220,damage:1,fireRate:650,bulletSpeed:430,coinBonus:0,weaponLevel:1};
     this.player.setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();
@@ -106,8 +108,15 @@ class Arena extends Phaser.Scene {
   autoShoot(){
     const alive=this.enemies.filter(e=>e.active);if(!alive.length)return;
     alive.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y));
-    const target=alive[0],b=this.bulletGroup.create(this.player.x,this.player.y,"bullet").setDepth(2);
-    this.physics.moveToObject(b,target,this.playerStats.bulletSpeed);b.damage=this.playerStats.damage;this.time.delayedCall(1800,()=>{if(b.active)b.destroy();});
+    const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
+    const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
+    const spread=level===2?.18:.16;
+    for(let i=0;i<count;i++){
+      const angle=base+(i-(count-1)/2)*spread;
+      const b=this.bulletGroup.create(this.player.x,this.player.y,"bullet").setDepth(2);
+      this.physics.velocityFromRotation(angle,this.playerStats.bulletSpeed,b.body.velocity);
+      b.damage=this.playerStats.damage;this.time.delayedCall(1800,()=>{if(b.active)b.destroy();});
+    }
   }
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;if(e.isBoss)this.updateHud();
