@@ -105,7 +105,7 @@ assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontr
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.6.0'), 'Versão do jogo não foi atualizada para 0.5.0');
+assert.ok(html.includes('VERSÃO 0.7.0'), 'Versão do jogo não foi atualizada para 0.5.0');
 
 assert.ok(game.includes('damage:1.08'), "Passiva de dano do Sobrevivente não encontrada");
 assert.ok(game.includes('coinBonus:1'), "Bônus de moedas do Motoboy não encontrado");
@@ -119,3 +119,13 @@ assert.ok(html.includes('VERSÃO 0.6.0'), "Versão não foi atualizada para 0.6.
 console.log("Versão 0.6.0: passivas exclusivas dos quatro personagens conferidas.");
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
+
+assert.ok(game.includes('curupira:{name:"Curupira",texture:"curupira"'), "Perfil jogável do Curupira não encontrado");
+assert.ok(game.includes('g.generateTexture("curupira",40,40)'), "Sprite procedural do Curupira não encontrado");
+assert.ok(game.includes("regen:profile.regen||0"), "Regeneração não é carregada nos atributos do personagem");
+assert.ok(game.includes("this.playerStats.regen>=0") || game.includes("this.playerStats.regen>0&&this.regenClock>=8"), "Regeneração periódica não foi implementada");
+assert.ok(game.includes("this.playerStats.hp+=healed"), "Cura periódica não é aplicada à vida do jogador");
+assert.ok(html.includes('data-character="curupira"') && html.includes('Recupera 2 de vida a cada 8s'), "Curupira não aparece corretamente na seleção");
+assert.ok(html.includes('VERSÃO 0.7.0'), "Versão 0.7.0 não aparece no HTML");
+assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
+console.log("Versão 0.7.0: Curupira, sprite, seleção e regeneração periódica conferidos.");

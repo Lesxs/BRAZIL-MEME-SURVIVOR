@@ -8,7 +8,7 @@ const ui = {
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
 const META_KEY="brasil-meme-survivors-meta-v1";
-const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."}};
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."},curupira:{name:"Curupira",texture:"curupira",hp:110,speed:230,damage:.95,fireRate:620,weapon:"espeto",regen:2,desc:"Guardião da mata: recupera 2 de vida a cada 8 segundos."}};
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
@@ -163,6 +163,17 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0x40251e);g.fillEllipse(28,30,46,18);g.fillStyle(0xe45b2d);g.fillEllipse(28,27,42,14);g.fillStyle(0xffc34f);g.fillEllipse(28,24,35,9);g.fillStyle(0xffe69a);g.fillCircle(10,20,7);g.fillStyle(0x24201d);g.fillCircle(8,19,2);g.fillStyle(0xff8d39);g.fillTriangle(47,20,55,27,46,30);g.generateTexture("boitata",60,42);g.clear();
     // Saci-pererê: gorro vermelho, corpo escuro e uma perna só.
     g.fillStyle(0x28221f);g.fillRoundedRect(7,14,26,23,8);g.fillStyle(0xb8784b);g.fillCircle(20,13,9);g.fillStyle(0xc93632);g.fillTriangle(10,10,29,10,21,0);g.fillRect(10,9,20,4);g.fillStyle(0x181b1b);g.fillCircle(17,13,1.5);g.fillCircle(24,13,1.5);g.fillStyle(0x5c3828);g.fillRect(18,34,5,5);g.fillStyle(0xd8b17a);g.fillRect(15,38,12,2);g.generateTexture("saci",40,40);g.clear();
+    // Curupira: cabelos vermelhos, roupa de folhas e pés voltados para trás.
+    g.fillStyle(0x263b2b);g.fillEllipse(20,26,28,23);
+    g.fillStyle(0x3d7540);g.fillRoundedRect(8,19,24,18,6);
+    g.fillStyle(0xe05a32);g.fillEllipse(20,10,22,17);
+    g.fillStyle(0xf0783d);g.fillTriangle(7,12,3,3,14,8);g.fillTriangle(26,8,37,2,31,14);
+    g.fillStyle(0xb8784b);g.fillCircle(20,16,8);
+    g.fillStyle(0x1d211b);g.fillCircle(17,15,1.4);g.fillCircle(23,15,1.4);
+    g.fillStyle(0xe7c26e);g.fillRect(18,21,4,5);
+    g.fillStyle(0x6b452b);g.fillRect(10,34,8,4);g.fillRect(22,34,8,4);
+    g.fillStyle(0xd4b27a);g.fillTriangle(9,37,3,39,13,39);g.fillTriangle(31,37,37,39,27,39);
+    g.generateTexture("curupira",40,40);g.clear();
     // Boi-bumbá: corpo robusto, chifres e manta de festa popular.
     g.fillStyle(0x282321);g.fillEllipse(20,24,34,24);g.fillStyle(0x315e9b);g.fillEllipse(20,22,29,20);g.fillStyle(0xe3bd54);g.fillTriangle(7,14,2,3,14,10);g.fillTriangle(26,10,38,3,33,16);g.fillStyle(0xd64c45);g.fillRect(7,19,26,6);g.fillStyle(0xf4d76b);g.fillCircle(12,22,3);g.fillCircle(28,22,3);g.fillStyle(0xe7e0c8);g.fillEllipse(20,30,17,9);g.fillStyle(0x211c1a);g.fillCircle(16,14,2);g.fillCircle(25,14,2);g.fillStyle(0xf0d9a3);g.fillEllipse(20,33,7,3);g.generateTexture("boi_bumba",40,40);g.clear();
     // Zé Gotinha: mascote brasileiro da vacinação, com gota e jaleco.
@@ -238,7 +249,7 @@ class Arena extends Phaser.Scene {
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;
     const profile=characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente,permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;
-    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,weaponLevel:1,startingWeapon:profile.weapon};
+    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,weaponLevel:1,startingWeapon:profile.weapon};
     this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
@@ -252,7 +263,7 @@ class Arena extends Phaser.Scene {
   startRun(){this.resetRun();this.active=true;this.updateAbilityButton();ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
   update(t,dt){
     if(!this.active)return;
-    const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.invuln=Math.max(0,this.invuln-d);const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
+    const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.invuln=Math.max(0,this.invuln-d);this.regenClock=(this.regenClock||0)+d;if(this.playerStats.regen>0&&this.regenClock>=8){this.regenClock-=8;const healed=Math.min(this.playerStats.regen,this.playerStats.maxHp-this.playerStats.hp);if(healed>0){this.playerStats.hp+=healed;this.updateHud();}}const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
     const spawnEvery=Math.max(380,1250-this.elapsed*8);
     if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(70,24+Math.floor(this.elapsed/12));if(this.enemies.length<enemyLimit)this.spawnEnemy();}

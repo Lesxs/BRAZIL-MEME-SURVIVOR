@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.6.0 — Passivas exclusivas dos personagens**
+**Versão 0.7.0 — Curupira, guardião da mata**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -87,3 +87,10 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - **Capivara Braba:** recebe 20% menos dano.
 - **Saci-pererê:** tem 15% de chance de esquivar completamente de um golpe.
 - Os cartões de seleção mostram os efeitos passivos antes do início da partida.
+
+
+## Novidades da versão 0.7.0
+- Quinto personagem jogável: **Curupira**, inspirado no folclore brasileiro.
+- Sprite procedural próprio com cabelos vermelhos, roupa verde e pés voltados para trás.
+- Passiva exclusiva: recupera 2 pontos de vida a cada 8 segundos, sem ultrapassar a vida máxima.
+- Seleção reorganizada em três colunas no desktop e duas no celular.
