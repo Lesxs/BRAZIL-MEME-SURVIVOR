@@ -5,8 +5,12 @@ const ui = {
   xp: document.querySelector("#xp-label"), hp: document.querySelector("#hp-label"), hpFill: document.querySelector("#hp-fill"), xpFill: document.querySelector("#xp-fill"),
   start: document.querySelector("#start-screen"), levelScreen: document.querySelector("#level-screen"),
   gameover: document.querySelector("#gameover-screen"), upgrades: document.querySelector("#upgrade-list"),
-  final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown")
+  final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
+const META_KEY="brasil-meme-survivors-meta-v1";
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1,fireRate:650,weapon:"espeto",desc:"Equilibrado: começa com Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",desc:"Muito rápido: começa arremessando Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",desc:"Resistente: começa com Estilingue."}};
+function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
+const metaProgress=loadMetaProgress();
 const chestUpgrades = [
   {name:"ESPETO DE AÇO",desc:"+35% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
   {name:"CALDO DE CANA",desc:"+30% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
@@ -29,7 +33,7 @@ const upgrades = [
   {name:"ENERGÉTICO DE GUARANÁ",desc:"+15% de velocidade dos projéteis.",apply:p=>p.bulletSpeed*=1.15}
 ];
 class Arena extends Phaser.Scene {
-  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
+  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   create(){
     this.makeTextures();this.drawArena();
     this.player=this.physics.add.image(W/2,H/2,"player").setDepth(3).setCollideWorldBounds(true);
@@ -150,6 +154,11 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0x5b3924);g.fillRoundedRect(5,1,4,14,2);g.fillStyle(0xe5bd78);g.fillRect(6,3,2,9);g.fillStyle(0xf1dfb0);g.fillTriangle(7,0,4,4,10,4);g.generateTexture("bullet_espeto",14,16);g.clear();
     g.fillStyle(0x27313a);g.fillRoundedRect(5,3,6,11,2);g.fillStyle(0xd94b38);g.fillRect(5,5,6,4);g.fillStyle(0xffd36a);g.fillTriangle(8,0,4,5,12,5);g.fillStyle(0xffa34d);g.fillTriangle(8,16,4,12,12,12);g.generateTexture("bullet_rojao",16,18);g.clear();
     g.fillStyle(0xffd66e);g.fillCircle(8,8,3);g.lineStyle(2,0xffa34d);for(let a=0;a<8;a++){const angle=a*Math.PI/4;g.lineBetween(8+Math.cos(angle)*4,8+Math.sin(angle)*4,8+Math.cos(angle)*8,8+Math.sin(angle)*8);}g.fillStyle(0xfff0a0);g.fillCircle(8,8,2);g.generateTexture("bullet_fogos",16,16);g.clear();
+    // Chinelo e estilingue como armas iniciais de personagens selecionáveis.
+    g.fillStyle(0x263b32);g.fillRoundedRect(3,5,12,25,6);g.fillStyle(0xf2b64e);g.fillRoundedRect(5,7,8,19,4);g.fillStyle(0x4a3024);g.fillRect(7,8,4,15);g.generateTexture("bullet_chinelo",18,32);g.clear();
+    g.lineStyle(3,0x80552f);g.lineBetween(5,23,9,5);g.lineBetween(23,23,19,5);g.lineStyle(2,0xd7b37a);g.lineBetween(9,5,19,5);g.lineStyle(2,0xe7d7b5);g.lineBetween(9,5,14,15);g.lineBetween(19,5,14,15);g.fillStyle(0x9a6139);g.fillCircle(14,16,4);g.generateTexture("bullet_estilingue",28,28);g.clear();
+    // Boitatá: serpente de fogo para o segundo chefe da rotação.
+    g.fillStyle(0x40251e);g.fillEllipse(28,30,46,18);g.fillStyle(0xe45b2d);g.fillEllipse(28,27,42,14);g.fillStyle(0xffc34f);g.fillEllipse(28,24,35,9);g.fillStyle(0xffe69a);g.fillCircle(10,20,7);g.fillStyle(0x24201d);g.fillCircle(8,19,2);g.fillStyle(0xff8d39);g.fillTriangle(47,20,55,27,46,30);g.generateTexture("boitata",60,42);g.clear();
     // Saci-pererê: gorro vermelho, corpo escuro e uma perna só.
     g.fillStyle(0x28221f);g.fillRoundedRect(7,14,26,23,8);g.fillStyle(0xb8784b);g.fillCircle(20,13,9);g.fillStyle(0xc93632);g.fillTriangle(10,10,29,10,21,0);g.fillRect(10,9,20,4);g.fillStyle(0x181b1b);g.fillCircle(17,13,1.5);g.fillCircle(24,13,1.5);g.fillStyle(0x5c3828);g.fillRect(18,34,5,5);g.fillStyle(0xd8b17a);g.fillRect(15,38,12,2);g.generateTexture("saci",40,40);g.clear();
     // Boi-bumbá: corpo robusto, chifres e manta de festa popular.
@@ -209,12 +218,20 @@ class Arena extends Phaser.Scene {
     deco.lineStyle(2,0x152321,.8);deco.strokeRect(7,7,W-14,H-14);
   }
   resetRun(){
-    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;
-    this.playerStats={hp:100,maxHp:100,speed:220,damage:1,fireRate:650,bulletSpeed:430,coinBonus:0,weaponLevel:1};
-    this.player.setPosition(W/2,H/2).setAlpha(1);
+    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;
+    const profile=characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente,permanent=metaProgress.upgrades;
+    const maxHp=profile.hp+permanent.hp*8;
+    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:0,weaponLevel:1,startingWeapon:profile.weapon};
+    this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
   }
+  renderMetaShop(){
+    if(ui.metaCoins)ui.metaCoins.textContent=String(metaProgress.coins);
+    document.querySelectorAll("[data-meta-upgrade]").forEach(button=>{const key=button.dataset.metaUpgrade,level=metaProgress.upgrades[key],cost=20+level*15;button.disabled=level>=5||metaProgress.coins<cost;const label=button.querySelector("small");if(label)label.textContent=level>=5?"MÁXIMO":`${cost} MOEDAS · NÍVEL ${level}/5`;});
+    document.querySelectorAll("[data-character]").forEach(button=>button.classList.toggle("selected",button.dataset.character===this.selectedCharacter));
+  }
+  buyMetaUpgrade(key){if(!Object.hasOwn(metaProgress.upgrades,key))return;const level=metaProgress.upgrades[key],cost=20+level*15;if(level>=5||metaProgress.coins<cost)return;metaProgress.coins-=cost;metaProgress.upgrades[key]++;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));this.renderMetaShop();}
   startRun(){this.resetRun();this.active=true;this.updateAbilityButton();ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
   update(t,dt){
     if(!this.active)return;
@@ -250,7 +267,8 @@ class Arena extends Phaser.Scene {
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
-    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.45);boss.baseScale=1.45;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName="Fiscal do Pix";boss.hp=24+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=38;boss.damage=25;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
+    const isBoitata=this.bossCount%2===1;this.bossCount++;
+    const boss=this.enemyGroup.create(x,y,isBoitata?"boitata":"boss").setDepth(2).setScale(isBoitata?1.35:1.45);boss.baseScale=isBoitata?1.35:1.45;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=isBoitata?"Boitatá":"Fiscal do Pix";boss.hp=(isBoitata?34:24)+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=isBoitata?52:38;boss.damage=isBoitata?29:25;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
   }
   moveEnemies(){
     for(const e of this.enemies){
@@ -272,7 +290,8 @@ class Arena extends Phaser.Scene {
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
     const spread=level===2 ? 0.18 : 0.16;
-    const projectile=level===1?"bullet_espeto":level===2?"bullet_rojao":"bullet_fogos";
+    const starter=this.playerStats.startingWeapon==="chinelo"?"bullet_chinelo":this.playerStats.startingWeapon==="estilingue"?"bullet_estilingue":"bullet_espeto";
+    const projectile=level===1?starter:level===2?"bullet_rojao":"bullet_fogos";
     for(let i=0;i<count;i++){
       const angle=base+(i-(count-1)/2)*spread;
       const b=this.bulletGroup.create(this.player.x,this.player.y,projectile).setDepth(2);
@@ -346,16 +365,18 @@ class Arena extends Phaser.Scene {
   }
   updateHud(){
     ui.time.textContent=this.formatTime(this.elapsed);ui.level.textContent=String(this.level).padStart(2,"0");ui.kills.textContent=this.kills;ui.coins.textContent=this.coins;
-    ui.hp.textContent=`${Math.max(0,Math.ceil(this.playerStats.hp))} / ${this.playerStats.maxHp}`;ui.hpFill.style.width=`${Math.max(0,this.playerStats.hp/this.playerStats.maxHp*100)}%`;const boss=this.enemies.find(e=>e.active&&e.isBoss);ui.bossWrap.classList.toggle("hidden",!boss);if(boss){ui.bossHp.textContent=`${Math.max(0,Math.ceil(boss.hp))} / ${boss.maxHp}`;ui.bossFill.style.width=`${Math.max(0,boss.hp/boss.maxHp*100)}%`;}ui.xp.textContent=`${this.xp} / ${this.xpNeed}`;ui.xpFill.style.width=`${Math.min(100,this.xp/this.xpNeed*100)}%`;
+    ui.hp.textContent=`${Math.max(0,Math.ceil(this.playerStats.hp))} / ${this.playerStats.maxHp}`;ui.hpFill.style.width=`${Math.max(0,this.playerStats.hp/this.playerStats.maxHp*100)}%`;const boss=this.enemies.find(e=>e.active&&e.isBoss);ui.bossWrap.classList.toggle("hidden",!boss);if(boss){ui.bossHp.textContent=`${Math.max(0,Math.ceil(boss.hp))} / ${boss.maxHp}`;ui.bossFill.style.width=`${Math.max(0,boss.hp/boss.maxHp*100)}%`;if(ui.bossName)ui.bossName.textContent=`CHEFE: ${boss.enemyName.toUpperCase()}`;}ui.xp.textContent=`${this.xp} / ${this.xpNeed}`;ui.xpFill.style.width=`${Math.min(100,this.xp/this.xpNeed*100)}%`;
   }
   formatTime(s){const n=Math.floor(s);return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");}
-  endRun(){this.active=false;this.updateAbilityButton();this.physics.pause();ui.final.textContent=`Você sobreviveu por ${this.formatTime(this.elapsed)} e eliminou ${this.kills} inimigos.`;ui.gameover.classList.remove("hidden");}
+  endRun(){this.active=false;this.updateAbilityButton();this.physics.pause();const earned=this.coins+Math.floor(this.elapsed/30)+Math.floor(this.kills/10);metaProgress.coins+=earned;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));this.renderMetaShop();ui.final.textContent=`Você sobreviveu por ${this.formatTime(this.elapsed)}, eliminou ${this.kills} inimigos e ganhou ${earned} fichas permanentes.`;ui.gameover.classList.remove("hidden");}
 }
 const game=new Phaser.Game({type:Phaser.AUTO,parent:"game",width:W,height:H,backgroundColor:"#121a29",pixelArt:true,physics:{default:"arcade",arcade:{debug:false}},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[Arena]});
 const scene=()=>game.scene.getScene("arena");
 document.querySelector("#start-btn").addEventListener("click",()=>{scene().startRun();});
 document.querySelector("#restart-btn").addEventListener("click",()=>{ui.gameover.classList.add("hidden");scene().startRun();});
-const touch={up:false,down:false,left:false,right:false};scene().touch=touch;ui.abilityButton.addEventListener("click",()=>scene().triggerAbility());
+const touch={up:false,down:false,left:false,right:false};scene().touch=touch;scene().renderMetaShop();ui.abilityButton.addEventListener("click",()=>scene().triggerAbility());
+document.querySelectorAll("[data-character]").forEach(button=>button.addEventListener("click",()=>{scene().selectedCharacter=button.dataset.character;metaProgress.selectedCharacter=button.dataset.character;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));scene().renderMetaShop();}));
+document.querySelectorAll("[data-meta-upgrade]").forEach(button=>button.addEventListener("click",()=>scene().buyMetaUpgrade(button.dataset.metaUpgrade)));
 document.querySelectorAll("[data-key]").forEach(btn=>{
   const key=btn.dataset.key;
   const down=e=>{e.preventDefault();touch[key]=true;};const up=e=>{e.preventDefault();touch[key]=false;};

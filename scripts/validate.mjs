@@ -79,3 +79,18 @@ assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
 assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
 assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recompensa imediata de moedas do baú não encontrada");
+
+assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"'), "Seleção dos três personagens jogáveis não encontrada");
+assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
+assert.ok(game.includes("this.player.setTexture(profile.texture)"), "Troca de aparência por personagem não encontrada");
+assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
+assert.ok(game.includes('generateTexture("bullet_estilingue",28,28)'), "Arma Estilingue da Capivara não encontrada");
+assert.ok(game.includes("startingWeapon"), "Arma inicial por personagem não encontrada");
+assert.ok(html.includes('data-meta-upgrade="hp"') && html.includes('data-meta-upgrade="damage"') && html.includes('data-meta-upgrade="speed"'), "Loja de melhorias permanentes não encontrada");
+assert.ok(game.includes("localStorage.setItem(META_KEY"), "Salvamento local da progressão permanente não encontrado");
+assert.ok(game.includes("metaProgress.coins+=earned"), "Recompensa permanente ao fim da partida não encontrada");
+assert.ok(game.includes('generateTexture("boitata",60,42)'), "Sprite do chefe Boitatá não encontrado");
+assert.ok(game.includes('isBoitata?"boitata":"boss"'), "Rotação entre chefes brasileiros não encontrada");
+assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontrado");
+assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options"), "Estilos da seleção de personagem e loja não encontrados");
+console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");

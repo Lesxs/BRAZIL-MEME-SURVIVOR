@@ -1,4 +1,4 @@
-# BRASIL: MEME SURVIVORS
+# BRASIL: MEME SURVIVORS\n\n**Versão 0.3.0 — Expansão Brasileira**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -46,3 +46,17 @@ O GitHub Actions verifica a sintaxe JavaScript e confere referências essenciais
 O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages após push na branch `main`.
 
 Jogue em: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
+
+## Personagens jogáveis — versão 0.3.0
+- **Sobrevivente:** personagem equilibrado, com Espeto de Aço.
+- **Motoboy do Grau:** mais veloz, com Chinelo como arma inicial.
+- **Capivara Braba:** mais vida e dano, com Estilingue como arma inicial.
+- As armas iniciais evoluem para rojões no nível 2 e fogos no nível 3.
+
+## Progressão permanente
+Ao terminar uma partida, fichas são calculadas com base nas moedas da rodada, no tempo sobrevivido e nas eliminações. O saldo e os níveis de melhoria são salvos localmente no navegador. A loja permite melhorar vida máxima, dano e velocidade, cada atributo até cinco níveis.
+
+## Rotação de chefes
+O Fiscal do Pix e o Boitatá alternam nas aparições de chefe. Cada um possui sprite, vida e velocidade próprios, e ambos deixam o Baú do Churrasco ao serem derrotados.
+
+A progressão permanente usa o armazenamento local do navegador; ela fica vinculada ao navegador/dispositivo utilizado e não sincroniza entre aparelhos.

@@ -28,7 +28,7 @@
         <div class="hud-stat"><small>NÍVEL</small><strong id="level">01</strong></div>
         <div class="hud-stat"><small>ELIMINAÇÕES</small><strong id="kills">0</strong></div>
         <div class="hud-stat"><small>MOEDAS</small><strong id="coins">0</strong></div>
-        <div class="health-wrap"><div class="xp-label"><small>VIDA</small><small id="hp-label">100 / 100</small></div><div class="health-track"><div id="hp-fill"></div></div></div><div class="xp-wrap"><div class="xp-label"><small>EXPERIÊNCIA</small><small id="xp-label">0 / 5</small></div><div class="xp-track"><div id="xp-fill"></div></div></div><div class="boss-wrap hidden" id="boss-wrap"><div class="xp-label"><small>CHEFE: FISCAL DO PIX</small><small id="boss-hp">0 / 0</small></div><div class="boss-track"><div id="boss-fill"></div></div></div>
+        <div class="health-wrap"><div class="xp-label"><small>VIDA</small><small id="hp-label">100 / 100</small></div><div class="health-track"><div id="hp-fill"></div></div></div><div class="xp-wrap"><div class="xp-label"><small>EXPERIÊNCIA</small><small id="xp-label">0 / 5</small></div><div class="xp-track"><div id="xp-fill"></div></div></div><div class="boss-wrap hidden" id="boss-wrap"><div class="xp-label"><small id="boss-name">CHEFE: FISCAL DO PIX</small><small id="boss-hp">0 / 0</small></div><div class="boss-track"><div id="boss-fill"></div></div></div>
       </div>
       <div class="arena-wrap">
         <div id="game"></div>
@@ -44,6 +44,22 @@
             <p class="start-kicker">APRESENTA</p>
             <h2 class="game-logo">BRASIL <span>MEME</span><br>SURVIVORS</h2>
             <p class="start-copy">A rua é sua arena. O Brasil é o desafio.</p>
+            <section class="character-picker" aria-label="Escolha seu personagem">
+              <p class="menu-section-title">ESCOLHA SEU PERSONAGEM</p>
+              <div class="character-options">
+                <button class="character-card selected" data-character="sobrevivente"><b>SOBREVIVENTE</b><span>Equilibrado · Espeto</span></button>
+                <button class="character-card" data-character="motoboy"><b>MOTOBOY DO GRAU</b><span>Velocidade · Chinelo</span></button>
+                <button class="character-card" data-character="capivara"><b>CAPIVARA BRABA</b><span>Resistência · Estilingue</span></button>
+              </div>
+            </section>
+            <section class="meta-shop" id="meta-shop" aria-label="Loja permanente">
+              <div class="meta-shop-heading"><b>LOJA ENTRE PARTIDAS</b><span><strong id="meta-coins">0</strong> FICHAS</span></div>
+              <div class="meta-shop-options">
+                <button data-meta-upgrade="hp"><b>CASCA GROSSA</b><span>+8 de vida máxima por nível</span><small>20 MOEDAS · NÍVEL 0/5</small></button>
+                <button data-meta-upgrade="damage"><b>ATAQUE BRASILEIRO</b><span>+6% de dano por nível</span><small>20 MOEDAS · NÍVEL 0/5</small></button>
+                <button data-meta-upgrade="speed"><b>CHINELO TURBO</b><span>+4% de velocidade por nível</span><small>20 MOEDAS · NÍVEL 0/5</small></button>
+              </div>
+            </section>
             <button class="primary-btn play-btn" id="start-btn">JOGAR</button>
             <p class="start-footnote">UM JOGO DE SOBREVIVÊNCIA BRASILEIRO</p>
           </div>
@@ -60,7 +76,7 @@
       </div>
       <footer class="game-footer"><span><i class="keycap">WASD</i> MOVIMENTAR</span><span><i class="keycap">AUTO</i> ATAQUE AUTOMÁTICO</span><span><i class="keycap">ESPAÇO</i> GRITO DA TORCIDA</span><span class="footer-tip">DICA: COLETE AS ESFERAS VERDES</span></footer>
     </section>
-    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.2.0 · PHASER 3</span></footer>
+    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.3.0 · PHASER 3</span></footer>
   </main>
   <script type="module" src="./src/game.js"></script>
 </body>
