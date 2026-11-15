@@ -259,7 +259,8 @@ class Arena extends Phaser.Scene {
   }
   resetRun(){
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=60;this.bossCount=0;
-    const profile=characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente,permanent=metaProgress.upgrades;
+    this.selectedCharacter=characterProfiles[this.selectedCharacter]?this.selectedCharacter:"sobrevivente";
+    const profile=characterProfiles[this.selectedCharacter],permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;
     this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,xpMultiplier:profile.xpMultiplier||1,weaponLevel:1,startingWeapon:profile.weapon};
     this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
@@ -269,10 +270,12 @@ class Arena extends Phaser.Scene {
   renderMetaShop(){
     if(ui.metaCoins)ui.metaCoins.textContent=String(metaProgress.coins);
     document.querySelectorAll("[data-meta-upgrade]").forEach(button=>{const key=button.dataset.metaUpgrade,level=metaProgress.upgrades[key],cost=20+level*15;button.disabled=level>=5||metaProgress.coins<cost;const label=button.querySelector("small");if(label)label.textContent=level>=5?"MÁXIMO":`${cost} MOEDAS · NÍVEL ${level}/5`;});
-    document.querySelectorAll("[data-character]").forEach(button=>button.classList.toggle("selected",button.dataset.character===this.selectedCharacter));
+    document.querySelectorAll("[data-character]").forEach(button=>{const selected=button.dataset.character===this.selectedCharacter;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected));});
+    const selectedLabel=document.querySelector("#selected-character-label");
+    if(selectedLabel)selectedLabel.textContent=`SELECIONADO: ${(characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente).name.toUpperCase()}`;
   }
-  buyMetaUpgrade(key){if(!Object.hasOwn(metaProgress.upgrades,key))return;const level=metaProgress.upgrades[key],cost=20+level*15;if(level>=5||metaProgress.coins<cost)return;metaProgress.coins-=cost;metaProgress.upgrades[key]++;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));this.renderMetaShop();}
-  startRun(){this.resetRun();this.active=true;this.updateAbilityButton();ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
+  buyMetaUpgrade(key){if(!Object.hasOwn(metaProgress.upgrades,key))return;const level=metaProgress.upgrades[key],cost=20+level*15;if(level>=5||metaProgress.coins<cost)return;metaProgress.coins-=cost;metaProgress.upgrades[key]++;persistMetaProgress();this.renderMetaShop();}
+  startRun(){this.selectedCharacter=characterProfiles[metaProgress.selectedCharacter]?metaProgress.selectedCharacter:"sobrevivente";this.resetRun();this.active=true;this.updateAbilityButton();ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
   update(t,dt){
     if(!this.active)return;
     const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.invuln=Math.max(0,this.invuln-d);this.regenClock=(this.regenClock||0)+d;if(this.playerStats.regen>0&&this.regenClock>=8){this.regenClock-=8;const healed=Math.min(this.playerStats.regen,this.playerStats.maxHp-this.playerStats.hp);if(healed>0){this.playerStats.hp+=healed;this.updateHud();}}const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
@@ -408,14 +411,26 @@ class Arena extends Phaser.Scene {
     ui.hp.textContent=`${Math.max(0,Math.ceil(this.playerStats.hp))} / ${this.playerStats.maxHp}`;ui.hpFill.style.width=`${Math.max(0,this.playerStats.hp/this.playerStats.maxHp*100)}%`;const boss=this.enemies.find(e=>e.active&&e.isBoss);ui.bossWrap.classList.toggle("hidden",!boss);if(boss){ui.bossHp.textContent=`${Math.max(0,Math.ceil(boss.hp))} / ${boss.maxHp}`;ui.bossFill.style.width=`${Math.max(0,boss.hp/boss.maxHp*100)}%`;if(ui.bossName)ui.bossName.textContent=`CHEFE: ${boss.enemyName.toUpperCase()}`;}ui.xp.textContent=`${this.xp} / ${this.xpNeed}`;ui.xpFill.style.width=`${Math.min(100,this.xp/this.xpNeed*100)}%`;
   }
   formatTime(s){const n=Math.floor(s);return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");}
-  endRun(){this.active=false;this.updateAbilityButton();this.physics.pause();const earned=this.coins+Math.floor(this.elapsed/30)+Math.floor(this.kills/10);metaProgress.coins+=earned;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));this.renderMetaShop();ui.final.textContent=`Você sobreviveu por ${this.formatTime(this.elapsed)}, eliminou ${this.kills} inimigos e ganhou ${earned} fichas permanentes.`;ui.gameover.classList.remove("hidden");}
+  endRun(){this.active=false;this.updateAbilityButton();this.physics.pause();const earned=this.coins+Math.floor(this.elapsed/30)+Math.floor(this.kills/10);metaProgress.coins+=earned;persistMetaProgress();this.renderMetaShop();ui.final.textContent=`Você sobreviveu por ${this.formatTime(this.elapsed)}, eliminou ${this.kills} inimigos e ganhou ${earned} fichas permanentes.`;ui.gameover.classList.remove("hidden");}
 }
 const game=new Phaser.Game({type:Phaser.AUTO,parent:"game",width:W,height:H,backgroundColor:"#121a29",pixelArt:true,physics:{default:"arcade",arcade:{debug:false}},scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},scene:[Arena]});
 const scene=()=>game.scene.getScene("arena");
+function persistMetaProgress(){try{localStorage.setItem(META_KEY,JSON.stringify(metaProgress));return true;}catch{return false;}}
+function selectCharacter(id){
+  if(!Object.hasOwn(characterProfiles,id))return false;
+  metaProgress.selectedCharacter=id;
+  scene().selectedCharacter=id;
+  document.querySelectorAll("[data-character]").forEach(button=>{const selected=button.dataset.character===id;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected));});
+  const label=document.querySelector("#selected-character-label");
+  if(label)label.textContent=`SELECIONADO: ${characterProfiles[id].name.toUpperCase()}`;
+  persistMetaProgress();
+  return true;
+}
 document.querySelector("#start-btn").addEventListener("click",()=>{scene().startRun();});
 document.querySelector("#restart-btn").addEventListener("click",()=>{ui.gameover.classList.add("hidden");scene().startRun();});
 const touch={up:false,down:false,left:false,right:false};scene().touch=touch;scene().renderMetaShop();ui.abilityButton.addEventListener("click",()=>scene().triggerAbility());
-document.querySelectorAll("[data-character]").forEach(button=>button.addEventListener("click",()=>{scene().selectedCharacter=button.dataset.character;metaProgress.selectedCharacter=button.dataset.character;localStorage.setItem(META_KEY,JSON.stringify(metaProgress));scene().renderMetaShop();}));
+document.querySelector(".character-options").addEventListener("click",event=>{const button=event.target.closest("[data-character]");if(!button)return;event.preventDefault();selectCharacter(button.dataset.character);});
+selectCharacter(metaProgress.selectedCharacter);
 document.querySelectorAll("[data-meta-upgrade]").forEach(button=>button.addEventListener("click",()=>scene().buyMetaUpgrade(button.dataset.metaUpgrade)));
 document.querySelectorAll("[data-key]").forEach(btn=>{
   const key=btn.dataset.key;

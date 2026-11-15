@@ -102,3 +102,11 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Sprite pixel art procedural próprio e arma inicial exclusiva **Onda**.
 - Passiva exclusiva: coleta 20% mais experiência em cada esfera.
 - Correção do relógio de regeneração do Curupira e reinício da recarga do Grito da Torcida entre partidas.
+
+
+## Versão 0.9.0 — seleção de personagens corrigida
+- Seleção delegada e validada para os seis personagens.
+- Personagem escolhido sincronizado antes de cada partida e reinício.
+- Indicador visível do personagem ativo, estados acessíveis e suporte a toque.
+- Salvamento protegido caso o navegador bloqueie o armazenamento local.
+- JavaScript e CSS com versão na URL para evitar cache antigo.

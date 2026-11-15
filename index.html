@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css">
+  <link rel="stylesheet" href="./style.css?v=0.9.0">
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 </head>
 <body>
@@ -46,13 +46,14 @@
             <p class="start-copy">A rua é sua arena. O Brasil é o desafio.</p>
             <section class="character-picker" aria-label="Escolha seu personagem">
               <p class="menu-section-title">ESCOLHA SEU PERSONAGEM</p>
+              <p class="selected-character-label" id="selected-character-label" aria-live="polite">SELECIONADO: SOBREVIVENTE</p>
               <div class="character-options">
-                <button class="character-card selected" data-character="sobrevivente"><b>SOBREVIVENTE</b><span>+8% dano · Espeto</span></button>
-                <button class="character-card" data-character="motoboy"><b>MOTOBOY DO GRAU</b><span>+1 moeda por eliminação · Chinelo</span></button>
-                <button class="character-card" data-character="capivara"><b>CAPIVARA BRABA</b><span>20% menos dano · Estilingue</span></button>
-                <button class="character-card" data-character="saci"><b>SACI-PERERÊ</b><span>15% de esquiva · Redemoinho</span></button>
-                <button class="character-card" data-character="curupira"><b>CURUPIRA</b><span>Recupera 2 de vida a cada 8s · Espeto</span></button>
-                <button class="character-card" data-character="boto"><b>BOTO-COR-DE-ROSA</b><span>+20% de XP · Onda</span></button>
+                <button class="character-card selected" data-character="sobrevivente" aria-pressed="true"><b>SOBREVIVENTE</b><span>+8% dano · Espeto</span></button>
+                <button class="character-card" data-character="motoboy" aria-pressed="false"><b>MOTOBOY DO GRAU</b><span>+1 moeda por eliminação · Chinelo</span></button>
+                <button class="character-card" data-character="capivara" aria-pressed="false"><b>CAPIVARA BRABA</b><span>20% menos dano · Estilingue</span></button>
+                <button class="character-card" data-character="saci" aria-pressed="false"><b>SACI-PERERÊ</b><span>15% de esquiva · Redemoinho</span></button>
+                <button class="character-card" data-character="curupira" aria-pressed="false"><b>CURUPIRA</b><span>Recupera 2 de vida a cada 8s · Espeto</span></button>
+                <button class="character-card" data-character="boto" aria-pressed="false"><b>BOTO-COR-DE-ROSA</b><span>+20% de XP · Onda</span></button>
               </div>
             </section>
             <section class="meta-shop" id="meta-shop" aria-label="Loja permanente">
@@ -79,8 +80,8 @@
       </div>
       <footer class="game-footer"><span><i class="keycap">WASD</i> MOVIMENTAR</span><span><i class="keycap">AUTO</i> ATAQUE AUTOMÁTICO</span><span><i class="keycap">ESPAÇO</i> GRITO DA TORCIDA</span><span class="footer-tip">DICA: COLETE AS ESFERAS VERDES</span></footer>
     </section>
-    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.8.0 · PHASER 3</span></footer>
+    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.9.0 · PHASER 3</span></footer>
   </main>
-  <script type="module" src="./src/game.js"></script>
+  <script type="module" src="./src/game.js?v=0.9.0"></script>
 </body>
 </html>
