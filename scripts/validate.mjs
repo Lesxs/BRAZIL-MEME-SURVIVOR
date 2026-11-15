@@ -16,7 +16,7 @@ assert.deepEqual(missing, [], "IDs usados pelo JavaScript e ausentes no HTML: " 
 assert.ok(html.includes("phaser@3.80.1"), "Biblioteca Phaser 3.80.1 não encontrada");
 assert.ok(html.includes('src="./src/game.js?v=0.10.0"'), "Entrada do jogo com cache busting não encontrada no HTML");
 assert.ok(game.includes("processLevelUps("), "Rotina de evolução de nível não encontrada");
-assert.ok(game.includes("Math.min(32,12+Math.floor(this.elapsed/35))"), "Limite de inimigos simultâneos não encontrado");
+assert.ok(game.includes("Math.min(42,12+Math.floor(this.elapsed/32)+difficultyTier*2)"), "Limite de inimigos simultâneos não encontrado");
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
 assert.ok(game.includes('generateTexture("boss",56,56)'), "Textura do chefe não encontrada");
 assert.ok(game.includes("spawnBoss()"), "Rotina de surgimento do chefe não encontrada");
