@@ -16,7 +16,7 @@ const upgrades = [
   {name:"ENERGÉTICO DE GUARANÁ",desc:"+15% de velocidade dos projéteis.",apply:p=>p.bulletSpeed*=1.15}
 ];
 class Arena extends Phaser.Scene {
-  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
+  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.nextBossAt=60;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   create(){
     this.makeTextures();this.drawArena();
     this.player=this.physics.add.image(W/2,H/2,"player").setDepth(3).setCollideWorldBounds(true);
@@ -34,6 +34,7 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0xb8a0ff);g.fillCircle(13,13,11);g.fillStyle(0x211d37);g.fillCircle(9,11,2);g.fillCircle(17,11,2);g.fillRect(10,17,7,2);g.generateTexture("pigeon",26,26);g.clear();
     g.fillStyle(0xffa35c);g.fillRoundedRect(2,2,24,24,7);g.fillStyle(0x442616);g.fillCircle(9,11,2);g.fillCircle(19,11,2);g.fillRect(10,18,8,2);g.generateTexture("vendor",28,28);g.clear();
     g.fillStyle(0x9bc879);g.fillEllipse(16,17,27,21);g.fillStyle(0x334b2b);g.fillCircle(9,12,2);g.fillCircle(21,12,2);g.fillStyle(0x273b24);g.fillEllipse(15,21,9,4);g.generateTexture("capybara",32,32);g.clear();
+    g.fillStyle(0x6f273b);g.fillRoundedRect(2,2,36,36,9);g.fillStyle(0xffd166);g.fillCircle(12,14,3);g.fillCircle(28,14,3);g.fillStyle(0x1c1720);g.fillRect(13,25,14,4);g.generateTexture("boss",40,40);g.clear();
     g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.generateTexture("orb",12,12);g.clear();
     g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.generateTexture("bullet",12,12);g.destroy();
   }
@@ -57,6 +58,7 @@ class Arena extends Phaser.Scene {
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
     const spawnEvery=Math.max(380,1250-this.elapsed*8);
     if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(70,24+Math.floor(this.elapsed/12));if(this.enemies.length<enemyLimit)this.spawnEnemy();}
+    if(this.elapsed>=this.nextBossAt){this.spawnBoss();this.nextBossAt+=60;}
     if(this.shotClock>this.playerStats.fireRate){this.shotClock=0;this.autoShoot();}
     if(Math.floor(this.elapsed)!==Math.floor(this.elapsed-d))this.updateHud();
   }
@@ -78,6 +80,10 @@ class Arena extends Phaser.Scene {
     e.damage=e.isVendor?22:e.isCapybara?18:12;e.setScale(e.isVendor?1.15:e.isCapybara?1.2:1);
     this.enemies.push(e);
   }
+  spawnBoss(){
+    const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
+    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.8);boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.hp=24+Math.floor(this.elapsed/12);boss.speed=38;boss.damage=25;this.enemies.push(boss);
+  }
   moveEnemies(){for(const e of this.enemies){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
   autoShoot(){
     const alive=this.enemies.filter(e=>e.active);if(!alive.length)return;
@@ -87,7 +93,7 @@ class Arena extends Phaser.Scene {
   }
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;
-    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=1+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isVendor?3:e.isCapybara?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
     if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.updateHud();
