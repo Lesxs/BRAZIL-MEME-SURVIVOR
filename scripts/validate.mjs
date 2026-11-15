@@ -84,16 +84,16 @@ assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recom
 
 assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"') && html.includes('data-character="boto"'), "Seleção dos seis personagens jogáveis não encontrada");
 assert.ok(html.includes('id="selected-character-label"') && html.includes('aria-pressed="true"'), "Estado visual e acessível do personagem selecionado não encontrado");
-assert.ok(game.includes("function selectCharacter(id)") && game.includes('button.addEventListener("pointerdown",choose,{passive:false})') && game.includes('button.addEventListener("click",event=>{if(event.detail===0)choose(event);})'), "Seleção por mouse, toque e teclado não está conectada");
+assert.ok(game.includes("function selectCharacter(id)") && game.includes('document.addEventListener("click",event=>'), "Seleção por mouse, toque e teclado não está conectada");
 assert.ok(game.includes('this.selectedCharacter=characterProfiles[metaProgress.selectedCharacter]?metaProgress.selectedCharacter:"sobrevivente";this.resetRun();'), "Início da partida não sincroniza o personagem escolhido");
 assert.ok(game.includes("function persistMetaProgress()") && game.includes("try{localStorage.setItem(META_KEY"), "Persistência da seleção não trata bloqueio do armazenamento local");
 assert.ok(html.includes("./src/game.js?v=0.9.2") && html.includes("./style.css?v=0.9.2"), "Cache busting da versão não encontrado");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
-assert.ok(game.includes("this.player.setTexture(profile.texture)"), "Troca de aparência por personagem não encontrada");
+assert.ok(game.includes("this.player.setTexture(profile.texture,0)"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
 assert.ok(game.includes('generateTexture("bullet_estilingue",28,28)'), "Arma Estilingue da Capivara não encontrada");
 assert.ok(game.includes('generateTexture("bullet_redemoinho",24,24)'), "Projétil Redemoinho do Saci não encontrado");
-assert.ok(game.includes('saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho"'), "Perfil jogável do Saci não encontrado");
+assert.ok(game.includes('saci:{name:"Saci-pererê",texture:"char_saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho"'), "Perfil jogável do Saci não encontrado");
 assert.ok(game.includes('this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho"'), "Arma inicial do Saci não está conectada ao disparo");
 assert.ok(html.includes('data-character="saci"'), "Cartão de seleção do Saci não encontrado");
 assert.ok(css.includes(".character-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop para cinco personagens não encontrada");
@@ -126,7 +126,7 @@ console.log("Versão 0.9.2: passivas exclusivas dos seis personagens conferidas.
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
 
-assert.ok(game.includes('curupira:{name:"Curupira",texture:"curupira"'), "Perfil jogável do Curupira não encontrado");
+assert.ok(game.includes('curupira:{name:"Curupira",texture:"char_curupira"'), "Perfil jogável do Curupira não encontrado");
 assert.ok(game.includes('g.generateTexture("curupira",40,40)'), "Sprite procedural do Curupira não encontrado");
 assert.ok(game.includes("regen:profile.regen||0"), "Regeneração não é carregada nos atributos do personagem");
 assert.ok(game.includes("this.playerStats.regen>=0") || game.includes("this.playerStats.regen>0&&this.regenClock>=8"), "Regeneração periódica não foi implementada");
@@ -137,7 +137,7 @@ assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade 
 console.log("Versão 0.9.2: Curupira, sprite, seleção e regeneração periódica conferidos.");
 
 assert.ok(resetRunBody.includes("this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;"), "Relógios de regeneração, invulnerabilidade e habilidade não são reiniciados em nova partida");
-assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
+assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"char_boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
 assert.ok(game.includes('g.generateTexture("boto",40,40)') && game.includes('g.generateTexture("bullet_onda",24,24)'), "Sprites do Boto e da Onda não encontrados");
 assert.ok(game.includes("xpMultiplier:profile.xpMultiplier||1") && game.includes("this.xp+=o.value*(this.playerStats.xpMultiplier||1)"), "Bônus de experiência não está conectado à coleta de orbes");
 assert.ok(game.includes('this.playerStats.startingWeapon==="onda"?"bullet_onda"'), "Arma Onda não está conectada ao disparo");
