@@ -141,3 +141,13 @@ Para gerar localmente: `python -m pip install pillow` e `python tools/generate_s
 - Nova melhoria Água de Coco Gelada recupera 30% da vida máxima.
 - Abaixo de 40% de vida, a escolha de nível garante a opção de cura, se ela ainda não estiver entre as opções.
 - Validador atualizado para conferir os bônus e a versão atual.
+
+
+## Versão 0.10.0 — dificuldade progressiva
+- A dificuldade agora considera tempo de sobrevivência e nível do jogador.
+- Novos tipos de inimigos entram gradualmente na rotação, com maior presença de ameaças especiais conforme a partida avança.
+- Vida e dano dos inimigos escalam em etapas moderadas; a velocidade cresce mais lentamente.
+- Inimigos de elite podem surgir a partir da segunda etapa, com brilho dourado, mais resistência e recompensa adicional de XP e moedas.
+- Limite de inimigos cresce gradualmente, com teto de 42; intervalo de surgimento reduz até 820 ms.
+- Chefes ganham resistência e dano progressivos em marcos maiores de tempo e nível.
+- A validação automatizada confere as novas regras.
