@@ -117,3 +117,10 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Suporte reforçado a mouse, toque e teclado.
 - Arte de fundo sem captura de eventos e cartões com prioridade de interação.
 - Escolha continua sendo salva quando o armazenamento local está disponível.
+
+
+## Spritesheets e animações (0.9.2)
+
+O projeto gera spritesheets pixel art de forma reproduzível com `tools/generate_sprites.py` (Python + Pillow). São geradas seis folhas de personagens e três de chefes, cada uma com animações idle, walk e attack. Os workflows de validação e GitHub Pages executam o gerador automaticamente antes de validar/publicar, portanto os PNGs são produzidos no build e não precisam ser enviados manualmente ao repositório.
+
+Para gerar localmente: `python -m pip install pillow` e `python tools/generate_sprites.py`.

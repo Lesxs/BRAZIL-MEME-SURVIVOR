@@ -8,7 +8,7 @@ const ui = {
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
 const META_KEY="brasil-meme-survivors-meta-v1";
-const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."},curupira:{name:"Curupira",texture:"curupira",hp:110,speed:230,damage:.95,fireRate:620,weapon:"espeto",regen:2,desc:"Guardião da mata: recupera 2 de vida a cada 8 segundos."},boto:{name:"Boto-cor-de-rosa",texture:"boto",hp:105,speed:245,damage:.94,fireRate:600,weapon:"onda",xpMultiplier:1.2,desc:"Encanto amazônico: recebe 20% mais experiência e ataca com Ondas."}};
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"char_sobrevivente",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"char_motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"char_capivara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"char_saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."},curupira:{name:"Curupira",texture:"char_curupira",hp:110,speed:230,damage:.95,fireRate:620,weapon:"espeto",regen:2,desc:"Guardião da mata: recupera 2 de vida a cada 8 segundos."},boto:{name:"Boto-cor-de-rosa",texture:"char_boto",hp:105,speed:245,damage:.94,fireRate:600,weapon:"onda",xpMultiplier:1.2,desc:"Encanto amazônico: recebe 20% mais experiência e ataca com Ondas."}};
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
@@ -34,9 +34,13 @@ const upgrades = [
 ];
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
+  preload(){
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png",{frameWidth:80,frameHeight:80});
+  }
   create(){
-    this.makeTextures();this.drawArena();
-    this.player=this.physics.add.image(W/2,H/2,"player").setDepth(3).setCollideWorldBounds(true);
+    this.makeTextures();this.createSpriteAnimations();this.drawArena();
+    this.player=this.physics.add.sprite(W/2,H/2,"char_sobrevivente",0).setDepth(3).setCollideWorldBounds(true);
     this.player.body.setCircle(11,5,5);
     this.enemyGroup=this.physics.add.group();this.bulletGroup=this.physics.add.group();this.orbGroup=this.physics.add.group();this.chestGroup=this.physics.add.group();
     this.physics.add.overlap(this.bulletGroup,this.enemyGroup,this.hitEnemy,null,this);
@@ -45,6 +49,13 @@ class Arena extends Phaser.Scene {
     this.physics.add.overlap(this.player,this.chestGroup,this.collectChest,null,this);
     this.keys=this.input.keyboard.addKeys("W,A,S,D,UP,DOWN,LEFT,RIGHT");this.abilityKey=this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);this.abilityCooldown=0;
     this.resetRun();this.scene.pause();
+  }
+  createSpriteAnimations(){
+    const rows=[{name:"idle",row:0,rate:5,repeat:-1},{name:"walk",row:1,rate:9,repeat:-1},{name:"attack",row:2,rate:12,repeat:0}];
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto","fiscal-do-pix","boitata","mula-sem-cabeca"]){
+      const key=(["fiscal-do-pix","boitata","mula-sem-cabeca"].includes(id)?"boss_":"char_")+id;
+      rows.forEach(a=>this.anims.create({key:key+"_"+a.name,frames:this.anims.generateFrameNumbers(key,{start:a.row*4,end:a.row*4+3}),frameRate:a.rate,repeat:a.repeat}));
+    }
   }
   makeTextures(){
     const g=this.make.graphics({x:0,y:0,add:false});
@@ -261,9 +272,9 @@ class Arena extends Phaser.Scene {
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=60;this.bossCount=0;
     this.selectedCharacter=characterProfiles[this.selectedCharacter]?this.selectedCharacter:"sobrevivente";
     const profile=characterProfiles[this.selectedCharacter],permanent=metaProgress.upgrades;
-    const maxHp=profile.hp+permanent.hp*8;
+    const maxHp=profile.hp+permanent.hp*8;this.playerTextureKey=profile.texture;this.playerAttackTimer=0;
     this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,xpMultiplier:profile.xpMultiplier||1,weaponLevel:1,startingWeapon:profile.weapon};
-    this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
+    this.player.setTexture(profile.texture,0).setPosition(W/2,H/2).setAlpha(1).setRotation(0);this.player.play(profile.texture+"_idle",true);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
   }
@@ -278,7 +289,7 @@ class Arena extends Phaser.Scene {
   startRun(){this.selectedCharacter=characterProfiles[metaProgress.selectedCharacter]?metaProgress.selectedCharacter:"sobrevivente";this.resetRun();this.active=true;this.updateAbilityButton();ui.start.classList.add("hidden");ui.gameover.classList.add("hidden");this.scene.resume();}
   update(t,dt){
     if(!this.active)return;
-    const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.invuln=Math.max(0,this.invuln-d);this.regenClock=(this.regenClock||0)+d;if(this.playerStats.regen>0&&this.regenClock>=8){this.regenClock-=8;const healed=Math.min(this.playerStats.regen,this.playerStats.maxHp-this.playerStats.hp);if(healed>0){this.playerStats.hp+=healed;this.updateHud();}}const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
+    const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.playerAttackTimer=Math.max(0,(this.playerAttackTimer||0)-d);this.invuln=Math.max(0,this.invuln-d);this.regenClock=(this.regenClock||0)+d;if(this.playerStats.regen>0&&this.regenClock>=8){this.regenClock-=8;const healed=Math.min(this.playerStats.regen,this.playerStats.maxHp-this.playerStats.hp);if(healed>0){this.playerStats.hp+=healed;this.updateHud();}}const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
     const spawnEvery=Math.max(380,1250-this.elapsed*8);
     if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(70,24+Math.floor(this.elapsed/12));if(this.enemies.length<enemyLimit)this.spawnEnemy();}
@@ -294,7 +305,7 @@ class Arena extends Phaser.Scene {
     this.player.setVelocity(x*this.playerStats.speed,y*this.playerStats.speed);
     const moving=Boolean(x||y),breath=Math.sin(this.elapsed*(moving?17:3.2));
     this.player.setScale(1+(moving?breath*.035:breath*.018));
-    this.player.setRotation(moving?Math.sin(this.elapsed*13)*.025:0);
+    this.player.setRotation(moving?Math.sin(this.elapsed*13)*.025:0);if(this.playerAttackTimer<=0){const anim=this.playerTextureKey+(moving?"_walk":"_idle");if(this.player.anims.currentAnim?.key!==anim)this.player.play(anim,true);}
     if(x)this.player.setFlipX(x<0);
     if(this.invuln>0)this.player.setAlpha(Math.floor(this.invuln*12)%2?.35:1);else this.player.setAlpha(1);
   }
@@ -310,8 +321,8 @@ class Arena extends Phaser.Scene {
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
-    const bossType=this.bossCount%3;this.bossCount++;const bossData=[{texture:"boss",name:"Fiscal do Pix",hp:24,speed:38,damage:25,scale:1.45},{texture:"boitata",name:"Boitatá",hp:34,speed:52,damage:29,scale:1.35},{texture:"mula",name:"Mula-sem-cabeça",hp:40,speed:44,damage:31,scale:1.5}][bossType];
-    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;boss.hp=bossData.hp+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=bossData.speed;boss.damage=bossData.damage;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
+    const bossType=this.bossCount%3;this.bossCount++;const bossData=[{texture:"boss_fiscal-do-pix",name:"Fiscal do Pix",hp:24,speed:38,damage:25,scale:1},{texture:"boss_boitata",name:"Boitatá",hp:34,speed:52,damage:29,scale:1},{texture:"boss_mula-sem-cabeca",name:"Mula-sem-cabeça",hp:40,speed:44,damage:31,scale:1}][bossType];
+    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.play(bossData.texture+"_idle");boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;boss.hp=bossData.hp+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=bossData.speed;boss.damage=bossData.damage;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
   }
   moveEnemies(){
     for(const e of this.enemies){
@@ -329,6 +340,7 @@ class Arena extends Phaser.Scene {
   }
   autoShoot(){
     const alive=this.enemies.filter(e=>e.active);if(!alive.length)return;
+    this.playerAttackTimer=.28;this.player.play(this.playerTextureKey+"_attack",true);
     alive.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y));
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
@@ -419,8 +431,13 @@ function persistMetaProgress(){try{localStorage.setItem(META_KEY,JSON.stringify(
 function selectCharacter(id){
   if(!Object.hasOwn(characterProfiles,id))return false;
   metaProgress.selectedCharacter=id;
-  scene().selectedCharacter=id;
-  document.querySelectorAll("[data-character]").forEach(button=>{const selected=button.dataset.character===id;button.classList.toggle("selected",selected);button.setAttribute("aria-pressed",String(selected));});
+  const arena=game.scene.getScene("arena");
+  if(arena)arena.selectedCharacter=id;
+  document.querySelectorAll("[data-character]").forEach(button=>{
+    const selected=button.dataset.character===id;
+    button.classList.toggle("selected",selected);
+    button.setAttribute("aria-pressed",String(selected));
+  });
   const label=document.querySelector("#selected-character-label");
   if(label)label.textContent=`SELECIONADO: ${characterProfiles[id].name.toUpperCase()}`;
   persistMetaProgress();
@@ -429,7 +446,12 @@ function selectCharacter(id){
 document.querySelector("#start-btn").addEventListener("click",()=>{scene().startRun();});
 document.querySelector("#restart-btn").addEventListener("click",()=>{ui.gameover.classList.add("hidden");scene().startRun();});
 const touch={up:false,down:false,left:false,right:false};scene().touch=touch;scene().renderMetaShop();ui.abilityButton.addEventListener("click",()=>scene().triggerAbility());
-document.querySelectorAll("[data-character]").forEach(button=>{const choose=event=>{event.preventDefault();selectCharacter(button.dataset.character);};button.addEventListener("pointerdown",choose,{passive:false});button.addEventListener("click",event=>{if(event.detail===0)choose(event);});});
+document.addEventListener("click",event=>{
+  const button=event.target.closest?.("[data-character]");
+  if(!button)return;
+  event.preventDefault();
+  selectCharacter(button.dataset.character);
+},true);
 selectCharacter(metaProgress.selectedCharacter);
 document.querySelectorAll("[data-meta-upgrade]").forEach(button=>button.addEventListener("click",()=>scene().buyMetaUpgrade(button.dataset.metaUpgrade)));
 document.querySelectorAll("[data-key]").forEach(btn=>{
