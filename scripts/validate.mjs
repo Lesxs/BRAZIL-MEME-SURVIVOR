@@ -43,3 +43,8 @@ assert.ok(game.includes("spawnChest(x,y)"), "Surgimento de baú após chefe não
 assert.ok(game.includes("showChestRewards()"), "Tela de recompensas do baú não encontrada");
 assert.ok(game.includes('rarity:"ÉPICO"'), "Recompensas épicas não encontradas");
 assert.ok(css.includes(".upgrade-card.rarity-epico"), "Estilo de raridade épica não encontrado");
+
+assert.ok(game.includes("weaponLevel:1"), "Nível inicial da arma não encontrado");
+assert.ok(game.includes("count=level===1?1:level===2?3:5"), "Disparos evolutivos não encontrados");
+assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
+assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
