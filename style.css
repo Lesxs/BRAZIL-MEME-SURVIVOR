@@ -8,3 +8,7 @@
 .play-btn{position:relative;z-index:2;min-width:190px;padding:20px 38px;font-size:15px;letter-spacing:.18em;border-radius:9px;box-shadow:0 7px 0 #729a43,0 12px 35px #0008}
 @keyframes meme-float{0%,100%{translate:0 0}50%{translate:0 -9px}}
 @media(max-width:600px){.meme-wall{grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));padding:14px;gap:9px;transform:rotate(-4deg) scale(1.04)}.meme-sticker{font-size:clamp(30px,10vw,58px);border-radius:12px}.play-btn{min-width:160px;padding:17px 30px}}
+
+/* HUD de vida */
+.health-wrap{flex:1;min-width:130px;padding-right:16px}.health-track{height:7px;border-radius:8px;background:#30384a;overflow:hidden}.health-track div{height:100%;width:100%;background:linear-gradient(90deg,#e85d5d,#ff9b70);border-radius:8px;transition:width .2s}.health-wrap .xp-label{justify-content:space-between}
+@media(max-width:700px){.health-wrap{flex-basis:calc(50% - 8px);min-width:110px;padding-right:0}.xp-wrap{flex-basis:calc(50% - 8px)}}
