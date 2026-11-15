@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-Roguelite de sobrevivência em arena com humor e referências à cultura brasileira, desenvolvido em Phaser 3.
+Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
 ## Como jogar
 - **WASD / setas:** movimentar.
@@ -8,11 +8,15 @@ Roguelite de sobrevivência em arena com humor e referências à cultura brasile
 - **Ataque:** automático contra o inimigo mais próximo.
 - **Objetivo:** sobreviver, derrotar inimigos, coletar XP e escolher melhorias ao subir de nível.
 
-## Inimigos
-- **Pombo:** inimigo básico.
-- **Capivara:** resistente, lenta e concede mais experiência.
-- **Vendedor:** forte, causa mais dano e concede mais experiência.
-- **Chefe:** surge a cada 60 segundos, tem muita vida e oferece recompensa especial de XP e moedas.
+## Elenco brasileiro
+- **Pombo ladrão:** inimigo comum.
+- **Cachorro caramelo:** resistente e equilibrado.
+- **Capivara braba:** resistente e mais lenta.
+- **Pernilongo de madrugada:** muito rápido e irritante.
+- **Vendedor do centro:** inimigo especial, forte e resistente.
+- **Fiscal do Pix:** chefe que aparece a cada 60 segundos e oferece recompensa especial.
+
+A direção de arte e os próximos personagens devem continuar ligados a memes, cultura popular e referências brasileiras. Evitar inimigos genéricos sem identidade temática.
 
 ## Progressão
 Colete esferas verdes para ganhar XP. Escolha melhorias de dano, velocidade, ataque, projéteis, moedas ou vida. Evoluções acumuladas são processadas uma por vez.
@@ -20,8 +24,11 @@ Colete esferas verdes para ganhar XP. Escolha melhorias de dano, velocidade, ata
 ## Desempenho
 A quantidade de inimigos comuns aumenta gradualmente e tem limite de 70 simultâneos. O processamento dos inimigos evita cópias desnecessárias da lista a cada quadro.
 
+## Áudio
+A trilha sonora original será integrada posteriormente, quando o arquivo de música criado para o jogo estiver disponível.
+
 ## Validação automática
-O GitHub Actions verifica a sintaxe JavaScript e confere referências essenciais entre HTML e JavaScript, além de validar a presença das mecânicas de desempenho e do chefe.
+O GitHub Actions verifica a sintaxe JavaScript e confere referências essenciais entre HTML e JavaScript, além de validar as mecânicas de desempenho, chefes e personagens brasileiros.
 
 ## Publicação
 O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages após push na branch `main`.
