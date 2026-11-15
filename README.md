@@ -133,3 +133,11 @@ Para gerar localmente: `python -m pip install pillow` e `python tools/generate_s
 - Chefes a cada 90 segundos, mais lentos e com dano e escala de vida menores.
 - XP mais acessível, raridades raras/épicas mais frequentes e itens fortalecidos.
 - Cartões de recompensa redesenhados com maior destaque visual.
+
+
+## Versão 0.9.4 — recompensas mais consistentes
+- Corrigidos bônus dos itens para que os efeitos reais correspondam às descrições.
+- Melhorias de nível agora exibem raridade com a identidade visual dos baús.
+- Nova melhoria Água de Coco Gelada recupera 30% da vida máxima.
+- Abaixo de 40% de vida, a escolha de nível garante a opção de cura, se ela ainda não estiver entre as opções.
+- Validador atualizado para conferir os bônus e a versão atual.

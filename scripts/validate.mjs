@@ -14,7 +14,7 @@ const missing = [...new Set(selectors)].filter(id => !html.includes('id="' + id 
 
 assert.deepEqual(missing, [], "IDs usados pelo JavaScript e ausentes no HTML: " + missing.join(", "));
 assert.ok(html.includes("phaser@3.80.1"), "Biblioteca Phaser 3.80.1 não encontrada");
-assert.ok(html.includes('src="./src/game.js?v=0.9.3"'), "Entrada do jogo com cache busting não encontrada no HTML");
+assert.ok(html.includes('src="./src/game.js?v=0.9.4"'), "Entrada do jogo com cache busting não encontrada no HTML");
 assert.ok(game.includes("processLevelUps("), "Rotina de evolução de nível não encontrada");
 assert.ok(game.includes("Math.min(32,12+Math.floor(this.elapsed/35))"), "Limite de inimigos simultâneos não encontrado");
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
@@ -79,15 +79,15 @@ assert.ok(css.includes(".ability-btn.ready"), "Estilo do botão de habilidade n�
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
-assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
-assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recompensa imediata de moedas do baú não encontrada");
+assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+15 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
+assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?15:20'), "Recompensa imediata de moedas do baú não encontrada");
 
 assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"') && html.includes('data-character="boto"'), "Seleção dos seis personagens jogáveis não encontrada");
 assert.ok(html.includes('id="selected-character-label"') && html.includes('aria-pressed="true"'), "Estado visual e acessível do personagem selecionado não encontrado");
 assert.ok(game.includes("function selectCharacter(id)") && game.includes('document.addEventListener("click",event=>'), "Seleção por mouse, toque e teclado não está conectada");
 assert.ok(game.includes('this.selectedCharacter=characterProfiles[metaProgress.selectedCharacter]?metaProgress.selectedCharacter:"sobrevivente";this.resetRun();'), "Início da partida não sincroniza o personagem escolhido");
 assert.ok(game.includes("function persistMetaProgress()") && game.includes("try{localStorage.setItem(META_KEY"), "Persistência da seleção não trata bloqueio do armazenamento local");
-assert.ok(html.includes("./src/game.js?v=0.9.3") && html.includes("./style.css?v=0.9.3"), "Cache busting da versão não encontrado");
+assert.ok(html.includes("./src/game.js?v=0.9.4") && html.includes("./style.css?v=0.9.4"), "Cache busting da versão não encontrado");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
 assert.ok(game.includes("this.player.setTexture(profile.texture,0)"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
@@ -111,7 +111,7 @@ assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontr
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options") && css.includes("#start-screen .title-screen-art{pointer-events:none}") && css.includes("#start-screen .character-options{position:relative;z-index:4}"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.9.3'), 'Versão do jogo não foi atualizada para 0.5.0');
+assert.ok(html.includes('VERSÃO 0.9.4'), 'Versão do jogo não foi atualizada para 0.5.0');
 
 assert.ok(game.includes('damage:1.08'), "Passiva de dano do Sobrevivente não encontrada");
 assert.ok(game.includes('coinBonus:1'), "Bônus de moedas do Motoboy não encontrado");
@@ -121,8 +121,8 @@ assert.ok(game.includes('coinBonus:profile.coinBonus||0'), "Passivas não são c
 assert.ok(game.includes('Math.random()<this.playerStats.dodgeChance'), "Esquiva do Saci não está aplicada ao receber dano");
 assert.ok(game.includes('e.damage*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
 assert.ok(html.includes('+8% dano · Espeto') && html.includes('+1 moeda por eliminação · Chinelo') && html.includes('20% menos dano · Estilingue') && html.includes('15% de esquiva · Redemoinho'), "Passivas não estão descritas nos cartões");
-assert.ok(html.includes('VERSÃO 0.9.3'), "Versão não foi atualizada para 0.9.3");
-console.log("Versão 0.9.3: passivas exclusivas dos seis personagens conferidas.");
+assert.ok(html.includes('VERSÃO 0.9.4'), "Versão não foi atualizada para 0.9.4");
+console.log("Versão 0.9.4: passivas exclusivas dos seis personagens conferidas.");
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
 
@@ -132,9 +132,9 @@ assert.ok(game.includes("regen:profile.regen||0"), "Regeneração não é carreg
 assert.ok(game.includes("this.playerStats.regen>=0") || game.includes("this.playerStats.regen>0&&this.regenClock>=8"), "Regeneração periódica não foi implementada");
 assert.ok(game.includes("this.playerStats.hp+=healed"), "Cura periódica não é aplicada à vida do jogador");
 assert.ok(html.includes('data-character="curupira"') && html.includes('Recupera 2 de vida a cada 8s'), "Curupira não aparece corretamente na seleção");
-assert.ok(html.includes('VERSÃO 0.9.3'), "Versão 0.9.3 não aparece no HTML");
+assert.ok(html.includes('VERSÃO 0.9.4'), "Versão 0.9.4 não aparece no HTML");
 assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
-console.log("Versão 0.9.3: Curupira, sprite, seleção e regeneração periódica conferidos.");
+console.log("Versão 0.9.4: Curupira, sprite, seleção e regeneração periódica conferidos.");
 
 assert.ok(resetRunBody.includes("this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;"), "Relógios de regeneração, invulnerabilidade e habilidade não são reiniciados em nova partida");
 assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"char_boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
@@ -143,7 +143,7 @@ assert.ok(game.includes("xpMultiplier:profile.xpMultiplier||1") && game.includes
 assert.ok(game.includes('this.playerStats.startingWeapon==="onda"?"bullet_onda"'), "Arma Onda não está conectada ao disparo");
 assert.ok(html.includes('+20% de XP · Onda'), "Passiva do Boto não aparece no cartão");
 
-// 0.9.3: spritesheets, animações e seleção delegada.
+// 0.9.4: spritesheets, animações e seleção delegada.
 for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])assert.ok(existsSync(`assets/sprites/characters/${id}.png`),`Spritesheet de ${id} ausente`);
 for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])assert.ok(existsSync(`assets/sprites/bosses/${id}.png`),`Spritesheet de ${id} ausente`);
 assert.ok(game.includes('this.load.spritesheet("char_"+id'),"Carregamento das spritesheets dos personagens ausente");
@@ -156,3 +156,7 @@ assert.ok(game.includes('this.load.spritesheet("enemy_"+id'));
 assert.ok(game.includes('this.enemyGroup.create(x,y,"enemy_"+kind)'));
 assert.ok(game.includes("Math.max(950,1900-this.elapsed*3.5)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
+
+assert.ok(game.includes('name:"ÁGUA DE COCO GELADA"') && game.includes("p.maxHp*.3"),"Melhoria de recuperação de vida ausente");
+assert.ok(game.includes('rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum"'),"Raridade visual das melhorias de nível ausente");
+assert.ok(game.includes("p.damage*=1.45") && game.includes("p.speed*=1.35") && game.includes("p.maxHp+=45"),"Efeitos dos itens não correspondem às descrições");

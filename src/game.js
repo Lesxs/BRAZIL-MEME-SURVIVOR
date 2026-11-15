@@ -12,11 +12,11 @@ const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"char_sobrevi
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
-  {name:"ESPETO DE AÇO",desc:"+45% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
-  {name:"CALDO DE CANA",desc:"+35% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
-  {name:"FAROFA REFORÇADA",desc:"+45 de vida máxima e recupera 45.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
-  {name:"CHURRASCO DE RESPEITO",desc:"+75% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
-  {name:"GÁS DO BOTIJÃO",desc:"+45% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
+  {name:"ESPETO DE AÇO",desc:"+45% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.45},
+  {name:"CALDO DE CANA",desc:"+35% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.35},
+  {name:"FAROFA REFORÇADA",desc:"+45 de vida máxima e recupera 45.",rarity:"COMUM",apply:p=>{p.maxHp+=45;p.hp=Math.min(p.maxHp,p.hp+45)}},
+  {name:"CHURRASCO DE RESPEITO",desc:"+75% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.75},
+  {name:"GÁS DO BOTIJÃO",desc:"+80% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
   {name:"PIX DO MILHÃO",desc:"+15 moedas imediatamente.",rarity:"RARO",apply:p=>{}},
   {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 80.",rarity:"ÉPICO",apply:p=>{p.maxHp+=80;p.hp=p.maxHp}},
   {name:"CHINELO LENDÁRIO",desc:"+85% de velocidade e +50% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.85;p.damage*=1.5}},
@@ -25,12 +25,13 @@ const chestUpgrades = [
   {name:"CANHÃO DE FESTA JUNINA",desc:"Evolui o ataque para cinco projéteis por disparo.",rarity:"ÉPICO",apply:p=>p.weaponLevel=3}
 ];
 const upgrades = [
-  {name:"PESO DE RESPEITO",desc:"+25% de dano nos ataques.",apply:p=>p.damage*=1.25},
-  {name:"CHINELO TURBO",desc:"+18% de velocidade de movimento.",apply:p=>p.speed*=1.18},
-  {name:"CASCA GROSSA",desc:"+25 de vida máxima e cura 25.",apply:p=>{p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+25)}},
-  {name:"MIRA DE MILHÕES",desc:"+20% de velocidade de ataque.",apply:p=>p.fireRate*=.8},
-  {name:"PIX PREMIADO",desc:"+1 moeda extra por eliminação.",apply:p=>p.coinBonus++},
-  {name:"ENERGÉTICO DE GUARANÁ",desc:"+15% de velocidade dos projéteis.",apply:p=>p.bulletSpeed*=1.15}
+  {name:"PESO DE RESPEITO",desc:"+25% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.25},
+  {name:"CHINELO TURBO",desc:"+18% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.18},
+  {name:"CASCA GROSSA",desc:"+25 de vida máxima e cura 25.",rarity:"COMUM",apply:p=>{p.maxHp+=25;p.hp=Math.min(p.maxHp,p.hp+25)}},
+  {name:"MIRA DE MILHÕES",desc:"+20% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.8},
+  {name:"PIX PREMIADO",desc:"+1 moeda extra por eliminação.",rarity:"RARO",apply:p=>p.coinBonus++},
+  {name:"ENERGÉTICO DE GUARANÁ",desc:"+15% de velocidade dos projéteis.",rarity:"COMUM",apply:p=>p.bulletSpeed*=1.15},
+  {name:"ÁGUA DE COCO GELADA",desc:"Recupera 30% da vida máxima.",rarity:"RARO",apply:p=>{p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.3)}}
 ];
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
@@ -418,8 +419,8 @@ class Arena extends Phaser.Scene {
   moveOrbs(d){this.orbGroup.children.each(o=>{if(!o.active)return;const dist=Phaser.Math.Distance.Between(o.x,o.y,this.player.x,this.player.y);if(dist<105)this.physics.moveToObject(o,this.player,210);});}
   showLevelUp(){
     this.active=false;this.physics.pause();ui.levelScreen.classList.remove("hidden");ui.upgrades.innerHTML="";
-    const choices=Phaser.Utils.Array.Shuffle([...upgrades]).slice(0,3);
-    for(const item of choices){const btn=document.createElement("button");btn.className="upgrade-card";btn.innerHTML=`<b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);ui.levelScreen.classList.add("hidden");this.updateHud();if(this.xp>=this.xpNeed){this.processLevelUps();}else{this.active=true;this.physics.resume();}},{once:true});ui.upgrades.append(btn);}
+    const choices=Phaser.Utils.Array.Shuffle([...upgrades]).slice(0,3);if(this.playerStats.hp/this.playerStats.maxHp<.4){const heal=upgrades.find(item=>item.name==="ÁGUA DE COCO GELADA");if(heal&&!choices.includes(heal))choices[2]=heal;}
+    for(const item of choices){const btn=document.createElement("button");const rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum";btn.className="upgrade-card rarity-"+rarityClass;btn.innerHTML=`<small>${item.rarity} · MELHORIA</small><b>${item.name}</b><span>${item.desc}</span><i>ESCOLHER MELHORIA</i>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);ui.levelScreen.classList.add("hidden");this.updateHud();if(this.xp>=this.xpNeed){this.processLevelUps();}else{this.active=true;this.physics.resume();}},{once:true});ui.upgrades.append(btn);}
     this.updateHud();
   }
   updateHud(){
