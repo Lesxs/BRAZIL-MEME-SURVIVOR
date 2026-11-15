@@ -12,3 +12,6 @@
 /* HUD de vida */
 .health-wrap{flex:1;min-width:130px;padding-right:16px}.health-track{height:7px;border-radius:8px;background:#30384a;overflow:hidden}.health-track div{height:100%;width:100%;background:linear-gradient(90deg,#e85d5d,#ff9b70);border-radius:8px;transition:width .2s}.health-wrap .xp-label{justify-content:space-between}
 @media(max-width:700px){.health-wrap{flex-basis:calc(50% - 8px);min-width:110px;padding-right:0}.xp-wrap{flex-basis:calc(50% - 8px)}}
+
+/* Barra de vida do chefe: aparece somente durante o combate. */
+.boss-wrap{flex-basis:100%;min-width:100%;padding-top:2px}.boss-wrap.hidden{display:none}.boss-track{height:9px;border-radius:8px;background:#49313a;overflow:hidden}.boss-track div{height:100%;width:100%;background:linear-gradient(90deg,#a8324a,#ff657a);border-radius:8px;transition:width .15s}
