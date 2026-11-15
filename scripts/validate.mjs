@@ -50,6 +50,12 @@ assert.ok(game.includes("showChestRewards()"), "Tela de recompensas do baú não
 assert.ok(game.includes('rarity:"ÉPICO"'), "Recompensas épicas não encontradas");
 assert.ok(css.includes(".upgrade-card.rarity-epico"), "Estilo de raridade épica não encontrado");
 
+assert.ok(game.includes('g.generateTexture("player",40,40)'), "Sprite redesenhado do sobrevivente não encontrado");
+assert.ok(game.includes('g.generateTexture("pigeon",40,40)'), "Sprite redesenhado do pombo não encontrado");
+assert.ok(game.includes('g.generateTexture("boss",56,56)'), "Sprite redesenhado do Fiscal do Pix não encontrado");
+assert.ok(game.includes("Fachadas de comércio brasileiro"), "Cenário urbano brasileiro não encontrado");
+assert.ok(game.includes("Postes, árvores, bancos, bueiros"), "Elementos de ambientação da arena não encontrados");
+assert.ok(!game.includes("bg.lineStyle(1,0x243047,.65)"), "Grade genérica do cenário antigo ainda está presente");
 assert.ok(game.includes("weaponLevel:1"), "Nível inicial da arma não encontrado");
 assert.ok(game.includes("count=level===1?1:level===2?3:5"), "Disparos evolutivos não encontrados");
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
