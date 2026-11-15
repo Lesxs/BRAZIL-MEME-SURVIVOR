@@ -36,9 +36,9 @@ const upgrades = [
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.5",{frameWidth:48,frameHeight:48});
-    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.5",{frameWidth:80,frameHeight:80});
-    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.5",{frameWidth:40,frameHeight:40});
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.6",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.6",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.6",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -223,17 +223,17 @@ class Arena extends Phaser.Scene {
   drawArena(){
     const bg=this.add.graphics().setDepth(0);
     bg.fillStyle(0x263b38);bg.fillRect(0,0,W,H);
-    // Quadras e asfalto com textura discreta, sem grade de protótipo.
+    // Rua principal, asfalto gasto e calçadas de concreto.
     bg.fillStyle(0x52604d);bg.fillRect(0,0,W,72);bg.fillRect(0,H-70,W,70);
     bg.fillStyle(0x303a39);bg.fillRect(0,72,W,H-142);
     bg.fillStyle(0x394544);bg.fillRect(0,80,W,7);bg.fillRect(0,H-78,W,7);
-    // Calçadas, guias e faixas de pedestre.
     bg.fillStyle(0x9a927c);bg.fillRect(0,67,W,7);bg.fillRect(0,H-74,W,7);
     bg.fillStyle(0xe4d6ad,.7);for(let i=0;i<8;i++)bg.fillRect(410+i*19,72,10,34);
     bg.fillStyle(0xd9d1b8,.45);for(let i=0;i<8;i++)bg.fillRect(410+i*19,H-106,10,34);
-    // Fachadas de comércio brasileiro nas bordas superiores e inferiores.
+    // Fachadas de comércio e casas com cores variadas.
     const shops=[{x:22,w:150,c:0xc66c43},{x:202,w:128,c:0x527d70},{x:360,w:154,c:0xd1a65f},{x:548,w:135,c:0x6d8290},{x:715,w:210,c:0xb75c48}];
-    for(const s of shops){
+    for(let i=0;i<shops.length;i++){
+      const s=shops[i];
       bg.fillStyle(0x202a2b);bg.fillRoundedRect(s.x,9,s.w,53,4);
       bg.fillStyle(s.c);bg.fillRect(s.x+4,13,s.w-8,45);
       bg.fillStyle(0xf2d99b);bg.fillRect(s.x+9,20,s.w-18,5);
@@ -241,37 +241,75 @@ class Arena extends Phaser.Scene {
       bg.fillStyle(0x9ec0ad);for(let x=s.x+17;x<s.x+s.w-18;x+=26)bg.fillRect(x,34,17,17);
       bg.fillStyle(0x332b25);bg.fillRect(s.x+5,57,s.w-10,5);
       bg.fillStyle(0xf0c56b);bg.fillRect(s.x+8,14,s.w-16,3);
+      // Toldos listrados para quebrar grandes blocos de cor.
+      bg.fillStyle(i%2?0xe7d5a5:0xf0a45e);
+      for(let x=s.x+8;x<s.x+s.w-8;x+=18)bg.fillRect(x,25,9,5);
     }
-    // Casas e quiosques no lado de baixo, mantendo a área central livre.
     const stalls=[{x:35,w:125,c:0x8f4b34},{x:230,w:150,c:0x376b5a},{x:580,w:145,c:0xb67a3f},{x:790,w:130,c:0x42677c}];
-    for(const s of stalls){
+    for(let i=0;i<stalls.length;i++){
+      const s=stalls[i];
       bg.fillStyle(0x202929);bg.fillRect(s.x,H-65,s.w,54);
       bg.fillStyle(s.c);bg.fillRect(s.x+4,H-61,s.w-8,46);
       bg.fillStyle(0xe8c47d);bg.fillRect(s.x,H-65,s.w,8);
-      bg.fillStyle(0x293c3a);bg.fillRect(s.x+12,H-48,s.w-24,28);
+      bg.fillStyle(i%2?0x293c3a:0x34433b);bg.fillRect(s.x+12,H-48,s.w-24,28);
       bg.fillStyle(0x9dc5b1);bg.fillRect(s.x+17,H-45,18,17);
       bg.fillStyle(0x40352b);bg.fillRect(s.x+4,H-15,s.w-8,4);
+      bg.fillStyle(0xf0c56b);for(let x=s.x+8;x<s.x+s.w-8;x+=20)bg.fillRect(x,H-57,10,3);
     }
-    // Postes, árvores, bancos, bueiros e marcas de rua.
+    // Textura da calçada: juntas, rachaduras e remendos.
     const deco=this.add.graphics().setDepth(1);
+    deco.lineStyle(1,0x6f7568,.42);
+    for(let x=12;x<W;x+=38){deco.lineBetween(x,4,x,64);deco.lineBetween(x,H-64,x,H-5);}
+    for(let y=20;y<64;y+=22){deco.lineBetween(0,y,W,y);deco.lineBetween(0,H-y,W,H-y);}
+    // Árvores pequenas e postes de iluminação.
     for(let i=0;i<18;i++){
-      const x=18+i*54;
-      deco.fillStyle(0x1d2927);deco.fillCircle(x,91+(i%2)*12,12);
-      deco.fillStyle(0x49724f);deco.fillCircle(x-3,87+(i%2)*12,10);
-      deco.fillStyle(0x77583b);deco.fillRect(x-2,98+(i%2)*12,4,10);
-      if(i%3===0){deco.fillStyle(0x202a2b);deco.fillRect(x+17,104,3,32);deco.fillStyle(0xf3c56b);deco.fillCircle(x+18,103,4);}
+      const x=18+i*54,y=91+(i%2)*12;
+      deco.fillStyle(0x77583b);deco.fillRect(x-2,y+7,4,18);
+      deco.fillStyle(0x1d2927);deco.fillCircle(x,y,12);
+      deco.fillStyle(0x49724f);deco.fillCircle(x-3,y-4,10);
+      deco.fillStyle(0x75a45e,.8);deco.fillCircle(x-6,y-8,3);
+      if(i%3===0){
+        deco.fillStyle(0x202a2b);deco.fillRect(x+17,104,3,32);
+        deco.fillStyle(0xf3c56b);deco.fillCircle(x+18,103,4);
+        deco.fillStyle(0xffe7a1,.22);deco.fillCircle(x+18,108,9);
+      }
     }
+    // Bueiros, remendos de asfalto e manchas de uso.
     for(let i=0;i<7;i++){
       const x=95+i*125,y=H/2+(i%2?54:-58);
       deco.fillStyle(0x1c2525);deco.fillEllipse(x,y,31,15);
       deco.lineStyle(2,0x77827a,.7);deco.strokeEllipse(x,y,31,15);
+      deco.lineStyle(1,0x68746d,.65);for(let k=-9;k<=9;k+=6)deco.lineBetween(x-10,y+k*.35,x+10,y+k*.35);
       deco.fillStyle(0x69736a);deco.fillCircle(x,y,3);
     }
-    // Linhas de pista e pequenos detalhes urbanos.
-    deco.lineStyle(2,0xb5a77e,.45);
-    for(let x=25;x<W;x+=95){deco.lineBetween(x,270,x+42,270);deco.lineBetween(x,282,x+42,282);}
-    deco.fillStyle(0xe6d6a8,.55);deco.fillCircle(480,270,3);
-    deco.lineStyle(2,0x152321,.8);deco.strokeRect(7,7,W-14,H-14);
+    for(let i=0;i<12;i++){
+      const x=42+i*79,y=145+(i%4)*73;
+      deco.fillStyle(i%2?0x3c4843:0x394440,.5);deco.fillEllipse(x,y,18+(i%3)*5,5+(i%2)*2);
+      if(i%3===0){deco.lineStyle(1,0x73796a,.4);deco.lineBetween(x-8,y+3,x-2,y+7);deco.lineBetween(x-2,y+7,x+5,y+4);}
+    }
+    // Fiação aérea, placas, caixas de energia e detalhes de bairro.
+    const streetArt=this.add.graphics().setDepth(1.15);
+    streetArt.lineStyle(2,0x172523,.85);
+    streetArt.lineBetween(0,74,220,83);streetArt.lineBetween(220,83,455,72);streetArt.lineBetween(455,72,710,82);streetArt.lineBetween(710,82,W,74);
+    streetArt.lineStyle(1,0x202a28,.7);
+    streetArt.lineBetween(0,H-76,240,H-84);streetArt.lineBetween(240,H-84,520,H-74);streetArt.lineBetween(520,H-74,W,H-82);
+    for(const x of [92,278,492,674,866]){
+      streetArt.fillStyle(0x252f2d);streetArt.fillRect(x,76,5,15);
+      streetArt.fillStyle(0x4b6253);streetArt.fillRect(x-3,88,11,7);
+      streetArt.fillStyle(0x202a2b);streetArt.fillRoundedRect(x+8,92,13,18,2);
+      streetArt.fillStyle(0x7ca16a);streetArt.fillRect(x+11,96,7,3);
+    }
+    // Pinturas e cartazes estilizados nas paredes, sem texto ilegível.
+    for(const x of [72,250,425,620,820]){
+      streetArt.fillStyle(0x243638,.85);streetArt.fillRect(x,42,24,10);
+      streetArt.fillStyle(0xe7c47a);streetArt.fillRect(x+3,45,18,2);
+      streetArt.fillStyle(0xd96e4e,.9);streetArt.fillRect(x+5,48,5,2);
+    }
+    // Faixas da pista e contorno de segurança.
+    streetArt.lineStyle(2,0xb5a77e,.45);
+    for(let x=25;x<W;x+=95){streetArt.lineBetween(x,270,x+42,270);streetArt.lineBetween(x,282,x+42,282);}
+    streetArt.fillStyle(0xe6d6a8,.55);streetArt.fillCircle(480,270,3);
+    streetArt.lineStyle(2,0x152321,.8);streetArt.strokeRect(7,7,W-14,H-14);
   }
   resetRun(){
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=90;this.bossCount=0;
