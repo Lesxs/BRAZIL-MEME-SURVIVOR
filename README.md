@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.5.0 — O Saci entra na arena**
+**Versão 0.6.0 — Passivas exclusivas dos personagens**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -78,3 +78,12 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Nova arma inicial: Redemoinho, projétil visual de vento e folhas exclusivo do Saci no primeiro estágio.
 - Menu de personagens reorganizado em quatro colunas no desktop e duas no celular.
 - A seleção do Saci é salva junto com a progressão local existente.
+
+
+## Novidades da versão 0.6.0
+- Cada personagem agora possui uma habilidade passiva própria, além de sua arma inicial.
+- **Sobrevivente:** causa 8% mais dano.
+- **Motoboy do Grau:** recebe uma moeda adicional por eliminação.
+- **Capivara Braba:** recebe 20% menos dano.
+- **Saci-pererê:** tem 15% de chance de esquivar completamente de um golpe.
+- Os cartões de seleção mostram os efeitos passivos antes do início da partida.

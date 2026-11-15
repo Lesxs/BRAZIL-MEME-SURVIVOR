@@ -8,7 +8,7 @@ const ui = {
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
 const META_KEY="brasil-meme-survivors-meta-v1";
-const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1,fireRate:650,weapon:"espeto",desc:"Equilibrado: começa com Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",desc:"Muito rápido: começa arremessando Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",desc:"Resistente: começa com Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",desc:"Muito veloz: começa com Redemoinho."}};
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."}};
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
@@ -238,7 +238,7 @@ class Arena extends Phaser.Scene {
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;
     const profile=characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente,permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;
-    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:0,weaponLevel:1,startingWeapon:profile.weapon};
+    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,weaponLevel:1,startingWeapon:profile.weapon};
     this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
@@ -346,7 +346,7 @@ class Arena extends Phaser.Scene {
     ui.abilityButton.classList.toggle("ready",ready&&this.active);
   }
   hitPlayer(p,e){
-    if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
+    if(!this.active||this.invuln>0||!e.active)return;if(this.playerStats.dodgeChance>0&&Math.random()<this.playerStats.dodgeChance){this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0);return;}this.playerStats.hp-=e.damage*(1-(this.playerStats.damageReduction||0));this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
     if(!e.isBoss){this.damageEnemy(e,e.hp);}
     if(this.playerStats.hp<=0)this.endRun();
   }
