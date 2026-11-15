@@ -86,3 +86,18 @@ body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(ellipse a
 .art-label-left{left:7%}.art-label-right{right:7%;top:29%;transform:rotate(7deg)}
 @media(max-width:700px){body{padding:10px}.topbar{margin-bottom:14px}.brand{font-size:9px;letter-spacing:.04em}.brand-mark{width:32px;height:32px}.top-tag{font-size:7px}.game-panel{padding:12px;border-radius:6px}.game-heading{align-items:flex-start;gap:10px;flex-direction:column}.game-heading h1{font-size:32px}.status-pill{font-size:7px}.hud{padding:10px;gap:10px}.hud-stat{min-width:61px;padding-right:9px;margin-right:0}.hud-stat strong{font-size:19px}.hud-stat small,.xp-label small{font-size:7px}.xp-wrap{flex-basis:calc(50% - 6px);min-width:110px}.health-wrap{flex-basis:calc(50% - 6px);min-width:110px;padding-right:0}.arena-wrap{min-height:260px}.screen-overlay{padding:12px}.screen-overlay h2{font-size:24px}.screen-overlay>p:not(.eyebrow){font-size:10px}.upgrade-list{grid-template-columns:1fr;max-width:310px;gap:6px}.upgrade-card{min-height:0;padding:10px}.mobile-controls{display:block}.game-footer{font-size:7px}.footer-tip{display:none}.site-footer{font-size:7px}.sun-disc{width:72vw;top:39%}.hero-silhouette{bottom:9%;transform:translateX(-50%) scale(.8)}.art-label{font-size:6px;top:12%;padding:6px}.art-label-right{top:24%}.game-logo{font-size:clamp(46px,13vw,72px)!important}.start-copy{max-width:270px;text-align:center}.start-footnote{font-size:6px!important;margin-top:18px!important}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+/* Acabamento da arena urbana e sprites em pixel art */
+.arena-wrap{background:#303a39;border-color:#7b8069;box-shadow:inset 0 0 0 5px #182421,0 16px 42px #0007}
+#game canvas{image-rendering:pixelated;image-rendering:crisp-edges}
+.hud{background:linear-gradient(110deg,#111b1b,#1a2825);border-color:#53645a}
+.hud-stat strong{color:#f5edcf;text-shadow:0 2px 0 #0007}
+.health-track div{box-shadow:0 0 10px #ff775577}
+.xp-track div{box-shadow:0 0 10px #b8f36b66}
+@media(max-width:700px){
+  .arena-wrap{min-height:230px}
+  #game canvas{max-height:72vh}
+  .hud-stat{flex:1 1 20%;min-width:0}
+  .hud-stat strong{font-size:18px}
+  .health-wrap,.xp-wrap{flex:1 1 45%}
+}
