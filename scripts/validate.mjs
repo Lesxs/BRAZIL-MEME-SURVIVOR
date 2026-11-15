@@ -14,7 +14,7 @@ const missing = [...new Set(selectors)].filter(id => !html.includes('id="' + id 
 
 assert.deepEqual(missing, [], "IDs usados pelo JavaScript e ausentes no HTML: " + missing.join(", "));
 assert.ok(html.includes("phaser@3.80.1"), "Biblioteca Phaser 3.80.1 não encontrada");
-assert.ok(html.includes('src="./src/game.js"'), "Entrada do jogo não encontrada no HTML");
+assert.ok(html.includes('src="./src/game.js?v=0.9.0"'), "Entrada do jogo com cache busting não encontrada no HTML");
 assert.ok(game.includes("processLevelUps("), "Rotina de evolução de nível não encontrada");
 assert.ok(game.includes("Math.min(70,24+Math.floor(this.elapsed/12))"), "Limite de inimigos simultâneos não encontrado");
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
