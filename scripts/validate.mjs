@@ -62,6 +62,10 @@ assert.ok(game.includes('generateTexture("bullet_espeto",14,16)'), "Projétil de
 assert.ok(game.includes('generateTexture("bullet_rojao",16,18)'), "Projétil de rojão não encontrado");
 assert.ok(game.includes('generateTexture("bullet_fogos",16,16)'), "Projétil de fogos de artifício não encontrado");
 assert.ok(game.includes('const projectile=level===1?"bullet_espeto":level===2?"bullet_rojao":"bullet_fogos"'), "Seleção visual de projéteis por evolução não encontrada");
+assert.ok(game.includes("this.player.setScale(1+(moving?breath*.035:breath*.018))"), "Animação de respiração e movimento do jogador não encontrada");
+assert.ok(game.includes("e.setScale(e.baseScale*(1+(e.isBoss?pulse*.045:e.isMosquito?pulse*.055:pulse*.025)))"), "Animação procedural dos inimigos não encontrada");
+assert.ok(game.includes("spawnHitEffect(x,y,color=0xffd16b)"), "Efeito visual de impacto não encontrado");
+assert.ok(game.includes("this.cameras.main.shake(260,.004)"), "Impacto de entrada do chefe não encontrado");
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
