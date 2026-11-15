@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#10131d">
+  <meta name="description" content="BRASIL: MEME SURVIVORS — sobreviva ao caos brasileiro.">
+  <title>BRASIL: MEME SURVIVORS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./style.css">
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Brasil Meme Survivors início"><span class="brand-mark">B!</span><span>BRASIL <b>MEME</b> SURVIVORS</span></a>
+      <div class="top-tag">PROTÓTIPO 0.1 <i></i> ALPHA</div>
+    </header>
+    <section class="game-panel">
+      <div class="game-heading">
+        <div><p class="eyebrow">SOBREVIVA AO CAOS</p><h1>A arena é sua.</h1><p class="subheading">Colete XP. Fique mais forte. Não deixe o pombo te pegar.</p></div>
+        <div class="status-pill"><span></span> JOGO CARREGADO</div>
+      </div>
+      <div class="hud">
+        <div class="hud-stat"><small>TEMPO</small><strong id="time">00:00</strong></div>
+        <div class="hud-stat"><small>NÍVEL</small><strong id="level">01</strong></div>
+        <div class="hud-stat"><small>ELIMINAÇÕES</small><strong id="kills">0</strong></div>
+        <div class="hud-stat"><small>MOEDAS</small><strong id="coins">0</strong></div>
+        <div class="xp-wrap"><div class="xp-label"><small>EXPERIÊNCIA</small><small id="xp-label">0 / 5</small></div><div class="xp-track"><div id="xp-fill"></div></div></div>
+      </div>
+      <div class="arena-wrap">
+        <div id="game"></div>
+        <div class="screen-overlay" id="start-screen">
+          <div class="pixel-stamp">BMS</div><p class="eyebrow">MISSÃO: SOBREVIVER</p><h2>O BRASIL<br><em>É SELVAGEM.</em></h2>
+          <p>Uma horda de criaturas está vindo. Você sabe o que fazer.</p>
+          <button class="primary-btn" id="start-btn">COMEÇAR PARTIDA <span>→</span></button>
+          <small class="hint">WASD OU SETAS PARA SE MOVER</small>
+        </div>
+        <div class="screen-overlay hidden" id="level-screen">
+          <p class="eyebrow">VOCÊ FICOU MAIS FORTE</p><h2>SUBIU DE NÍVEL!</h2><p>Escolha uma melhoria:</p>
+          <div class="upgrade-list" id="upgrade-list"></div>
+        </div>
+        <div class="screen-overlay hidden" id="gameover-screen">
+          <p class="eyebrow">FIM DE JOGO</p><h2>QUE FASE, HEIN.</h2><p id="final-stats">Você sobreviveu por 00:00.</p>
+          <button class="primary-btn" id="restart-btn">TENTAR DE NOVO <span>↻</span></button>
+        </div>
+        <div class="mobile-controls" aria-hidden="true"><div class="dpad"><button data-key="up">▲</button><div><button data-key="left">◀</button><button data-key="down">▼</button><button data-key="right">▶</button></div></div></div>
+      </div>
+      <footer class="game-footer"><span><i class="keycap">WASD</i> MOVIMENTAR</span><span><i class="keycap">AUTO</i> ATAQUE AUTOMÁTICO</span><span class="footer-tip">DICA: COLETE AS ESFERAS VERDES</span></footer>
+    </section>
+    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.1.0 · PHASER 3</span></footer>
+  </main>
+  <script type="module" src="./src/game.js"></script>
+</body>
+</html>
