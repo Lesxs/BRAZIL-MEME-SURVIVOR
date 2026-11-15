@@ -111,7 +111,7 @@ assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontr
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options") && css.includes("#start-screen .title-screen-art{pointer-events:none}") && css.includes("#start-screen .character-options{position:relative;z-index:4}"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.9.4'), 'Versão do jogo não foi atualizada para 0.5.0');
+assert.ok(html.includes('VERSÃO 0.9.4'), 'Versão do jogo não foi atualizada para 0.9.4');
 
 assert.ok(game.includes('damage:1.08'), "Passiva de dano do Sobrevivente não encontrada");
 assert.ok(game.includes('coinBonus:1'), "Bônus de moedas do Motoboy não encontrado");
@@ -119,7 +119,7 @@ assert.ok(game.includes('damageReduction:.2'), "Redução de dano da Capivara n�
 assert.ok(game.includes('dodgeChance:.15'), "Esquiva do Saci não encontrada");
 assert.ok(game.includes('coinBonus:profile.coinBonus||0'), "Passivas não são carregadas nos atributos da partida");
 assert.ok(game.includes('Math.random()<this.playerStats.dodgeChance'), "Esquiva do Saci não está aplicada ao receber dano");
-assert.ok(game.includes('e.damage*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
+assert.ok(game.includes('e.damage*(e.isBoss?.58:.62)*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
 assert.ok(html.includes('+8% dano · Espeto') && html.includes('+1 moeda por eliminação · Chinelo') && html.includes('20% menos dano · Estilingue') && html.includes('15% de esquiva · Redemoinho'), "Passivas não estão descritas nos cartões");
 assert.ok(html.includes('VERSÃO 0.9.4'), "Versão não foi atualizada para 0.9.4");
 console.log("Versão 0.9.4: passivas exclusivas dos seis personagens conferidas.");
