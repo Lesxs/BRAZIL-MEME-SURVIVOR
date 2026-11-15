@@ -19,6 +19,9 @@ assert.ok(game.includes("Math.min(70,24+Math.floor(this.elapsed/12))"), "Limite 
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
 assert.ok(game.includes('generateTexture("boss",40,40)'), "Textura do chefe não encontrada");
 assert.ok(game.includes("spawnBoss()"), "Rotina de surgimento do chefe não encontrada");
+assert.ok(game.includes('generateTexture("caramelo",32,32)'), "Sprite do cachorro caramelo não encontrado");
+assert.ok(game.includes('generateTexture("mosquito",32,32)'), "Sprite do pernilongo não encontrado");
+assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
 assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
 
 console.log("Validação concluída: arquivos presentes, Phaser carregado e seletores HTML conferidos.");
