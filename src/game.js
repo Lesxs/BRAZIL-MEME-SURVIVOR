@@ -34,11 +34,11 @@ const upgrades = [
   {name:"ÁGUA DE COCO GELADA",desc:"Recupera 30% da vida máxima.",rarity:"RARO",apply:p=>{p.hp=Math.min(p.maxHp,p.hp+p.maxHp*.3)}}
 ];
 class Arena extends Phaser.Scene {
-  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
+  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.bossWarningShown=false;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.8",{frameWidth:48,frameHeight:48});
-    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.8",{frameWidth:80,frameHeight:80});
-    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.8",{frameWidth:40,frameHeight:40});
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.9",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.9",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.9",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -336,7 +336,7 @@ class Arena extends Phaser.Scene {
     this.add.text(18,86,"QUEBRADA BRASILEIRA  /  ZONA 01",{fontFamily:"Arial",fontSize:"10px",fontStyle:"bold",color:"#f0d59a",stroke:"#1b2925",strokeThickness:3,letterSpacing:1}).setDepth(1.2).setAlpha(.88);
   }
   resetRun(){
-    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=90;this.bossCount=0;
+    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=90;this.bossCount=0;this.bossWarningShown=false;
     this.selectedCharacter=characterProfiles[this.selectedCharacter]?this.selectedCharacter:"sobrevivente";
     const profile=characterProfiles[this.selectedCharacter],permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;this.playerTextureKey=profile.texture;this.playerAttackTimer=0;
@@ -360,7 +360,8 @@ class Arena extends Phaser.Scene {
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
     const difficultyTier=Math.min(5,Math.floor(this.elapsed/90)+Math.floor((this.level-1)/8));const spawnEvery=Math.max(820,1900-this.elapsed*3.2-difficultyTier*45);
     if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(42,12+Math.floor(this.elapsed/32)+difficultyTier*2);if(this.enemies.length<enemyLimit)this.spawnEnemy();}
-    if(this.elapsed>=this.nextBossAt){if(!this.enemies.some(e=>e.active&&e.isBoss))this.spawnBoss();this.nextBossAt+=90;}
+    if(this.elapsed>=this.nextBossAt-5&&!this.bossWarningShown){this.bossWarningShown=true;this.showBossWarning();}
+    if(this.elapsed>=this.nextBossAt){if(!this.enemies.some(e=>e.active&&e.isBoss))this.spawnBoss();this.nextBossAt+=90;this.bossWarningShown=false;}
     if(this.shotClock>this.playerStats.fireRate){this.shotClock=0;this.autoShoot();}
     if(Math.floor(this.elapsed)!==Math.floor(this.elapsed-d))this.updateHud();
   }
@@ -386,10 +387,20 @@ class Arena extends Phaser.Scene {
     e.damage=Math.ceil((e.isVendor?15:e.isEt?14:e.isBoiBumba?16:e.isSaci?11:e.isCapybara?12:e.isMosquito?6:e.isCaramelo?9:e.isMotoboy?11:e.isChurrasco?12:8)*(1+tier*.07));e.speed*=1+tier*.035;e.isElite=tier>=1&&Math.random()<Math.min(.18,.06+tier*.025);if(e.isElite){e.hp=Math.ceil(e.hp*1.8);e.damage=Math.ceil(e.damage*1.25);e.speed*=1.12;e.setTint(0xffd36a);}e.setScale((e.isVendor||e.isEt?1.15:e.isBoiBumba?1.28:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1)*(e.isElite?1.18:1));e.baseScale=e.scaleX;
     this.enemies.push(e);
   }
+  showBossWarning(){
+    const warning=this.add.text(W/2,105,"ATENÇÃO! CHEFE SE APROXIMANDO",{
+      fontFamily:"Press Start 2P, monospace",fontSize:"15px",color:"#ffe28a",
+      stroke:"#241a20",strokeThickness:6,align:"center",
+      shadow:{offsetX:0,offsetY:3,color:"#000000",blur:6,fill:true}
+    }).setOrigin(.5).setDepth(20).setAlpha(0);
+    this.tweens.add({targets:warning,alpha:1,y:116,duration:220,ease:"Cubic.Out"});
+    this.time.delayedCall(2200,()=>{if(warning.active)this.tweens.add({targets:warning,alpha:0,y:96,duration:420,onComplete:()=>warning.destroy()});});
+    this.cameras.main.shake(140,.0014);
+  }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
     const bossType=this.bossCount%3;this.bossCount++;const bossData=[{texture:"boss_fiscal-do-pix",name:"Fiscal do Pix",hp:24,speed:38,damage:25,scale:1},{texture:"boss_boitata",name:"Boitatá",hp:34,speed:52,damage:29,scale:1},{texture:"boss_mula-sem-cabeca",name:"Mula-sem-cabeça",hp:40,speed:44,damage:31,scale:1}][bossType];
-    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.animationKey=bossData.texture;boss.play(boss.animationKey+"_walk");boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;const bossTier=Math.min(5,Math.floor(this.elapsed/180)+Math.floor((this.level-1)/12));boss.hp=Math.round((bossData.hp+Math.floor(this.elapsed/55))*(1+bossTier*.28));boss.maxHp=boss.hp;boss.speed=bossData.speed*.88*(1+bossTier*.035);boss.damage=Math.round(bossData.damage*.68*(1+bossTier*.09));boss.difficultyTier=bossTier;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
+    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.animationKey=bossData.texture;boss.play(boss.animationKey+"_walk");boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;const bossTier=Math.min(5,Math.floor(this.elapsed/180)+Math.floor((this.level-1)/12));boss.hp=Math.round((bossData.hp+Math.floor(this.elapsed/55))*(1+bossTier*.28));boss.maxHp=boss.hp;boss.speed=bossData.speed*.88*(1+bossTier*.035);boss.damage=Math.round(bossData.damage*.68*(1+bossTier*.09));boss.difficultyTier=bossTier;this.enemies.push(boss);const warningRing=this.add.circle(x,y,18,0xffb94f,.18).setStrokeStyle(5,0xffd16b,.95).setDepth(5);this.tweens.add({targets:warningRing,scale:4.8,alpha:0,duration:520,ease:"Cubic.Out",onComplete:()=>warningRing.destroy()});const bossLabel=this.add.text(x,y-58,bossData.name.toUpperCase(),{fontFamily:"Press Start 2P, monospace",fontSize:"10px",color:"#ffe28a",stroke:"#241a20",strokeThickness:4}).setOrigin(.5).setDepth(9);this.tweens.add({targets:bossLabel,y:bossLabel.y-20,alpha:0,duration:1500,ease:"Cubic.Out",onComplete:()=>bossLabel.destroy()});this.cameras.main.shake(260,.004);this.updateHud();
   }
   moveEnemies(){
     for(const e of this.enemies){
