@@ -36,3 +36,10 @@ assert.ok(html.includes('id="boss-wrap"') && html.includes('id="boss-hp"') && ht
 assert.ok(game.includes('boss.maxHp=boss.hp'), "Vida máxima do chefe não foi registrada");
 assert.ok(game.includes('this.enemies.some(e=>e.active&&e.isBoss)'), "Proteção contra chefes simultâneos não encontrada");
 assert.ok(game.includes('ui.bossFill.style.width'), "Atualização da barra de vida do chefe não encontrada");
+
+assert.ok(game.includes('generateTexture("chest",32,32)'), "Sprite do baú brasileiro não encontrado");
+assert.ok(game.includes("this.physics.add.overlap(this.player,this.chestGroup,this.collectChest"), "Colisão para abrir baú não encontrada");
+assert.ok(game.includes("spawnChest(x,y)"), "Surgimento de baú após chefe não encontrado");
+assert.ok(game.includes("showChestRewards()"), "Tela de recompensas do baú não encontrada");
+assert.ok(game.includes('rarity:"ÉPICO"'), "Recompensas épicas não encontradas");
+assert.ok(css.includes(".upgrade-card.rarity-epico"), "Estilo de raridade épica não encontrado");
