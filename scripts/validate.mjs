@@ -157,7 +157,7 @@ assert.ok(game.includes('this.load.spritesheet("char_"+id') && game.includes('fr
 assert.ok(game.includes('this.playerTextureKey=profile.texture') && game.includes('this.player.play(this.playerTextureKey+"_idle",true)'),"Animações do personagem selecionado não estão conectadas");
 assert.ok(game.includes('assets/sprites/characters/"+id+".png?v=0.10.3') && game.includes('assets/sprites/enemies/"+id+".png?v=0.10.3'),"Cache busting dos sprites não encontrado");
 assert.ok(game.includes('const e=this.enemyGroup.create(x,y,"enemy_"+kind).setDepth(2);e.play("enemy_"+kind+"_idle")'),"Inimigos não usam spritesheets consistentes");
-assert.ok(game.includes('this.enemyGroup.create(x,y,pilotTexture||("enemy_"+kind))'));
+assert.ok(!game.includes("pilotTexture") && game.includes('this.enemyGroup.create(x,y,"enemy_"+kind)'),"Inimigos ainda usam sprites piloto inconsistentes");
 assert.ok(game.includes("Math.max(820,1900-this.elapsed*3.2-difficultyTier*45)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
 
