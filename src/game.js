@@ -56,7 +56,7 @@ class Arena extends Phaser.Scene {
     const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.invuln=Math.max(0,this.invuln-d);
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
     const spawnEvery=Math.max(380,1250-this.elapsed*8);
-    if(this.spawnClock>spawnEvery){this.spawnClock=0;this.spawnEnemy();}
+    if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(70,24+Math.floor(this.elapsed/12));if(this.enemies.length<enemyLimit)this.spawnEnemy();}
     if(this.shotClock>this.playerStats.fireRate){this.shotClock=0;this.autoShoot();}
     if(Math.floor(this.elapsed)!==Math.floor(this.elapsed-d))this.updateHud();
   }
@@ -78,7 +78,7 @@ class Arena extends Phaser.Scene {
     e.damage=e.isVendor?22:e.isCapybara?18:12;e.setScale(e.isVendor?1.15:e.isCapybara?1.2:1);
     this.enemies.push(e);
   }
-  moveEnemies(d){for(const e of [...this.enemies]){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
+  moveEnemies(){for(const e of this.enemies){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
   autoShoot(){
     const alive=this.enemies.filter(e=>e.active);if(!alive.length)return;
     alive.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y));
