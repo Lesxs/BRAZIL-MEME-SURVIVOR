@@ -2,7 +2,7 @@ const W = 960, H = 540;
 const ui = {
   time: document.querySelector("#time"), level: document.querySelector("#level"),
   kills: document.querySelector("#kills"), coins: document.querySelector("#coins"),
-  xp: document.querySelector("#xp-label"), xpFill: document.querySelector("#xp-fill"),
+  xp: document.querySelector("#xp-label"), hp: document.querySelector("#hp-label"), hpFill: document.querySelector("#hp-fill"), xpFill: document.querySelector("#xp-fill"),
   start: document.querySelector("#start-screen"), levelScreen: document.querySelector("#level-screen"),
   gameover: document.querySelector("#gameover-screen"), upgrades: document.querySelector("#upgrade-list"),
   final: document.querySelector("#final-stats")
@@ -33,6 +33,7 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0xb8f36b);g.fillCircle(16,16,14);g.fillStyle(0x26351e);g.fillCircle(11,13,2);g.fillCircle(21,13,2);g.fillStyle(0x26351e);g.fillRect(12,21,8,2);g.generateTexture("player",32,32);g.clear();
     g.fillStyle(0xb8a0ff);g.fillCircle(13,13,11);g.fillStyle(0x211d37);g.fillCircle(9,11,2);g.fillCircle(17,11,2);g.fillRect(10,17,7,2);g.generateTexture("pigeon",26,26);g.clear();
     g.fillStyle(0xffa35c);g.fillRoundedRect(2,2,24,24,7);g.fillStyle(0x442616);g.fillCircle(9,11,2);g.fillCircle(19,11,2);g.fillRect(10,18,8,2);g.generateTexture("vendor",28,28);g.clear();
+    g.fillStyle(0x9bc879);g.fillEllipse(16,17,27,21);g.fillStyle(0x334b2b);g.fillCircle(9,12,2);g.fillCircle(21,12,2);g.fillStyle(0x273b24);g.fillEllipse(15,21,9,4);g.generateTexture("capybara",32,32);g.clear();
     g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.generateTexture("orb",12,12);g.clear();
     g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.generateTexture("bullet",12,12);g.destroy();
   }
@@ -70,8 +71,11 @@ class Arena extends Phaser.Scene {
   }
   spawnEnemy(){
     const side=Phaser.Math.Between(0,3);let x=side===0?15:side===1?W-15:Phaser.Math.Between(15,W-15),y=side===2?15:side===3?H-15:Phaser.Math.Between(15,H-15);
-    const vendor=this.elapsed>35&&Math.random()<.17;const key=vendor?"vendor":"pigeon";
-    const e=this.enemyGroup.create(x,y,key).setDepth(2);e.hp=vendor?4+Math.floor(this.elapsed/30):1+Math.floor(this.elapsed/70);e.speed=vendor?48:Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);e.damage=vendor?22:12;e.isVendor=vendor;e.setScale(vendor?1.15:1);
+    const roll=Math.random();const kind=this.elapsed>25&&roll<.16?"vendor":this.elapsed>12&&roll<.43?"capybara":"pigeon";
+    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";
+    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isCapybara?2+Math.floor(this.elapsed/55):1+Math.floor(this.elapsed/70);
+    e.speed=e.isVendor?48:e.isCapybara?Phaser.Math.Between(38,52):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
+    e.damage=e.isVendor?22:e.isCapybara?18:12;e.setScale(e.isVendor?1.15:e.isCapybara?1.2:1);
     this.enemies.push(e);
   }
   moveEnemies(d){for(const e of [...this.enemies]){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
@@ -83,10 +87,10 @@ class Arena extends Phaser.Scene {
   }
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;
-    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=1+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isVendor?3:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=1+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isVendor?3:e.isCapybara?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
-    if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;
+    if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.updateHud();
     e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);
     if(this.playerStats.hp<=0)this.endRun();
   }
@@ -101,7 +105,7 @@ class Arena extends Phaser.Scene {
   }
   updateHud(){
     ui.time.textContent=this.formatTime(this.elapsed);ui.level.textContent=String(this.level).padStart(2,"0");ui.kills.textContent=this.kills;ui.coins.textContent=this.coins;
-    ui.xp.textContent=`${this.xp} / ${this.xpNeed}`;ui.xpFill.style.width=`${Math.min(100,this.xp/this.xpNeed*100)}%`;
+    ui.hp.textContent=`${Math.max(0,Math.ceil(this.playerStats.hp))} / ${this.playerStats.maxHp}`;ui.hpFill.style.width=`${Math.max(0,this.playerStats.hp/this.playerStats.maxHp*100)}%`;ui.xp.textContent=`${this.xp} / ${this.xpNeed}`;ui.xpFill.style.width=`${Math.min(100,this.xp/this.xpNeed*100)}%`;
   }
   formatTime(s){const n=Math.floor(s);return String(Math.floor(n/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0");}
   endRun(){this.active=false;this.physics.pause();ui.final.textContent=`Você sobreviveu por ${this.formatTime(this.elapsed)} e eliminou ${this.kills} inimigos.`;ui.gameover.classList.remove("hidden");}
