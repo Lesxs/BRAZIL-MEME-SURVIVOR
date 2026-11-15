@@ -1,4 +1,6 @@
-# BRASIL: MEME SURVIVORS\n\n**Versão 0.3.0 — Expansão Brasileira**
+# BRASIL: MEME SURVIVORS
+
+**Versão 0.3.0 — Expansão Brasileira**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
