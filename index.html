@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./style.css?v=0.10.3">
+  <link rel="stylesheet" href="./style.css?v=0.10.4">
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
 </head>
 <body>
@@ -76,12 +76,12 @@
           <p class="eyebrow">FIM DE JOGO</p><h2>QUE FASE, HEIN.</h2><p id="final-stats">Você sobreviveu por 00:00.</p>
           <button class="primary-btn" id="restart-btn">TENTAR DE NOVO <span>↻</span></button>
         </div>
-        <div class="mobile-controls" aria-hidden="true"><div class="dpad"><button data-key="up">▲</button><div><button data-key="left">◀</button><button data-key="down">▼</button><button data-key="right">▶</button></div></div></div><button class="ability-btn" id="ability-btn" type="button" aria-label="Usar Grito da Torcida">GRITO <small id="ability-cooldown">PRONTO</small></button>
+        <div class="mobile-controls" aria-label="Controles de movimento"><div class="dpad" role="group" aria-label="Direcional virtual"><button type="button" data-key="up" aria-label="Mover para cima">▲</button><div><button type="button" data-key="left" aria-label="Mover para a esquerda">◀</button><button type="button" data-key="down" aria-label="Mover para baixo">▼</button><button type="button" data-key="right" aria-label="Mover para a direita">▶</button></div></div></div><button class="ability-btn" id="ability-btn" type="button" aria-label="Usar Grito da Torcida">GRITO <small id="ability-cooldown">PRONTO</small></button>
       </div>
       <footer class="game-footer"><span><i class="keycap">WASD</i> MOVIMENTAR</span><span><i class="keycap">AUTO</i> ATAQUE AUTOMÁTICO</span><span><i class="keycap">ESPAÇO</i> GRITO DA TORCIDA</span><span class="footer-tip">DICA: COLETE AS ESFERAS VERDES</span></footer>
     </section>
-    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.10.3 · PHASER 3</span></footer>
+    <footer class="site-footer"><span>FEITO NO BRASIL, COM CAOS.</span><span>VERSÃO 0.10.4 · PHASER 3</span></footer>
   </main>
-  <script type="module" src="./src/game.js?v=0.10.3"></script>
+  <script type="module" src="./src/game.js?v=0.10.4"></script>
 </body>
 </html>

@@ -166,3 +166,43 @@ body{margin:0;min-height:100vh;padding:24px;background:radial-gradient(ellipse a
 .upgrade-list{gap:16px}.upgrade-card{position:relative;min-height:156px;padding:22px 18px 18px;border:2px solid #94a9b5;border-radius:16px;background:linear-gradient(155deg,#283b46,#18252f 72%);box-shadow:0 8px 0 #0d151d,0 12px 24px #0005;transition:transform .16s ease,filter .16s ease;overflow:hidden}.upgrade-card::before{content:"";position:absolute;inset:0 0 auto;height:5px;background:#aab4bc}.upgrade-card:hover{transform:translateY(-5px);filter:brightness(1.16)}.upgrade-card small{display:inline-block;margin-bottom:12px;font-size:10px;letter-spacing:1.4px;color:#c9d5df}.upgrade-card b{display:block;font-size:15px;line-height:1.45;color:#fff4d6}.upgrade-card span{display:block;margin-top:9px;color:#d4e0e6;font-size:12px;line-height:1.55}.upgrade-card i{display:block;margin-top:14px;font-style:normal;font-size:9px;font-weight:900;letter-spacing:1.4px;color:#a8bac4}.upgrade-card.rarity-raro{border-color:#54b8ee;background:linear-gradient(155deg,#214e70,#172d45 72%)}.upgrade-card.rarity-raro::before{background:linear-gradient(90deg,#4fd5ff,#568bff)}.upgrade-card.rarity-raro small{color:#8bdcff}.upgrade-card.rarity-epico{border-color:#d6a1ff;background:linear-gradient(155deg,#633c7c,#302345 72%);box-shadow:0 8px 0 #1a1225,0 0 24px #bd73ff33}.upgrade-card.rarity-epico::before{background:linear-gradient(90deg,#f3c66b,#e17cff,#7ddcff)}.upgrade-card.rarity-epico small{color:#f2c9ff}@media(max-width:650px){.upgrade-list{gap:10px}.upgrade-card{min-height:130px;padding:16px 12px}.upgrade-card b{font-size:13px}}
 
 .upgrade-card.rarity-comum{border-color:#94a9b5}.upgrade-card.rarity-comum::before{background:#aab4bc}.upgrade-card.rarity-raro{border-color:#54b8ee}.upgrade-card.rarity-raro::before{background:linear-gradient(90deg,#4fd5ff,#568bff)}.upgrade-card.rarity-epico{border-color:#d6a1ff}.upgrade-card.rarity-epico::before{background:linear-gradient(90deg,#f3c66b,#e17cff,#7ddcff)}
+
+
+/* 0.10.4 — controles táteis e legibilidade em celulares */
+.mobile-controls{z-index:4;bottom:max(14px,env(safe-area-inset-bottom));left:max(14px,env(safe-area-inset-left))}
+.dpad{gap:5px;filter:drop-shadow(0 3px 7px #0008)}
+.dpad>div{gap:5px}
+.dpad button{width:46px;height:46px;min-width:46px;border:1px solid #d9e6d477;border-radius:10px;background:linear-gradient(145deg,#263a3acc,#101b20ed);color:#fff5dc;font-size:18px;font-weight:900;box-shadow:0 3px 0 #080e11,inset 0 1px #ffffff22;touch-action:none;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.dpad button:active,.dpad button.is-pressed{transform:translateY(2px);background:#66824f;color:#fff;box-shadow:0 1px 0 #080e11,inset 0 0 0 2px #d7f36a}
+.ability-btn{touch-action:manipulation;user-select:none;-webkit-tap-highlight-color:transparent}
+.ability-btn:active:not(:disabled){transform:translateY(2px);filter:brightness(1.2)}
+@media(max-width:700px),(pointer:coarse){
+  .mobile-controls{display:block}
+  #game canvas{touch-action:none}
+  .game-footer{justify-content:center;gap:7px 12px}
+  .ability-btn{right:max(14px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));min-width:76px;width:76px;height:76px;padding:10px 5px;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;letter-spacing:.08em;box-shadow:0 4px 0 #101a18,0 0 18px #0007}
+  .ability-btn small{font-size:7px;letter-spacing:.08em}
+}
+@media(max-width:380px){
+  .dpad button{width:42px;height:42px;min-width:42px}
+  .ability-btn{width:68px;height:68px;min-width:68px}
+  .hud{gap:7px;padding:8px}
+  .hud-stat strong{font-size:16px}
+  .hud-stat small,.xp-label small{font-size:6px}
+}
+@media(orientation:landscape) and (max-height:500px) and (pointer:coarse){
+  body{padding:4px}
+  .topbar,.game-heading,.game-footer,.site-footer{display:none}
+  .game-panel{padding:5px;border:0;box-shadow:none}
+  .hud{margin:0 0 4px;padding:5px 8px;gap:5px}
+  .hud-stat{padding-right:5px}
+  .hud-stat strong{font-size:15px}
+  .hud-stat small,.xp-label small{font-size:6px;margin-bottom:2px}
+  .health-wrap,.xp-wrap{min-width:0}
+  .arena-wrap{min-height:0;height:calc(100svh - 72px)}
+  #game{height:100%}
+  #game canvas{height:100%!important;width:auto!important;max-width:100%;max-height:100%;margin:auto}
+  .mobile-controls{bottom:8px;left:8px}
+  .dpad button{width:40px;height:40px;min-width:40px}
+  .ability-btn{right:10px;bottom:10px;width:64px;height:64px;min-width:64px}
+}

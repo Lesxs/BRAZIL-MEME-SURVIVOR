@@ -36,9 +36,9 @@ const upgrades = [
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.3",{frameWidth:48,frameHeight:48});
-    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.3",{frameWidth:80,frameHeight:80});
-    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.3",{frameWidth:40,frameHeight:40});
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.4",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.4",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.4",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -461,7 +461,9 @@ selectCharacter(metaProgress.selectedCharacter);
 document.querySelectorAll("[data-meta-upgrade]").forEach(button=>button.addEventListener("click",()=>scene().buyMetaUpgrade(button.dataset.metaUpgrade)));
 document.querySelectorAll("[data-key]").forEach(btn=>{
   const key=btn.dataset.key;
-  const down=e=>{e.preventDefault();touch[key]=true;};const up=e=>{e.preventDefault();touch[key]=false;};
-  btn.addEventListener("pointerdown",down);btn.addEventListener("pointerup",up);btn.addEventListener("pointerleave",up);btn.addEventListener("pointercancel",up);
+  const down=e=>{e.preventDefault();touch[key]=true;btn.classList.add("is-pressed");try{btn.setPointerCapture(e.pointerId);}catch{}};
+  const up=e=>{if(e)e.preventDefault();touch[key]=false;btn.classList.remove("is-pressed");};
+  btn.addEventListener("pointerdown",down);btn.addEventListener("pointerup",up);btn.addEventListener("pointercancel",up);btn.addEventListener("lostpointercapture",up);
 });
-window.addEventListener("blur",()=>Object.keys(touch).forEach(k=>touch[k]=false));
+const releaseTouch=()=>{Object.keys(touch).forEach(k=>touch[k]=false);document.querySelectorAll(".dpad button.is-pressed").forEach(btn=>btn.classList.remove("is-pressed"));};
+window.addEventListener("blur",releaseTouch);document.addEventListener("visibilitychange",()=>{if(document.hidden)releaseTouch();});
