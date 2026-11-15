@@ -25,6 +25,9 @@ Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura
 ## Progressão
 Colete esferas verdes para ganhar XP. Escolha melhorias de dano, velocidade, ataque, projéteis, moedas ou vida. Evoluções acumuladas são processadas uma por vez.
 
+## Movimento e impacto
+O sobrevivente tem animação procedural de respiração e deslocamento. Inimigos possuem oscilações de movimento específicas por tipo, com o Pernilongo mais agitado e o Fiscal do Pix com pulsação própria. Acertos exibem clarão, eliminações geram um efeito de impacto e a câmera reage à entrada, ao dano e à derrota do chefe.
+
 ## Desempenho
 A quantidade de inimigos comuns aumenta gradualmente e tem limite de 70 simultâneos. O processamento dos inimigos evita cópias desnecessárias da lista a cada quadro.
 
