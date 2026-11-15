@@ -9,12 +9,13 @@ assert.ok(existsSync(gamePath), "src/game.js não encontrado");
 const html = readFileSync(htmlPath, "utf8");
 const game = readFileSync(gamePath, "utf8");
 const css = readFileSync("style.css", "utf8");
+const spriteGenerator = readFileSync("tools/generate_sprites.py", "utf8");
 const selectors = [...game.matchAll(/document\.querySelector\("#([^"]+)"\)/g)].map(match => match[1]);
 const missing = [...new Set(selectors)].filter(id => !html.includes('id="' + id + '"') && !html.includes("id='" + id + "'"));
 
 assert.deepEqual(missing, [], "IDs usados pelo JavaScript e ausentes no HTML: " + missing.join(", "));
 assert.ok(html.includes("phaser@3.80.1"), "Biblioteca Phaser 3.80.1 não encontrada");
-assert.ok(html.includes('src="./src/game.js?v=0.10.6"'), "Entrada do jogo com cache busting não encontrada no HTML");
+assert.ok(html.includes('src="./src/game.js?v=0.10.7"'), "Entrada do jogo com cache busting não encontrada no HTML");
 assert.ok(game.includes("processLevelUps("), "Rotina de evolução de nível não encontrada");
 assert.ok(game.includes("Math.min(42,12+Math.floor(this.elapsed/32)+difficultyTier*2)"), "Limite de inimigos simultâneos não encontrado");
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
@@ -87,7 +88,7 @@ assert.ok(html.includes('id="selected-character-label"') && html.includes('aria-
 assert.ok(game.includes("function selectCharacter(id)") && game.includes('document.addEventListener("click",event=>'), "Seleção por mouse, toque e teclado não está conectada");
 assert.ok(game.includes('this.selectedCharacter=characterProfiles[metaProgress.selectedCharacter]?metaProgress.selectedCharacter:"sobrevivente";this.resetRun();'), "Início da partida não sincroniza o personagem escolhido");
 assert.ok(game.includes("function persistMetaProgress()") && game.includes("try{localStorage.setItem(META_KEY"), "Persistência da seleção não trata bloqueio do armazenamento local");
-assert.ok(html.includes("./src/game.js?v=0.10.6") && html.includes("./style.css?v=0.10.6"), "Cache busting da versão não encontrado");
+assert.ok(html.includes("./src/game.js?v=0.10.7") && html.includes("./style.css?v=0.10.7"), "Cache busting da versão não encontrado");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
 assert.ok(game.includes("this.player.setTexture(this.playerTextureKey,0)") && game.includes("this.playerTextureKey=profile.texture"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
@@ -106,12 +107,12 @@ assert.ok(game.includes('generateTexture("boitata",60,42)'), "Sprite do chefe Bo
 assert.ok(game.includes('const bossType=this.bossCount%3') && game.includes('name:"Mula-sem-cabeça"'), "Rotação entre os três chefes brasileiros não encontrada");
 assert.ok(game.includes('generateTexture("mula",64,48)'), "Sprite da Mula-sem-cabeça não encontrado");
 assert.ok(game.includes('generateTexture("ze_gotinha",40,40)') && game.includes('generateTexture("et_varginha",40,40)'), "Novos inimigos brasileiros não encontrados");
-assert.ok(game.includes("this.damageEnemy(e,e.hp)"), "Colisão não concede recompensas de eliminação");
+assert.ok(!game.includes("this.damageEnemy(e,e.hp)"), "Inimigos não devem morrer automaticamente ao encostar no jogador");
 assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontrado");
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options") && css.includes("#start-screen .title-screen-art{pointer-events:none}") && css.includes("#start-screen .character-options{position:relative;z-index:4}"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.10.6'), 'Versão do jogo não foi atualizada para 0.10.6');
+assert.ok(html.includes('VERSÃO 0.10.7'), 'Versão do jogo não foi atualizada para 0.10.7');
 
 assert.ok(game.includes('damage:1.08'), "Passiva de dano do Sobrevivente não encontrada");
 assert.ok(game.includes('coinBonus:1'), "Bônus de moedas do Motoboy não encontrado");
@@ -121,8 +122,8 @@ assert.ok(game.includes('coinBonus:profile.coinBonus||0'), "Passivas não são c
 assert.ok(game.includes('Math.random()<this.playerStats.dodgeChance'), "Esquiva do Saci não está aplicada ao receber dano");
 assert.ok(game.includes('e.damage*(e.isBoss?.58:.62)*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
 assert.ok(html.includes('+8% dano · Espeto') && html.includes('+1 moeda por eliminação · Chinelo') && html.includes('20% menos dano · Estilingue') && html.includes('15% de esquiva · Redemoinho'), "Passivas não estão descritas nos cartões");
-assert.ok(html.includes('VERSÃO 0.10.6'), "Versão não foi atualizada para 0.10.6");
-console.log("Versão 0.10.6: passivas exclusivas dos seis personagens conferidas.");
+assert.ok(html.includes('VERSÃO 0.10.7'), "Versão não foi atualizada para 0.10.7");
+console.log("Versão 0.10.7: passivas exclusivas dos seis personagens conferidas.");
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
 
@@ -132,9 +133,9 @@ assert.ok(game.includes("regen:profile.regen||0"), "Regeneração não é carreg
 assert.ok(game.includes("this.playerStats.regen>=0") || game.includes("this.playerStats.regen>0&&this.regenClock>=8"), "Regeneração periódica não foi implementada");
 assert.ok(game.includes("this.playerStats.hp+=healed"), "Cura periódica não é aplicada à vida do jogador");
 assert.ok(html.includes('data-character="curupira"') && html.includes('Recupera 2 de vida a cada 8s'), "Curupira não aparece corretamente na seleção");
-assert.ok(html.includes('VERSÃO 0.10.6'), "Versão 0.10.6 não aparece no HTML");
+assert.ok(html.includes('VERSÃO 0.10.7'), "Versão 0.10.7 não aparece no HTML");
 assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
-console.log("Versão 0.10.6: Curupira, sprite, seleção e regeneração periódica conferidos.");
+console.log("Versão 0.10.7: Curupira, sprite, seleção e regeneração periódica conferidos.");
 
 assert.ok(resetRunBody.includes("this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;"), "Relógios de regeneração, invulnerabilidade e habilidade não são reiniciados em nova partida");
 assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"char_boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
@@ -143,7 +144,7 @@ assert.ok(game.includes("xpMultiplier:profile.xpMultiplier||1") && game.includes
 assert.ok(game.includes('this.playerStats.startingWeapon==="onda"?"bullet_onda"'), "Arma Onda não está conectada ao disparo");
 assert.ok(html.includes('+20% de XP · Onda'), "Passiva do Boto não aparece no cartão");
 
-// 0.10.6: spritesheets, animações e seleção delegada.
+// 0.10.7: spritesheets, animações e seleção delegada.
 for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])assert.ok(existsSync(`assets/sprites/characters/${id}.png`),`Spritesheet de ${id} ausente`);
 for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])assert.ok(existsSync(`assets/sprites/bosses/${id}.png`),`Spritesheet de ${id} ausente`);
 assert.ok(game.includes('this.load.spritesheet("char_"+id'),"Carregamento das spritesheets dos personagens ausente");
@@ -155,8 +156,8 @@ for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","c
 assert.ok(game.includes('this.load.spritesheet("enemy_"+id'));
 assert.ok(game.includes('this.load.spritesheet("char_"+id') && game.includes('frameWidth:48,frameHeight:48'),"Spritesheet animada do protagonista não encontrada");
 assert.ok(game.includes('this.playerTextureKey=profile.texture') && game.includes('this.player.play(this.playerTextureKey+"_idle",true)'),"Animações do personagem selecionado não estão conectadas");
-assert.ok(game.includes('assets/sprites/characters/"+id+".png?v=0.10.6') && game.includes('assets/sprites/enemies/"+id+".png?v=0.10.6'),"Cache busting dos sprites não encontrado");
-assert.ok(game.includes('const e=this.enemyGroup.create(x,y,"enemy_"+kind).setDepth(2);e.play("enemy_"+kind+"_idle")'),"Inimigos não usam spritesheets consistentes");
+assert.ok(game.includes('assets/sprites/characters/"+id+".png?v=0.10.7') && game.includes('assets/sprites/enemies/"+id+".png?v=0.10.7'),"Cache busting dos sprites não encontrado");
+assert.ok(game.includes('const e=this.enemyGroup.create(x,y,"enemy_"+kind).setDepth(2);e.animationKey="enemy_"+kind;e.play(e.animationKey+"_walk")'),"Inimigos não usam spritesheets consistentes");
 assert.ok(!game.includes("pilotTexture") && game.includes('this.enemyGroup.create(x,y,"enemy_"+kind)'),"Inimigos ainda usam sprites piloto inconsistentes");
 assert.ok(game.includes("Math.max(820,1900-this.elapsed*3.2-difficultyTier*45)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
@@ -174,18 +175,28 @@ for(const id of ["pilot_hero","pilot_caramelo","pilot_capybara","pilot_mosquito"
 assert.ok(html.includes('class="mobile-controls"') && html.includes('aria-label="Direcional virtual"'),"Direcional virtual acessível não encontrado");
 assert.ok(css.includes(".dpad button:active,.dpad button.is-pressed") && css.includes("env(safe-area-inset-bottom)") && css.includes("orientation:landscape"),"Estilos responsivos dos controles mobile ausentes");
 assert.ok(game.includes("setPointerCapture(e.pointerId)") && game.includes('document.addEventListener("visibilitychange"'),"Captura e liberação de controles por toque ausentes");
-console.log("Versão 0.10.6: controles táteis, orientação mobile e spritesheets compartilhadas conferidos.");
+console.log("Versão 0.10.7: controles táteis, orientação mobile e spritesheets compartilhadas conferidos.");
 
-// 0.10.6: feedback de dano e acertos críticos.
+// 0.10.7: feedback de dano e acertos críticos.
 assert.ok(game.includes("showDamageNumber(x,y,damage,isCritical=false)"),"Números flutuantes de dano ausentes");
 assert.ok(game.includes("Math.random()<.10"),"Chance de crítico ausente");
 assert.ok(game.includes("damage*1.75"),"Multiplicador crítico ausente");
 assert.ok(game.includes("this.showDamageNumber(e.x,e.y,finalDamage,isCritical)"),"Dano não conectado aos números flutuantes");
 assert.ok(game.includes('fontFamily:"Press Start 2P, monospace"') && game.includes('ease:"Cubic.Out"'),"Estilo/animação dos números ausentes");
-console.log("Versão 0.10.6: números de dano e críticos conferidos.");
+console.log("Versão 0.10.7: números de dano e críticos conferidos.");
 
 assert.ok(game.includes("Fiação aérea, placas, caixas de energia e detalhes de bairro."), "Detalhes urbanos da Quebrada não encontrados");
 assert.ok(game.includes("Pinturas e cartazes estilizados nas paredes"), "Acabamento das fachadas não encontrado");
 assert.ok(game.includes("Textura da calçada: juntas, rachaduras e remendos."), "Textura das calçadas não encontrada");
-assert.ok(html.includes('VERSÃO 0.10.6') && html.includes("./style.css?v=0.10.6"), "Versão visual 0.10.6 não está publicada no HTML");
-console.log("Versão 0.10.6: cenário urbano detalhado, fiação, fachadas, calçadas e cache conferidos.");
+assert.ok(html.includes('VERSÃO 0.10.7') && html.includes("./style.css?v=0.10.7"), "Versão visual 0.10.7 não está publicada no HTML");
+console.log("Versão 0.10.7: cenário urbano detalhado, fiação, fachadas, calçadas e cache conferidos.");
+
+// 0.10.7: combate coerente e animações completas dos inimigos.
+assert.ok(!game.includes("this.damageEnemy(e,e.hp)"),"Inimigos não podem morrer automaticamente ao tocar no jogador");
+assert.ok(game.includes('e.play(e.animationKey+"_walk")'),"Inimigos não iniciam animação de caminhada");
+assert.ok(game.includes('e.play(e.animationKey+"_attack",true)'),"Inimigos não possuem animação de ataque ao encostar no jogador");
+assert.ok(game.includes('rows.forEach(a=>this.anims.create({key:key+"_"+a.name'),"Animações completas dos inimigos não são registradas");
+assert.ok(game.includes('this.coins+=15'),"Recompensas monetárias do baú não são consistentes");
+assert.ok(game.includes('p.fireRate*=.8'),"Mala de Dinheiro não respeita o bônus anunciado de 25%");
+assert.ok(spriteGenerator.includes("def build_enemy(kind):") && spriteGenerator.includes('("idle","walk","attack")'),"Gerador não produz três linhas de animação para inimigos");
+console.log("Versão 0.10.7: contato, ataque inimigo, recompensas e animações de spritesheets conferidos.");
