@@ -124,3 +124,12 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 O projeto gera spritesheets pixel art de forma reproduzível com `tools/generate_sprites.py` (Python + Pillow). São geradas seis folhas de personagens e três de chefes, cada uma com animações idle, walk e attack. Os workflows de validação e GitHub Pages executam o gerador automaticamente antes de validar/publicar, portanto os PNGs são produzidos no build e não precisam ser enviados manualmente ao repositório.
 
 Para gerar localmente: `python -m pip install pillow` e `python tools/generate_sprites.py`.
+
+
+## Versão 0.9.3
+- Spritesheets pixel art animadas para 11 inimigos brasileiros, geradas no build.
+- Horda mais controlada: surgimento mais espaçado e limite de inimigos reduzido.
+- Dano de contato reduzido e janela de invulnerabilidade ampliada.
+- Chefes a cada 90 segundos, mais lentos e com dano e escala de vida menores.
+- XP mais acessível, raridades raras/épicas mais frequentes e itens fortalecidos.
+- Cartões de recompensa redesenhados com maior destaque visual.

@@ -12,14 +12,14 @@ const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"char_sobrevi
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
-  {name:"ESPETO DE AÇO",desc:"+35% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
-  {name:"CALDO DE CANA",desc:"+30% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
-  {name:"FAROFA REFORÇADA",desc:"+35 de vida máxima e recupera 35.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
-  {name:"CHURRASCO DE RESPEITO",desc:"+60% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
+  {name:"ESPETO DE AÇO",desc:"+45% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
+  {name:"CALDO DE CANA",desc:"+35% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
+  {name:"FAROFA REFORÇADA",desc:"+45 de vida máxima e recupera 45.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
+  {name:"CHURRASCO DE RESPEITO",desc:"+75% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
   {name:"GÁS DO BOTIJÃO",desc:"+45% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
-  {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}},
-  {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 60.",rarity:"ÉPICO",apply:p=>{p.maxHp+=60;p.hp=p.maxHp}},
-  {name:"CHINELO LENDÁRIO",desc:"+75% de velocidade e +35% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.75;p.damage*=1.35}},
+  {name:"PIX DO MILHÃO",desc:"+15 moedas imediatamente.",rarity:"RARO",apply:p=>{}},
+  {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 80.",rarity:"ÉPICO",apply:p=>{p.maxHp+=80;p.hp=p.maxHp}},
+  {name:"CHINELO LENDÁRIO",desc:"+85% de velocidade e +50% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.85;p.damage*=1.5}},
   {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.fireRate*=.75}},
   {name:"PIPOCA DE CINEMA",desc:"Avança um estágio na evolução do ataque.",rarity:"RARO",apply:p=>p.weaponLevel=Math.min(3,p.weaponLevel+1)},
   {name:"CANHÃO DE FESTA JUNINA",desc:"Evolui o ataque para cinco projéteis por disparo.",rarity:"ÉPICO",apply:p=>p.weaponLevel=3}
@@ -33,10 +33,11 @@ const upgrades = [
   {name:"ENERGÉTICO DE GUARANÁ",desc:"+15% de velocidade dos projéteis.",apply:p=>p.bulletSpeed*=1.15}
 ];
 class Arena extends Phaser.Scene {
-  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
+  constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
     for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png",{frameWidth:48,frameHeight:48});
     for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -52,6 +53,9 @@ class Arena extends Phaser.Scene {
   }
   createSpriteAnimations(){
     const rows=[{name:"idle",row:0,rate:5,repeat:-1},{name:"walk",row:1,rate:9,repeat:-1},{name:"attack",row:2,rate:12,repeat:0}];
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"]){
+      const key="enemy_"+id;this.anims.create({key:key+"_idle",frames:this.anims.generateFrameNumbers(key,{start:0,end:3}),frameRate:5,repeat:-1});
+    }
     for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto","fiscal-do-pix","boitata","mula-sem-cabeca"]){
       const key=(["fiscal-do-pix","boitata","mula-sem-cabeca"].includes(id)?"boss_":"char_")+id;
       rows.forEach(a=>this.anims.create({key:key+"_"+a.name,frames:this.anims.generateFrameNumbers(key,{start:a.row*4,end:a.row*4+3}),frameRate:a.rate,repeat:a.repeat}));
@@ -269,7 +273,7 @@ class Arena extends Phaser.Scene {
     deco.lineStyle(2,0x152321,.8);deco.strokeRect(7,7,W-14,H-14);
   }
   resetRun(){
-    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=60;this.bossCount=0;
+    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=90;this.bossCount=0;
     this.selectedCharacter=characterProfiles[this.selectedCharacter]?this.selectedCharacter:"sobrevivente";
     const profile=characterProfiles[this.selectedCharacter],permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;this.playerTextureKey=profile.texture;this.playerAttackTimer=0;
@@ -291,9 +295,9 @@ class Arena extends Phaser.Scene {
     if(!this.active)return;
     const d=dt/1000;this.elapsed+=d;this.spawnClock+=dt;this.shotClock+=dt;this.playerAttackTimer=Math.max(0,(this.playerAttackTimer||0)-d);this.invuln=Math.max(0,this.invuln-d);this.regenClock=(this.regenClock||0)+d;if(this.playerStats.regen>0&&this.regenClock>=8){this.regenClock-=8;const healed=Math.min(this.playerStats.regen,this.playerStats.maxHp-this.playerStats.hp);if(healed>0){this.playerStats.hp+=healed;this.updateHud();}}const cooldownBefore=Math.ceil(this.abilityCooldown);this.abilityCooldown=Math.max(0,this.abilityCooldown-d);if(Math.ceil(this.abilityCooldown)!==cooldownBefore)this.updateAbilityButton();if(Phaser.Input.Keyboard.JustDown(this.abilityKey))this.triggerAbility();
     this.movePlayer();this.moveEnemies(d);this.moveBullets(d);this.moveOrbs(d);
-    const spawnEvery=Math.max(380,1250-this.elapsed*8);
-    if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(70,24+Math.floor(this.elapsed/12));if(this.enemies.length<enemyLimit)this.spawnEnemy();}
-    if(this.elapsed>=this.nextBossAt){if(!this.enemies.some(e=>e.active&&e.isBoss))this.spawnBoss();this.nextBossAt+=60;}
+    const spawnEvery=Math.max(950,1900-this.elapsed*3.5);
+    if(this.spawnClock>spawnEvery){this.spawnClock=0;const enemyLimit=Math.min(32,12+Math.floor(this.elapsed/35));if(this.enemies.length<enemyLimit)this.spawnEnemy();}
+    if(this.elapsed>=this.nextBossAt){if(!this.enemies.some(e=>e.active&&e.isBoss))this.spawnBoss();this.nextBossAt+=90;}
     if(this.shotClock>this.playerStats.fireRate){this.shotClock=0;this.autoShoot();}
     if(Math.floor(this.elapsed)!==Math.floor(this.elapsed-d))this.updateHud();
   }
@@ -312,17 +316,17 @@ class Arena extends Phaser.Scene {
   spawnEnemy(){
     const side=Phaser.Math.Between(0,3);let x=side===0?15:side===1?W-15:Phaser.Math.Between(15,W-15),y=side===2?15:side===3?H-15:Phaser.Math.Between(15,H-15);
     const roll=Math.random();const kind=this.elapsed>55&&roll<.08?"et_varginha":this.elapsed>50&&roll<.16?"boi_bumba":this.elapsed>45&&roll<.24?"saci":this.elapsed>40&&roll<.34?"ze_gotinha":this.elapsed>35&&roll<.44?"vendor":this.elapsed>28&&roll<.54?"motoboy":this.elapsed>22&&roll<.64?"churrasco":this.elapsed>18&&roll<.72?"mosquito":this.elapsed>12&&roll<.80?"capybara":roll<.90?"caramelo":"pigeon";
-    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";e.isZeGotinha=kind==="ze_gotinha";e.isEt=kind==="et_varginha";
+    const e=this.enemyGroup.create(x,y,"enemy_"+kind).setDepth(2);e.play("enemy_"+kind+"_idle");e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";e.isZeGotinha=kind==="ze_gotinha";e.isEt=kind==="et_varginha";
     e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":e.isSaci?"Saci-pererê":e.isBoiBumba?"Boi-bumbá":e.isZeGotinha?"Zé Gotinha":e.isEt?"ET de Varginha":"Pombo ladrão";
-    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isEt?4+Math.floor(this.elapsed/32):e.isBoiBumba?5+Math.floor(this.elapsed/30):e.isSaci?2+Math.floor(this.elapsed/65):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/80):e.isMotoboy?3+Math.floor(this.elapsed/65):1+Math.floor(this.elapsed/70);
+    e.hp=e.isVendor?3+Math.floor(this.elapsed/55):e.isEt?3+Math.floor(this.elapsed/60):e.isBoiBumba?4+Math.floor(this.elapsed/55):e.isSaci?2+Math.floor(this.elapsed/100):e.isCapybara?2+Math.floor(this.elapsed/90):e.isMosquito?1+Math.floor(this.elapsed/130):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/115):e.isMotoboy?2+Math.floor(this.elapsed/100):1+Math.floor(this.elapsed/110);
     e.speed=e.isVendor?48:e.isEt?Phaser.Math.Between(72,92):e.isZeGotinha?Phaser.Math.Between(58,78):e.isBoiBumba?Phaser.Math.Between(34,44):e.isSaci?Phaser.Math.Between(112,142):e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
-    e.damage=e.isVendor?22:e.isEt?20:e.isBoiBumba?23:e.isSaci?16:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor||e.isEt?1.15:e.isBoiBumba?1.28:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);e.baseScale=e.scaleX;
+    e.damage=e.isVendor?15:e.isEt?14:e.isBoiBumba?16:e.isSaci?11:e.isCapybara?12:e.isMosquito?6:e.isCaramelo?9:e.isMotoboy?11:e.isChurrasco?12:8;e.setScale(e.isVendor||e.isEt?1.15:e.isBoiBumba?1.28:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);e.baseScale=e.scaleX;
     this.enemies.push(e);
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
     const bossType=this.bossCount%3;this.bossCount++;const bossData=[{texture:"boss_fiscal-do-pix",name:"Fiscal do Pix",hp:24,speed:38,damage:25,scale:1},{texture:"boss_boitata",name:"Boitatá",hp:34,speed:52,damage:29,scale:1},{texture:"boss_mula-sem-cabeca",name:"Mula-sem-cabeça",hp:40,speed:44,damage:31,scale:1}][bossType];
-    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.play(bossData.texture+"_idle");boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;boss.hp=bossData.hp+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=bossData.speed;boss.damage=bossData.damage;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
+    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.play(bossData.texture+"_idle");boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;boss.hp=bossData.hp+Math.floor(this.elapsed/45);boss.maxHp=boss.hp;boss.speed=bossData.speed*.88;boss.damage=Math.round(bossData.damage*.68);this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
   }
   moveEnemies(){
     for(const e of this.enemies){
@@ -360,7 +364,7 @@ class Arena extends Phaser.Scene {
   }
   damageEnemy(e,damage){
     if(!e.active)return;e.hp-=damage;e.setTintFill(0xffffff);this.time.delayedCall(65,()=>{if(e.active)e.clearTint();});if(e.isBoss)this.updateHud();
-    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco||e.isSaci||e.isBoiBumba||e.isEt?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?14:e.isVendor?5:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco||e.isSaci||e.isBoiBumba||e.isEt?3:2;orb.body.setCircle(6);this.updateHud();}
   }
   triggerAbility(){
     if(!this.active||this.abilityCooldown>0)return;
@@ -384,7 +388,7 @@ class Arena extends Phaser.Scene {
     ui.abilityButton.classList.toggle("ready",ready&&this.active);
   }
   hitPlayer(p,e){
-    if(!this.active||this.invuln>0||!e.active)return;if(this.playerStats.dodgeChance>0&&Math.random()<this.playerStats.dodgeChance){this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0);return;}this.playerStats.hp-=e.damage*(1-(this.playerStats.damageReduction||0));this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
+    if(!this.active||this.invuln>0||!e.active)return;if(this.playerStats.dodgeChance>0&&Math.random()<this.playerStats.dodgeChance){this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0);return;}this.playerStats.hp-=e.damage*(e.isBoss?.58:.62)*(1-(this.playerStats.damageReduction||0));this.invuln=1.15;this.cameras.main.shake(110,.0018);this.updateHud();
     if(!e.isBoss){this.damageEnemy(e,e.hp);}
     if(this.playerStats.hp<=0)this.endRun();
   }
@@ -399,17 +403,17 @@ class Arena extends Phaser.Scene {
     const choices=[];
     const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);
     for(let i=0;i<3&&available.length;i++){
-      const roll=Math.random()*100,rarity=roll<10?"ÉPICO":roll<40?"RARO":"COMUM";
+      const roll=Math.random()*100,rarity=roll<25?"ÉPICO":roll<75?"RARO":"COMUM";
       let pool=available.filter(item=>item.rarity===rarity);
       if(!pool.length)pool=available;
       const selected=Phaser.Utils.Array.GetRandom(pool);
       choices.push(selected);available.splice(available.indexOf(selected),1);
     }
-    for(const item of choices){const btn=document.createElement("button");const rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum";btn.className="upgrade-card rarity-"+rarityClass;btn.innerHTML=`<small>${item.rarity}</small><b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?8:15;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
+    for(const item of choices){const btn=document.createElement("button");const rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum";btn.className="upgrade-card rarity-"+rarityClass;btn.innerHTML=`<small>${item.rarity} · RECOMPENSA</small><b>${item.name}</b><span>${item.desc}</span><i>ESCOLHER RECOMPENSA</i>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?15:20;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
     this.updateHud();
   }
   collectOrb(p,o){if(!o.active)return;this.xp+=o.value*(this.playerStats.xpMultiplier||1);o.destroy();this.processLevelUps();this.updateHud();}
-  processLevelUps(){if(this.xp<this.xpNeed)return;this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.38+2);this.showLevelUp();}
+  processLevelUps(){if(this.xp<this.xpNeed)return;this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.22+1);this.showLevelUp();}
   moveBullets(){this.bulletGroup.children.each(b=>{if(b.active&&(b.x<0||b.x>W||b.y<0||b.y>H))b.destroy();});}
   moveOrbs(d){this.orbGroup.children.each(o=>{if(!o.active)return;const dist=Phaser.Math.Distance.Between(o.x,o.y,this.player.x,this.player.y);if(dist<105)this.physics.moveToObject(o,this.player,210);});}
   showLevelUp(){

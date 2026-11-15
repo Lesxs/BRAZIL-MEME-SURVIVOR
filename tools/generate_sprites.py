@@ -4,8 +4,8 @@ from PIL import Image,ImageDraw
 from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1]
-C=ROOT/"assets/sprites/characters";B=ROOT/"assets/sprites/bosses"
-C.mkdir(parents=True,exist_ok=True);B.mkdir(parents=True,exist_ok=True)
+C=ROOT/"assets/sprites/characters";B=ROOT/"assets/sprites/bosses";E=ROOT/"assets/sprites/enemies"
+C.mkdir(parents=True,exist_ok=True);B.mkdir(parents=True,exist_ok=True);E.mkdir(parents=True,exist_ok=True)
 def frame(kind,act,n,boss=False):
  size=40 if boss else 24; im=Image.new("RGBA",(size,size),(0,0,0,0));d=ImageDraw.Draw(im);bob=(0,-1,0,1)[n]
  if boss:
@@ -45,9 +45,41 @@ def build(kind,boss=False):
  for row,act in enumerate(("idle","walk","attack")):
   for n in range(4):out.alpha_composite(frame(kind,act,n,boss),(n*size,row*size))
  return out
+
+ENEMY_PALETTES={"pigeon":("#8998a5","#34414b","#2b9b8c"),"caramelo":("#c88745","#8f522d","#e8bb83"),"capybara":("#9b7047","#684a32","#d2ad7d"),"mosquito":("#91bfc4","#273744","#d9e6dc"),"vendor":("#e0a06c","#365b8b","#f08b45"),"motoboy":("#e4b184","#263747","#ffd04f"),"churrasco":("#d39a6b","#9a3d2e","#e9e1d0"),"saci":("#b8784b","#28221f","#c93632"),"boi_bumba":("#e3bd54","#315e9b","#d64c45"),"ze_gotinha":("#72c9ed","#f5f5e9","#2f8c62"),"et_varginha":("#789b82","#252d31","#141c20")}
+def enemy_frame(kind,n):
+ im=Image.new("RGBA",(40,40),(0,0,0,0));d=ImageDraw.Draw(im);skin,dark,accent=ENEMY_PALETTES[kind];bob=(0,-1,0,1)[n];d.ellipse((7,34,33,38),fill=(8,10,12,90))
+ if kind=="pigeon":
+  d.ellipse((5,15+bob,34,33+bob),fill=dark);d.ellipse((7,13+bob,31,30+bob),fill=skin);d.ellipse((17,12+bob,28,24+bob),fill=accent);d.ellipse((23,5+bob,34,17+bob),fill=skin);d.polygon([(32,9+bob),(39,12+bob),(32,15+bob)],fill="#f0c34f")
+ elif kind=="caramelo":
+  d.ellipse((6,12+bob,34,34+bob),fill=dark);d.ellipse((8,10+bob,32,32+bob),fill=skin);d.ellipse((5,6+bob,14,23+bob),fill=dark);d.ellipse((26,6+bob,35,23+bob),fill=dark);d.ellipse((13,20+bob,27,29+bob),fill=accent)
+ elif kind=="capybara":
+  d.ellipse((4,11+bob,36,33+bob),fill=dark);d.ellipse((6,9+bob,34,31+bob),fill=skin);d.ellipse((10,19+bob,30,29+bob),fill=accent);d.ellipse((8,6+bob,15,14+bob),fill=skin);d.ellipse((26,6+bob,33,14+bob),fill=skin)
+ elif kind=="mosquito":
+  d.line((18,18,3,7),fill=accent,width=2);d.line((22,18,37,7),fill=accent,width=2);d.ellipse((2,5,19,15),fill=(145,205,210,140));d.ellipse((21,5,38,15),fill=(145,205,210,140));d.ellipse((15,12+bob,25,31+bob),fill=dark);d.ellipse((16,7+bob,24,17+bob),fill=skin);d.line((20,16,35,2),fill="#e3c6a1",width=2)
+ elif kind=="vendor":
+  d.rounded_rectangle((7,12+bob,33,36+bob),5,fill=accent);d.rectangle((10,23+bob,30,32+bob),fill="#f6d16b");d.ellipse((11,5+bob,29,23+bob),fill=skin);d.rectangle((7,5+bob,32,11+bob),fill=dark);d.rectangle((5,10+bob,35,13+bob),fill=dark)
+ elif kind=="motoboy":
+  d.rounded_rectangle((7,17+bob,33,36+bob),6,fill=dark);d.ellipse((11,7+bob,29,25+bob),fill=skin);d.pieslice((7,2+bob,33,23+bob),180,360,fill=accent);d.rectangle((9,14+bob,31,18+bob),fill="#263747");d.rectangle((27,21+bob,36,34+bob),fill="#263747")
+ elif kind=="churrasco":
+  d.rounded_rectangle((6,16+bob,34,37+bob),6,fill=dark);d.ellipse((10,5+bob,30,24+bob),fill=skin);d.rectangle((7,5+bob,33,12+bob),fill=accent);d.rectangle((9,23+bob,31,34+bob),fill="#b94f32");d.line((31,21,38,7),fill="#ddd3bd",width=2)
+ elif kind=="saci":
+  d.rounded_rectangle((8,14+bob,32,35+bob),7,fill=dark);d.ellipse((11,6+bob,29,24+bob),fill=skin);d.polygon([(8,11+bob),(10,1+bob),(30,1+bob),(33,11+bob)],fill=accent);d.rectangle((8,10+bob,33,14+bob),fill="#a92327")
+ elif kind=="boi_bumba":
+  d.ellipse((5,13+bob,35,35+bob),fill=dark);d.ellipse((7,11+bob,33,32+bob),fill=skin);d.polygon([(9,14+bob),(2,1),(15,9+bob)],fill=accent);d.polygon([(26,9+bob),(38,1),(31,16+bob)],fill=accent);d.rectangle((8,20+bob,32,26+bob),fill="#d64c45")
+ elif kind=="ze_gotinha":
+  d.ellipse((8,18+bob,32,37+bob),fill=dark);d.rounded_rectangle((9,19+bob,31,35+bob),4,fill=accent);d.ellipse((9,6+bob,31,27+bob),fill=skin);d.polygon([(20,0+bob),(8,17+bob),(32,17+bob)],fill=skin)
+ else:
+  d.ellipse((6,13+bob,34,37+bob),fill=dark);d.ellipse((7,5+bob,33,30+bob),fill=skin);d.ellipse((10,10+bob,18,24+bob),fill="#141c20");d.ellipse((22,10+bob,30,24+bob),fill="#141c20")
+ return im
+
 meta={"frameWidth":48,"frameHeight":48,"columns":4,"animations":{"idle":{"row":0,"frames":4,"frameRate":5,"repeat":-1},"walk":{"row":1,"frames":4,"frameRate":9,"repeat":-1},"attack":{"row":2,"frames":4,"frameRate":12,"repeat":0}}}
 for name in ("sobrevivente","motoboy","capivara","saci","curupira","boto"):
  build(name).save(C/(name+".png"),optimize=True);(C/(name+".json")).write_text(json.dumps(meta,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
 for name in ("fiscal-do-pix","boitata","mula-sem-cabeca"):
  build(name,True).save(B/(name+".png"),optimize=True);(B/(name+".json")).write_text(json.dumps({**meta,"frameWidth":80,"frameHeight":80},ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print("Spritesheets geradas: 6 personagens e 3 chefes.")
+for name in ENEMY_PALETTES:
+ sheet=Image.new("RGBA",(160,40),(0,0,0,0))
+ for n in range(4):sheet.alpha_composite(enemy_frame(name,n),(n*40,0))
+ sheet.save(E/(name+".png"),optimize=True)
+print("Spritesheets geradas: 6 personagens, 3 chefes e 11 inimigos.")
