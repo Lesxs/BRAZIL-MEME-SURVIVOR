@@ -89,7 +89,7 @@ assert.ok(game.includes('this.selectedCharacter=characterProfiles[metaProgress.s
 assert.ok(game.includes("function persistMetaProgress()") && game.includes("try{localStorage.setItem(META_KEY"), "Persistência da seleção não trata bloqueio do armazenamento local");
 assert.ok(html.includes("./src/game.js?v=0.10.1") && html.includes("./style.css?v=0.10.1"), "Cache busting da versão não encontrado");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
-assert.ok(game.includes("this.player.setTexture(profile.texture,0)"), "Troca de aparência por personagem não encontrada");
+assert.ok(game.includes("this.player.setTexture(this.playerTextureKey,0)") && game.includes('this.playerTextureKey==="pilot_hero"'), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
 assert.ok(game.includes('generateTexture("bullet_estilingue",28,28)'), "Arma Estilingue da Capivara não encontrada");
 assert.ok(game.includes('generateTexture("bullet_redemoinho",24,24)'), "Projétil Redemoinho do Saci não encontrado");
@@ -153,7 +153,7 @@ assert.ok(!game.includes('button.addEventListener("pointerdown",choose'),"Listen
 
 for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])assert.ok(existsSync(`assets/sprites/enemies/${id}.png`),`Spritesheet ${id} ausente`);
 assert.ok(game.includes('this.load.spritesheet("enemy_"+id'));
-assert.ok(game.includes('this.enemyGroup.create(x,y,"enemy_"+kind)'));
+assert.ok(game.includes('this.enemyGroup.create(x,y,pilotTexture||("enemy_"+kind))'));
 assert.ok(game.includes("Math.max(820,1900-this.elapsed*3.2-difficultyTier*45)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
 
@@ -164,3 +164,5 @@ assert.ok(game.includes("p.damage*=1.45") && game.includes("p.speed*=1.35") && g
 assert.ok(game.includes("Math.floor(this.elapsed/90)+Math.floor((this.level-1)/8)"),"Escalonamento da dificuldade por tempo e nível ausente");
 assert.ok(game.includes("e.isElite=tier>=1") && game.includes("e.hp=Math.ceil(e.hp*1.8)") && game.includes("orb.value=e.isBoss?14:e.isElite?6"),"Inimigos de elite e recompensa adicional ausentes");
 assert.ok(game.includes("bossTier=Math.min(5") && game.includes("boss.damage=Math.round(bossData.damage*.68*(1+bossTier*.09))"),"Escalonamento progressivo dos chefes ausente");
+
+for(const id of ["pilot_hero","pilot_caramelo","pilot_capybara","pilot_mosquito"])assert.ok(existsSync(`assets/sprites/pilot/${id}.png`),`Sprite piloto ${id} ausente`);
