@@ -13,10 +13,12 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Cachorro caramelo:** resistente e equilibrado.
 - **Capivara braba:** resistente e mais lenta.
 - **Pernilongo de madrugada:** muito rápido e irritante.
+- **Motoboy do grau:** veloz e perigoso.
+- **Tio do churrasco:** resistente e pesado.
 - **Vendedor do centro:** inimigo especial, forte e resistente.
 - **Fiscal do Pix:** chefe que aparece a cada 60 segundos e oferece recompensa especial.
 
-A direção de arte e os próximos personagens devem continuar ligados a memes, cultura popular e referências brasileiras. Evitar inimigos genéricos sem identidade temática.
+Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura popular ou situações do cotidiano. Evitar personagens genéricos sem identidade temática.
 
 ## Progressão
 Colete esferas verdes para ganhar XP. Escolha melhorias de dano, velocidade, ataque, projéteis, moedas ou vida. Evoluções acumuladas são processadas uma por vez.
