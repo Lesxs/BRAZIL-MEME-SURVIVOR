@@ -9,6 +9,8 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Objetivo:** sobreviver, derrotar inimigos, coletar XP e escolher melhorias ao subir de nível.
 
 ## Elenco brasileiro
+- **Saci-pererê:** criatura folclórica veloz, aparece após 40 segundos.
+- **Boi-bumbá:** inimigo pesado inspirado nas festas populares do Norte, aparece após 50 segundos.
 - **Pombo ladrão:** inimigo comum.
 - **Cachorro caramelo:** resistente e equilibrado.
 - **Capivara braba:** resistente e mais lenta.
@@ -24,6 +26,9 @@ Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura
 
 ## Progressão
 Colete esferas verdes para ganhar XP. Escolha melhorias de dano, velocidade, ataque, projéteis, moedas ou vida. Evoluções acumuladas são processadas uma por vez.
+
+## Habilidade ativa
+Use **Espaço** ou o botão **GRITO** para soltar o Grito da Torcida: uma onda de impacto atinge inimigos em um raio de 170 pixels, causa dano e afasta adversários comuns. A habilidade tem recarga de 12 segundos e também funciona no celular pelo botão na arena.
 
 ## Movimento e impacto
 O sobrevivente tem animação procedural de respiração e deslocamento. Inimigos possuem oscilações de movimento específicas por tipo, com o Pernilongo mais agitado e o Fiscal do Pix com pulsação própria. Acertos exibem clarão, eliminações geram um efeito de impacto e a câmera reage à entrada, ao dano e à derrota do chefe.

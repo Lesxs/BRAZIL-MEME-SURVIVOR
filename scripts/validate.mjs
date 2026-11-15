@@ -66,6 +66,14 @@ assert.ok(game.includes("this.player.setScale(1+(moving?breath*.035:breath*.018)
 assert.ok(game.includes("e.setScale(e.baseScale*(1+(e.isBoss?pulse*.045:e.isMosquito?pulse*.055:pulse*.025)))"), "Animação procedural dos inimigos não encontrada");
 assert.ok(game.includes("spawnHitEffect(x,y,color=0xffd16b)"), "Efeito visual de impacto não encontrado");
 assert.ok(game.includes("this.cameras.main.shake(260,.004)"), "Impacto de entrada do chefe não encontrado");
+assert.ok(game.includes('generateTexture("saci",40,40)'), "Sprite do Saci não encontrado");
+assert.ok(game.includes('generateTexture("boi_bumba",40,40)'), "Sprite do Boi-bumbá não encontrado");
+assert.ok(game.includes("triggerAbility(){"), "Habilidade ativa não encontrada");
+assert.ok(game.includes("const radius=170"), "Área de efeito não encontrada");
+assert.ok(game.includes("this.abilityCooldown=12"), "Recarga da habilidade não encontrada");
+assert.ok(game.includes('ui.abilityButton.addEventListener("click",()=>scene().triggerAbility())'), "Clique do botão da habilidade não está conectado");
+assert.ok(html.includes('id="ability-btn"') && html.includes('id="ability-cooldown"'), "Botão da habilidade não encontrado");
+assert.ok(css.includes(".ability-btn.ready"), "Estilo do botão de habilidade não encontrado");
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
