@@ -129,3 +129,5 @@ assert.ok(html.includes('data-character="curupira"') && html.includes('Recupera 
 assert.ok(html.includes('VERSÃO 0.7.0'), "Versão 0.7.0 não aparece no HTML");
 assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
 console.log("Versão 0.7.0: Curupira, sprite, seleção e regeneração periódica conferidos.");
+
+assert.ok(game.includes("this.shotClock=0;this.regenClock=0;this.invuln=0"), "Relógio de regeneração não é reiniciado no início da partida");
