@@ -24,13 +24,13 @@ assert.ok(game.includes('generateTexture("caramelo",40,40)'), "Sprite do cachorr
 assert.ok(game.includes('generateTexture("mosquito",40,40)'), "Sprite do pernilongo não encontrado");
 assert.ok(game.includes('generateTexture("motoboy",40,40)'), "Sprite do motoboy não encontrado");
 assert.ok(game.includes('generateTexture("churrasco",40,40)'), "Sprite do tio do churrasco não encontrado");
-assert.ok(game.includes("this.nextBossAt=60;"), "Temporizador de chefes não é reiniciado");
+assert.ok(game.includes("this.nextBossAt=90;"), "Temporizador de chefes não é reiniciado");
 const resetRunBody=game.slice(game.indexOf("  resetRun(){"),game.indexOf("  renderMetaShop(){"));
-assert.ok(resetRunBody.includes("this.nextBossAt=60;"), "Temporizador do chefe não é reiniciado em uma nova partida");
-assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Temporizador do chefe duplicado");
-assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Inicialização duplicada do chefe encontrada");
+assert.ok(resetRunBody.includes("this.nextBossAt=90;"), "Temporizador do chefe não é reiniciado em uma nova partida");
+assert.ok(!game.includes("this.nextBossAt=90;this.nextBossAt=90;"), "Temporizador do chefe duplicado");
+assert.ok(!game.includes("this.nextBossAt=90;this.nextBossAt=90;"), "Inicialização duplicada do chefe encontrada");
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
-assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
+assert.ok(game.includes("e.isBoss?14:e.isVendor?5"), "Recompensa especial do chefe não encontrada");
 
 assert.ok(!html.includes("meme-wall") && !html.includes("meme-sticker"), "Tela inicial antiga com mural de emojis ainda está presente");
 assert.ok(html.includes('class="title-screen-art"'), "Arte cenográfica da nova tela inicial não encontrada");
