@@ -16,7 +16,7 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Motoboy do grau:** veloz e perigoso.
 - **Tio do churrasco:** resistente e pesado.
 - **Vendedor do centro:** inimigo especial, forte e resistente.
-- **Fiscal do Pix:** chefe que aparece a cada 60 segundos e oferece recompensa especial.
+- **Fiscal do Pix:** chefe que aparece a cada 60 segundos, possui barra de vida própria e oferece recompensa especial. Apenas um Fiscal do Pix pode ficar ativo por vez.
 
 Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura popular ou situações do cotidiano. Evitar personagens genéricos sem identidade temática.
 
