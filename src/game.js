@@ -16,7 +16,7 @@ const chestUpgrades = [
   {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{p.coinBonus+=2}},
   {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 60.",rarity:"ÉPICO",apply:p=>{p.maxHp+=60;p.hp=p.maxHp}},
   {name:"CHINELO LENDÁRIO",desc:"+75% de velocidade e +35% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.75;p.damage*=1.35}},
-  {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.coins+=15;p.fireRate*=.75}}
+  {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.fireRate*=.75}}
 ];
 const upgrades = [
   {name:"PESO DE RESPEITO",desc:"+25% de dano nos ataques.",apply:p=>p.damage*=1.25},
@@ -135,7 +135,7 @@ class Arena extends Phaser.Scene {
       const selected=Phaser.Utils.Array.GetRandom(pool);
       choices.push(selected);available.splice(available.indexOf(selected),1);
     }
-    for(const item of choices){const btn=document.createElement("button");btn.className="upgrade-card rarity-"+item.rarity.toLowerCase().normalize("NFD").replace(/[\\u0300-\\u036f]/g,"");btn.innerHTML=`<small>${item.rarity}</small><b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?8:15;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
+    for(const item of choices){const btn=document.createElement("button");const rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum";btn.className="upgrade-card rarity-"+rarityClass;btn.innerHTML=`<small>${item.rarity}</small><b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?8:15;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
     this.updateHud();
   }
   collectOrb(p,o){if(!o.active)return;this.xp+=o.value;o.destroy();this.processLevelUps();this.updateHud();}
