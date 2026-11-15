@@ -154,7 +154,7 @@ assert.ok(!game.includes('button.addEventListener("pointerdown",choose'),"Listen
 for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])assert.ok(existsSync(`assets/sprites/enemies/${id}.png`),`Spritesheet ${id} ausente`);
 assert.ok(game.includes('this.load.spritesheet("enemy_"+id'));
 assert.ok(game.includes('this.load.spritesheet("pilot_hero"') && game.includes('frameWidth:48,frameHeight:48'),"Spritesheet animada do protagonista não encontrada");
-assert.ok(game.includes('pilotTexture+"_walk"') && game.includes('pilot_hero_walk'),"Animações de caminhada dos sprites piloto não encontradas");
+assert.ok(game.includes('pilotTexture+"_walk"') && game.includes('key:id+"_walk"'),"Animações de caminhada dos sprites piloto não encontradas");
 assert.ok(game.includes('this.enemyGroup.create(x,y,pilotTexture||("enemy_"+kind))'));
 assert.ok(game.includes("Math.max(820,1900-this.elapsed*3.2-difficultyTier*45)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
