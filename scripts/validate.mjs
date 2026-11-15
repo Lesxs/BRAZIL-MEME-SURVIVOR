@@ -81,7 +81,7 @@ assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE
 assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
 assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recompensa imediata de moedas do baú não encontrada");
 
-assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"'), "Seleção dos três personagens jogáveis não encontrada");
+assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"'), "Seleção dos cinco personagens jogáveis não encontrada");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
 assert.ok(game.includes("this.player.setTexture(profile.texture)"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
@@ -90,7 +90,7 @@ assert.ok(game.includes('generateTexture("bullet_redemoinho",24,24)'), "Projéti
 assert.ok(game.includes('saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho"'), "Perfil jogável do Saci não encontrado");
 assert.ok(game.includes('this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho"'), "Arma inicial do Saci não está conectada ao disparo");
 assert.ok(html.includes('data-character="saci"'), "Cartão de seleção do Saci não encontrado");
-assert.ok(css.includes(".character-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))"), "Grade desktop para quatro personagens não encontrada");
+assert.ok(css.includes(".character-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop para cinco personagens não encontrada");
 assert.ok(css.includes(".character-options{grid-template-columns:repeat(2,minmax(0,1fr))"), "Grade mobile de duas colunas não encontrada");
 assert.ok(game.includes("startingWeapon"), "Arma inicial por personagem não encontrada");
 assert.ok(html.includes('data-meta-upgrade="hp"') && html.includes('data-meta-upgrade="damage"') && html.includes('data-meta-upgrade="speed"'), "Loja de melhorias permanentes não encontrada");
