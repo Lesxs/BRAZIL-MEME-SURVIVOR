@@ -8,6 +8,7 @@ assert.ok(existsSync(gamePath), "src/game.js não encontrado");
 
 const html = readFileSync(htmlPath, "utf8");
 const game = readFileSync(gamePath, "utf8");
+const css = readFileSync("style.css", "utf8");
 const selectors = [...game.matchAll(/document\.querySelector\("#([^"]+)"\)/g)].map(match => match[1]);
 const missing = [...new Set(selectors)].filter(id => !html.includes('id="' + id + '"') && !html.includes("id='" + id + "'"));
 
@@ -30,7 +31,12 @@ assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Inicializa�
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
 assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
 
-console.log("Validação concluída: arquivos presentes, Phaser carregado e seletores HTML conferidos.");
+assert.ok(!html.includes("meme-wall") && !html.includes("meme-sticker"), "Tela inicial antiga com mural de emojis ainda está presente");
+assert.ok(html.includes('class="title-screen-art"'), "Arte cenográfica da nova tela inicial não encontrada");
+assert.ok(html.includes('class="game-logo"'), "Título principal da nova tela inicial não encontrado");
+assert.ok(css.includes(".start-screen{") && css.includes(".hero-silhouette{") && css.includes(".skyline-front{"), "Estilos da nova identidade visual não encontrados");
+assert.ok(css.includes(".upgrade-card.rarity-epico"), "Estilo de raridade épica não encontrado");
+console.log("Validação concluída: arquivos, seletores, Phaser, identidade visual e tela inicial conferidos.");
 
 assert.ok(html.includes('id="boss-wrap"') && html.includes('id="boss-hp"') && html.includes('id="boss-fill"'), "HUD de vida do chefe não encontrado");
 assert.ok(game.includes('boss.maxHp=boss.hp'), "Vida máxima do chefe não foi registrada");
