@@ -13,11 +13,11 @@ const chestUpgrades = [
   {name:"FARofa REFORÇADA",desc:"+35 de vida máxima e recupera 35.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
   {name:"CHURRASCO DE RESPEITO",desc:"+60% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
   {name:"GÁS DO BOTIJÃO",desc:"+45% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
-  {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{p.coinBonus+=2}},
+  {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}},
   {name:"BENÇÃO DA CAPIVARA",desc:"Recupera toda a vida e aumenta a vida máxima em 60.",rarity:"ÉPICO",apply:p=>{p.maxHp+=60;p.hp=p.maxHp}},
   {name:"CHINELO LENDÁRIO",desc:"+75% de velocidade e +35% de dano.",rarity:"ÉPICO",apply:p=>{p.speed*=1.75;p.damage*=1.35}},
   {name:"MALA DE DINHEIRO",desc:"+15 moedas e +25% de velocidade de ataque.",rarity:"ÉPICO",apply:p=>{p.fireRate*=.75}},
-  {name:"PIPOCA DE CINEMA",desc:"Evolui o ataque para três projéteis por disparo.",rarity:"RARO",apply:p=>p.weaponLevel=Math.min(3,p.weaponLevel+1)},
+  {name:"PIPOCA DE CINEMA",desc:"Avança um estágio na evolução do ataque.",rarity:"RARO",apply:p=>p.weaponLevel=Math.min(3,p.weaponLevel+1)},
   {name:"CANHÃO DE FESTA JUNINA",desc:"Evolui o ataque para cinco projéteis por disparo.",rarity:"ÉPICO",apply:p=>p.weaponLevel=3}
 ];
 const upgrades = [
@@ -248,7 +248,7 @@ class Arena extends Phaser.Scene {
     alive.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y));
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
-    const spread=level===2?.18:.16;
+    const spread=level===2 ? 0.18 : 0.16;
     for(let i=0;i<count;i++){
       const angle=base+(i-(count-1)/2)*spread;
       const b=this.bulletGroup.create(this.player.x,this.player.y,"bullet").setDepth(2);
@@ -274,7 +274,7 @@ class Arena extends Phaser.Scene {
     description.textContent="Escolha uma recompensa. Quanto maior a raridade, maior o prêmio.";
     ui.upgrades.innerHTML="";
     const choices=[];
-    const available=[...chestUpgrades];
+    const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);
     for(let i=0;i<3&&available.length;i++){
       const roll=Math.random()*100,rarity=roll<10?"ÉPICO":roll<40?"RARO":"COMUM";
       let pool=available.filter(item=>item.rarity===rarity);
