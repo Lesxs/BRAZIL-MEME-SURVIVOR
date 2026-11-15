@@ -13,5 +13,7 @@ Abra `index.html` em um servidor estático local ou publique com GitHub Pages. O
 ## Publicação
 O workflow em `.github/workflows/pages.yml` publica automaticamente o conteúdo do repositório no GitHub Pages após cada push na branch `main`.
 
+URL esperada: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
+
 ## Estado atual
 Protótipo inicial: movimentação, inimigos, combate automático, experiência, evolução e reinício de partida.
