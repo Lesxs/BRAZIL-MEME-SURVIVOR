@@ -49,7 +49,7 @@ class Arena extends Phaser.Scene {
     const deco=this.add.graphics().setDepth(1);for(let i=0;i<24;i++){const x=Phaser.Math.Between(25,W-25),y=Phaser.Math.Between(25,H-25);deco.fillStyle(0x2c3a4c,.55);deco.fillCircle(x,y,Phaser.Math.Between(1,3));}
   }
   resetRun(){
-    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;
+    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;
     this.playerStats={hp:100,maxHp:100,speed:220,damage:1,fireRate:650,bulletSpeed:430,coinBonus:0};
     this.player.setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup].forEach(g=>g.clear(true,true));
