@@ -36,10 +36,10 @@ const upgrades = [
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    this.load.image("pilot_hero","assets/sprites/pilot/pilot_hero.png");
-    this.load.image("pilot_caramelo","assets/sprites/pilot/pilot_caramelo.png");
-    this.load.image("pilot_capybara","assets/sprites/pilot/pilot_capybara.png");
-    this.load.image("pilot_mosquito","assets/sprites/pilot/pilot_mosquito.png");
+    this.load.spritesheet("pilot_hero","assets/sprites/pilot/pilot_hero.png",{frameWidth:48,frameHeight:48});
+    this.load.spritesheet("pilot_caramelo","assets/sprites/pilot/pilot_caramelo.png",{frameWidth:40,frameHeight:40});
+    this.load.spritesheet("pilot_capybara","assets/sprites/pilot/pilot_capybara.png",{frameWidth:40,frameHeight:40});
+    this.load.spritesheet("pilot_mosquito","assets/sprites/pilot/pilot_mosquito.png",{frameWidth:40,frameHeight:40});
     for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png",{frameWidth:48,frameHeight:48});
     for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png",{frameWidth:80,frameHeight:80});
     for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png",{frameWidth:40,frameHeight:40});
@@ -58,6 +58,7 @@ class Arena extends Phaser.Scene {
   }
   createSpriteAnimations(){
     const rows=[{name:"idle",row:0,rate:5,repeat:-1},{name:"walk",row:1,rate:9,repeat:-1},{name:"attack",row:2,rate:12,repeat:0}];
+    for(const id of ["pilot_hero","pilot_caramelo","pilot_capybara","pilot_mosquito"]){const frameCount=4;this.anims.create({key:id+"_idle",frames:[{key:id,frame:0}],frameRate:1,repeat:-1});this.anims.create({key:id+"_walk",frames:this.anims.generateFrameNumbers(id,{start:0,end:frameCount-1}),frameRate:9,repeat:-1});this.anims.create({key:id+"_attack",frames:this.anims.generateFrameNumbers(id,{start:0,end:frameCount-1}),frameRate:13,repeat:0});}
     for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"]){
       const key="enemy_"+id;this.anims.create({key:key+"_idle",frames:this.anims.generateFrameNumbers(key,{start:0,end:3}),frameRate:5,repeat:-1});
     }
@@ -283,7 +284,7 @@ class Arena extends Phaser.Scene {
     const profile=characterProfiles[this.selectedCharacter],permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;this.playerTextureKey=this.selectedCharacter==="sobrevivente"?"pilot_hero":profile.texture;this.playerAttackTimer=0;
     this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,xpMultiplier:profile.xpMultiplier||1,weaponLevel:1,startingWeapon:profile.weapon};
-    this.player.setTexture(this.playerTextureKey,0).setPosition(W/2,H/2).setAlpha(1).setRotation(0);if(this.playerTextureKey!=="pilot_hero")this.player.play(profile.texture+"_idle",true);
+    this.player.setTexture(this.playerTextureKey,0).setPosition(W/2,H/2).setAlpha(1).setRotation(0);this.player.play(this.playerTextureKey==="pilot_hero"?"pilot_hero_idle":profile.texture+"_idle",true);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
   }
@@ -314,14 +315,14 @@ class Arena extends Phaser.Scene {
     this.player.setVelocity(x*this.playerStats.speed,y*this.playerStats.speed);
     const moving=Boolean(x||y),breath=Math.sin(this.elapsed*(moving?17:3.2));
     this.player.setScale(1+(moving?breath*.035:breath*.018));
-    this.player.setRotation(moving?Math.sin(this.elapsed*13)*.025:0);if(this.playerAttackTimer<=0){if(this.playerTextureKey!=="pilot_hero"){const anim=this.playerTextureKey+(moving?"_walk":"_idle");if(this.player.anims.currentAnim?.key!==anim)this.player.play(anim,true);}}
+    this.player.setRotation(moving?Math.sin(this.elapsed*13)*.025:0);if(this.playerAttackTimer<=0){const anim=this.playerTextureKey+(moving?"_walk":"_idle");if(this.player.anims.currentAnim?.key!==anim)this.player.play(anim,true);}
     if(x)this.player.setFlipX(x<0);
     if(this.invuln>0)this.player.setAlpha(Math.floor(this.invuln*12)%2?.35:1);else this.player.setAlpha(1);
   }
   spawnEnemy(){
     const side=Phaser.Math.Between(0,3);let x=side===0?15:side===1?W-15:Phaser.Math.Between(15,W-15),y=side===2?15:side===3?H-15:Phaser.Math.Between(15,H-15);
     const roll=Math.random();const kind=this.elapsed>150&&roll<.14?"et_varginha":this.elapsed>120&&roll<.25?"boi_bumba":this.elapsed>90&&roll<.36?"saci":this.elapsed>65&&roll<.48?"ze_gotinha":this.elapsed>45&&roll<.58?"vendor":this.elapsed>35&&roll<.68?"motoboy":this.elapsed>25&&roll<.76?"churrasco":this.elapsed>18&&roll<.84?"mosquito":this.elapsed>10&&roll<.91?"capybara":roll<.96?"caramelo":"pigeon";
-    const pilotTexture=kind==="caramelo"?"pilot_caramelo":kind==="capybara"?"pilot_capybara":kind==="mosquito"?"pilot_mosquito":null;const e=this.enemyGroup.create(x,y,pilotTexture||("enemy_"+kind)).setDepth(2);if(!pilotTexture)e.play("enemy_"+kind+"_idle");e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";e.isZeGotinha=kind==="ze_gotinha";e.isEt=kind==="et_varginha";
+    const pilotTexture=kind==="caramelo"?"pilot_caramelo":kind==="capybara"?"pilot_capybara":kind==="mosquito"?"pilot_mosquito":null;const e=this.enemyGroup.create(x,y,pilotTexture||("enemy_"+kind)).setDepth(2);e.play(pilotTexture?pilotTexture+"_walk":"enemy_"+kind+"_idle");e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";e.isZeGotinha=kind==="ze_gotinha";e.isEt=kind==="et_varginha";
     e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":e.isSaci?"Saci-pererê":e.isBoiBumba?"Boi-bumbá":e.isZeGotinha?"Zé Gotinha":e.isEt?"ET de Varginha":"Pombo ladrão";
     const tier=Math.min(5,Math.floor(this.elapsed/90)+Math.floor((this.level-1)/8));e.difficultyTier=tier;e.hp=e.isVendor?3+Math.floor(this.elapsed/55):e.isEt?3+Math.floor(this.elapsed/60):e.isBoiBumba?4+Math.floor(this.elapsed/55):e.isSaci?2+Math.floor(this.elapsed/100):e.isCapybara?2+Math.floor(this.elapsed/90):e.isMosquito?1+Math.floor(this.elapsed/130):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/115):e.isMotoboy?2+Math.floor(this.elapsed/100):1+Math.floor(this.elapsed/110);e.hp=Math.ceil(e.hp*(1+tier*.16));
     e.speed=e.isVendor?48:e.isEt?Phaser.Math.Between(72,92):e.isZeGotinha?Phaser.Math.Between(58,78):e.isBoiBumba?Phaser.Math.Between(34,44):e.isSaci?Phaser.Math.Between(112,142):e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
@@ -339,7 +340,7 @@ class Arena extends Phaser.Scene {
       this.physics.moveToObject(e,this.player,e.speed);
       const phase=this.elapsed*(e.isMosquito||e.isSaci?15:e.isBoss?4:6)+e.x*.035;
       const pulse=Math.sin(phase);
-      e.setScale(e.baseScale*(1+(e.isBoss?pulse*.045:e.isMosquito?pulse*.055:pulse*.025)));
+      if(e.texture?.key?.startsWith("pilot_"))e.setFlipX(this.player.x<e.x);e.setScale(e.baseScale*(1+(e.isBoss?pulse*.045:e.isMosquito?pulse*.055:pulse*.025)));
       e.setRotation(e.isMosquito?Math.sin(phase*.7)*.13:e.isBoss?Math.sin(phase*.45)*.025:Math.sin(phase*.5)*.035);
     }
   }
