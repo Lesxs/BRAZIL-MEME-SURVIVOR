@@ -89,7 +89,7 @@ assert.ok(game.includes('this.selectedCharacter=characterProfiles[metaProgress.s
 assert.ok(game.includes("function persistMetaProgress()") && game.includes("try{localStorage.setItem(META_KEY"), "Persistência da seleção não trata bloqueio do armazenamento local");
 assert.ok(html.includes("./src/game.js?v=0.10.1") && html.includes("./style.css?v=0.10.1"), "Cache busting da versão não encontrado");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
-assert.ok(game.includes("this.player.setTexture(this.playerTextureKey,0)") && game.includes('this.playerTextureKey==="pilot_hero"'), "Troca de aparência por personagem não encontrada");
+assert.ok(game.includes("this.player.setTexture(this.playerTextureKey,0)") && game.includes('?"pilot_hero":profile.texture'), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
 assert.ok(game.includes('generateTexture("bullet_estilingue",28,28)'), "Arma Estilingue da Capivara não encontrada");
 assert.ok(game.includes('generateTexture("bullet_redemoinho",24,24)'), "Projétil Redemoinho do Saci não encontrado");
