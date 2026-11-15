@@ -31,3 +31,8 @@ assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não
 assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
 
 console.log("Validação concluída: arquivos presentes, Phaser carregado e seletores HTML conferidos.");
+
+assert.ok(html.includes('id="boss-wrap"') && html.includes('id="boss-hp"') && html.includes('id="boss-fill"'), "HUD de vida do chefe não encontrado");
+assert.ok(game.includes('boss.maxHp=boss.hp'), "Vida máxima do chefe não foi registrada");
+assert.ok(game.includes('this.enemies.some(e=>e.active&&e.isBoss)'), "Proteção contra chefes simultâneos não encontrada");
+assert.ok(game.includes('ui.bossFill.style.width'), "Atualização da barra de vida do chefe não encontrada");
