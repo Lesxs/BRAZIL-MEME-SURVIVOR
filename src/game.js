@@ -97,7 +97,7 @@ class Arena extends Phaser.Scene {
     this.physics.moveToObject(b,target,this.playerStats.bulletSpeed);b.damage=this.playerStats.damage;this.time.delayedCall(1800,()=>{if(b.active)b.destroy();});
   }
   hitEnemy(b,e){
-    if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;
+    if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;if(e.isBoss)this.updateHud();
     if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
