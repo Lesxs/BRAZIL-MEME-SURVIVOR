@@ -21,6 +21,10 @@ assert.ok(game.includes('generateTexture("boss",40,40)'), "Textura do chefe não
 assert.ok(game.includes("spawnBoss()"), "Rotina de surgimento do chefe não encontrada");
 assert.ok(game.includes('generateTexture("caramelo",32,32)'), "Sprite do cachorro caramelo não encontrado");
 assert.ok(game.includes('generateTexture("mosquito",32,32)'), "Sprite do pernilongo não encontrado");
+assert.ok(game.includes('generateTexture("motoboy",32,32)'), "Sprite do motoboy não encontrado");
+assert.ok(game.includes('generateTexture("churrasco",32,32)'), "Sprite do tio do churrasco não encontrado");
+assert.ok(game.includes("this.nextBossAt=60;"), "Temporizador de chefes não é reiniciado");
+assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Inicialização duplicada do chefe encontrada");
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
 assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
 
