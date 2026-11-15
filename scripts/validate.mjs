@@ -25,7 +25,8 @@ assert.ok(game.includes('generateTexture("mosquito",40,40)'), "Sprite do pernilo
 assert.ok(game.includes('generateTexture("motoboy",40,40)'), "Sprite do motoboy não encontrado");
 assert.ok(game.includes('generateTexture("churrasco",40,40)'), "Sprite do tio do churrasco não encontrado");
 assert.ok(game.includes("this.nextBossAt=60;"), "Temporizador de chefes não é reiniciado");
-assert.ok(game.includes('resetRun(){\n    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;'), "Temporizador do chefe não é reiniciado em uma nova partida");
+const resetRunBody=game.slice(game.indexOf("  resetRun(){"),game.indexOf("  renderMetaShop(){"));
+assert.ok(resetRunBody.includes("this.nextBossAt=60;"), "Temporizador do chefe não é reiniciado em uma nova partida");
 assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Temporizador do chefe duplicado");
 assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Inicialização duplicada do chefe encontrada");
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
@@ -130,7 +131,6 @@ assert.ok(html.includes('VERSÃO 0.8.0'), "Versão 0.8.0 não aparece no HTML");
 assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
 console.log("Versão 0.8.0: Curupira, sprite, seleção e regeneração periódica conferidos.");
 
-const resetRunBody=game.slice(game.indexOf("  resetRun(){"),game.indexOf("  renderMetaShop(){"));
 assert.ok(resetRunBody.includes("this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;"), "Relógios de regeneração, invulnerabilidade e habilidade não são reiniciados em nova partida");
 assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
 assert.ok(game.includes('g.generateTexture("boto",40,40)') && game.includes('g.generateTexture("bullet_onda",24,24)'), "Sprites do Boto e da Onda não encontrados");
