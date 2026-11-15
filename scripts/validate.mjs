@@ -17,5 +17,8 @@ assert.ok(html.includes('src="./src/game.js"'), "Entrada do jogo não encontrada
 assert.ok(game.includes("processLevelUps("), "Rotina de evolução de nível não encontrada");
 assert.ok(game.includes("Math.min(70,24+Math.floor(this.elapsed/12))"), "Limite de inimigos simultâneos não encontrado");
 assert.ok(game.includes("for(const e of this.enemies)"), "Loop de inimigos otimizado não encontrado");
+assert.ok(game.includes('generateTexture("boss",40,40)'), "Textura do chefe não encontrada");
+assert.ok(game.includes("spawnBoss()"), "Rotina de surgimento do chefe não encontrada");
+assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
 
 console.log("Validação concluída: arquivos presentes, Phaser carregado e seletores HTML conferidos.");
