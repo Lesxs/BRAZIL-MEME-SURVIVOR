@@ -24,6 +24,8 @@ assert.ok(game.includes('generateTexture("mosquito",32,32)'), "Sprite do pernilo
 assert.ok(game.includes('generateTexture("motoboy",32,32)'), "Sprite do motoboy não encontrado");
 assert.ok(game.includes('generateTexture("churrasco",32,32)'), "Sprite do tio do churrasco não encontrado");
 assert.ok(game.includes("this.nextBossAt=60;"), "Temporizador de chefes não é reiniciado");
+assert.ok(game.includes('resetRun(){\n    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;'), "Temporizador do chefe não é reiniciado em uma nova partida");
+assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Temporizador do chefe duplicado");
 assert.ok(!game.includes("this.nextBossAt=60;this.nextBossAt=60;"), "Inicialização duplicada do chefe encontrada");
 assert.ok(game.includes('"Fiscal do Pix"'), "Identidade brasileira do chefe não encontrada");
 assert.ok(game.includes("e.isBoss?8:e.isVendor?3"), "Recompensa especial do chefe não encontrada");
