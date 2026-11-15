@@ -17,6 +17,7 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Tio do churrasco:** resistente e pesado.
 - **Vendedor do centro:** inimigo especial, forte e resistente.
 - **Fiscal do Pix:** chefe que aparece a cada 60 segundos, possui barra de vida própria e oferece recompensa especial. Apenas um Fiscal do Pix pode ficar ativo por vez.
+- **Baú do churrasco:** surge quando um chefe é derrotado. Aproxime-se para escolher uma entre três recompensas de raridade comum, rara ou épica. O baú desaparece após 30 segundos se não for coletado.
 
 Todos os inimigos e chefes devem seguir referências brasileiras, memes, cultura popular ou situações do cotidiano. Evitar personagens genéricos sem identidade temática.
 
@@ -30,7 +31,7 @@ A quantidade de inimigos comuns aumenta gradualmente e tem limite de 70 simultâ
 A trilha sonora original será integrada posteriormente, quando o arquivo de música criado para o jogo estiver disponível.
 
 ## Validação automática
-O GitHub Actions verifica a sintaxe JavaScript e confere referências essenciais entre HTML e JavaScript, além de validar as mecânicas de desempenho, chefes e personagens brasileiros.
+O GitHub Actions verifica a sintaxe JavaScript e confere referências essenciais entre HTML e JavaScript, além de validar as mecânicas de desempenho, chefes, baús com raridades e personagens brasileiros.
 
 ## Publicação
 O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages após push na branch `main`.
