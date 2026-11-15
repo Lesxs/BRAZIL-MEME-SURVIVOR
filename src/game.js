@@ -36,6 +36,8 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0x9bc879);g.fillEllipse(16,17,27,21);g.fillStyle(0x334b2b);g.fillCircle(9,12,2);g.fillCircle(21,12,2);g.fillStyle(0x273b24);g.fillEllipse(15,21,9,4);g.generateTexture("capybara",32,32);g.clear();
     g.fillStyle(0xc58b52);g.fillEllipse(16,18,22,17);g.fillCircle(7,8,6);g.fillCircle(25,8,6);g.fillStyle(0x25201b);g.fillCircle(11,16,2);g.fillCircle(21,16,2);g.fillStyle(0x38251d);g.fillEllipse(16,23,5,3);g.generateTexture("caramelo",32,32);g.clear();
     g.fillStyle(0x9aa5b5);g.fillEllipse(16,17,8,15);g.fillCircle(16,7,5);g.lineStyle(2,0xc8d2e0);g.lineBetween(12,14,4,7);g.lineBetween(20,14,28,7);g.fillStyle(0x202638);g.fillCircle(14,6,1);g.fillCircle(18,6,1);g.generateTexture("mosquito",32,32);g.clear();
+    g.fillStyle(0x2d3748);g.fillRoundedRect(5,9,22,19,5);g.fillStyle(0xffd166);g.fillRoundedRect(7,2,18,12,5);g.fillStyle(0x263142);g.fillRect(7,11,18,3);g.fillStyle(0xe8edf5);g.fillCircle(12,20,2);g.fillCircle(21,20,2);g.generateTexture("motoboy",32,32);g.clear();
+    g.fillStyle(0xb65e36);g.fillEllipse(16,19,23,16);g.fillStyle(0x5b3024);g.fillCircle(8,9,6);g.fillCircle(24,9,6);g.fillStyle(0xffd166);g.fillRect(10,5,12,5);g.fillStyle(0x241b19);g.fillCircle(11,17,2);g.fillCircle(21,17,2);g.fillRect(12,24,8,3);g.generateTexture("churrasco",32,32);g.clear();
     g.fillStyle(0x6f273b);g.fillRoundedRect(2,2,36,36,9);g.fillStyle(0xffd166);g.fillCircle(12,14,3);g.fillCircle(28,14,3);g.fillStyle(0x1c1720);g.fillRect(13,25,14,4);g.generateTexture("boss",40,40);g.clear();
     g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.generateTexture("orb",12,12);g.clear();
     g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.generateTexture("bullet",12,12);g.destroy();
@@ -75,12 +77,12 @@ class Arena extends Phaser.Scene {
   }
   spawnEnemy(){
     const side=Phaser.Math.Between(0,3);let x=side===0?15:side===1?W-15:Phaser.Math.Between(15,W-15),y=side===2?15:side===3?H-15:Phaser.Math.Between(15,H-15);
-    const roll=Math.random();const kind=this.elapsed>25&&roll<.13?"vendor":this.elapsed>18&&roll<.28?"mosquito":this.elapsed>12&&roll<.48?"capybara":roll<.68?"caramelo":"pigeon";
-    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";
-    e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":"Pombo ladrão";
-    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo?2+Math.floor(this.elapsed/80):1+Math.floor(this.elapsed/70);
-    e.speed=e.isVendor?48:e.isCapybara?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
-    e.damage=e.isVendor?22:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:12;e.setScale(e.isVendor?1.15:e.isCapybara?1.2:e.isCaramelo?1.12:1);
+    const roll=Math.random();const kind=this.elapsed>35&&roll<.10?"vendor":this.elapsed>28&&roll<.22?"motoboy":this.elapsed>22&&roll<.32?"churrasco":this.elapsed>18&&roll<.43?"mosquito":this.elapsed>12&&roll<.58?"capybara":roll<.78?"caramelo":"pigeon";
+    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";
+    e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":"Pombo ladrão";
+    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/80):e.isMotoboy?3+Math.floor(this.elapsed/65):1+Math.floor(this.elapsed/70);
+    e.speed=e.isVendor?48:e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
+    e.damage=e.isVendor?22:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor?1.15:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);
     this.enemies.push(e);
   }
   spawnBoss(){
@@ -96,7 +98,7 @@ class Arena extends Phaser.Scene {
   }
   hitEnemy(b,e){
     if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;
-    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
     if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.updateHud();
