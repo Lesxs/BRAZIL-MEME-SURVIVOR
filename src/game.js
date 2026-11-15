@@ -44,24 +44,162 @@ class Arena extends Phaser.Scene {
   }
   makeTextures(){
     const g=this.make.graphics({x:0,y:0,add:false});
-    g.fillStyle(0xb8f36b);g.fillCircle(16,16,14);g.fillStyle(0x26351e);g.fillCircle(11,13,2);g.fillCircle(21,13,2);g.fillStyle(0x26351e);g.fillRect(12,21,8,2);g.generateTexture("player",32,32);g.clear();
-    g.fillStyle(0xb8a0ff);g.fillCircle(13,13,11);g.fillStyle(0x211d37);g.fillCircle(9,11,2);g.fillCircle(17,11,2);g.fillRect(10,17,7,2);g.generateTexture("pigeon",26,26);g.clear();
-    g.fillStyle(0xffa35c);g.fillRoundedRect(2,2,24,24,7);g.fillStyle(0x442616);g.fillCircle(9,11,2);g.fillCircle(19,11,2);g.fillRect(10,18,8,2);g.generateTexture("vendor",28,28);g.clear();
-    g.fillStyle(0x9bc879);g.fillEllipse(16,17,27,21);g.fillStyle(0x334b2b);g.fillCircle(9,12,2);g.fillCircle(21,12,2);g.fillStyle(0x273b24);g.fillEllipse(15,21,9,4);g.generateTexture("capybara",32,32);g.clear();
-    g.fillStyle(0xc58b52);g.fillEllipse(16,18,22,17);g.fillCircle(7,8,6);g.fillCircle(25,8,6);g.fillStyle(0x25201b);g.fillCircle(11,16,2);g.fillCircle(21,16,2);g.fillStyle(0x38251d);g.fillEllipse(16,23,5,3);g.generateTexture("caramelo",32,32);g.clear();
-    g.fillStyle(0x9aa5b5);g.fillEllipse(16,17,8,15);g.fillCircle(16,7,5);g.lineStyle(2,0xc8d2e0);g.lineBetween(12,14,4,7);g.lineBetween(20,14,28,7);g.fillStyle(0x202638);g.fillCircle(14,6,1);g.fillCircle(18,6,1);g.generateTexture("mosquito",32,32);g.clear();
-    g.fillStyle(0x2d3748);g.fillRoundedRect(5,9,22,19,5);g.fillStyle(0xffd166);g.fillRoundedRect(7,2,18,12,5);g.fillStyle(0x263142);g.fillRect(7,11,18,3);g.fillStyle(0xe8edf5);g.fillCircle(12,20,2);g.fillCircle(21,20,2);g.generateTexture("motoboy",32,32);g.clear();
-    g.fillStyle(0xb65e36);g.fillEllipse(16,19,23,16);g.fillStyle(0x5b3024);g.fillCircle(8,9,6);g.fillCircle(24,9,6);g.fillStyle(0xffd166);g.fillRect(10,5,12,5);g.fillStyle(0x241b19);g.fillCircle(11,17,2);g.fillCircle(21,17,2);g.fillRect(12,24,8,3);g.generateTexture("churrasco",32,32);g.clear();
-    g.fillStyle(0x6f273b);g.fillRoundedRect(2,2,36,36,9);g.fillStyle(0xffd166);g.fillCircle(12,14,3);g.fillCircle(28,14,3);g.fillStyle(0x1c1720);g.fillRect(13,25,14,4);g.generateTexture("boss",40,40);g.clear();
-    g.fillStyle(0x9b6237);g.fillRoundedRect(2,8,28,20,4);g.fillStyle(0xe0ad58);g.fillRect(2,14,28,4);g.fillStyle(0xf6d98b);g.fillRect(13,8,6,20);g.fillStyle(0x5b3826);g.fillRect(13,15,6,4);g.generateTexture("chest",32,32);g.clear();
-    g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.generateTexture("orb",12,12);g.clear();
-    g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.generateTexture("bullet",12,12);g.destroy();
+    // Sobrevivente: boné, camisa verde-amarela, bermuda e tênis.
+    g.fillStyle(0x172321);g.fillRoundedRect(5,5,30,33,9);
+    g.fillStyle(0xd49a69);g.fillCircle(20,14,10);
+    g.fillStyle(0x202b28);g.fillRoundedRect(9,3,22,8,4);g.fillRect(7,9,27,3);
+    g.fillStyle(0x176b43);g.fillRoundedRect(7,20,26,15,5);
+    g.fillStyle(0xf4d34e);g.fillRect(17,21,6,12);
+    g.fillStyle(0x263b31);g.fillRect(10,33,8,5);g.fillRect(23,33,8,5);
+    g.fillStyle(0xe9eee0);g.fillRect(8,37,11,2);g.fillRect(22,37,11,2);
+    g.fillStyle(0x202321);g.fillCircle(16,14,1.5);g.fillCircle(24,14,1.5);
+    g.fillStyle(0x6e382d);g.fillRect(17,19,7,2);g.generateTexture("player",40,40);g.clear();
+
+    // Pombo ladrão: corpo cinza, asa marcada e pescoço iridescente.
+    g.fillStyle(0x252b31);g.fillEllipse(19,23,29,20);
+    g.fillStyle(0x8795a1);g.fillEllipse(18,19,25,18);
+    g.fillStyle(0x596d82);g.fillEllipse(18,23,18,10);
+    g.fillStyle(0x2e8b82);g.fillEllipse(25,13,9,13);
+    g.fillStyle(0x9eabb3);g.fillCircle(27,8,6);
+    g.fillStyle(0xf0c34f);g.fillTriangle(32,8,39,11,32,13);
+    g.fillStyle(0x151a1d);g.fillCircle(29,7,1.5);
+    g.fillStyle(0xb77c3e);g.fillRect(16,32,2,5);g.fillRect(25,32,2,5);
+    g.generateTexture("pigeon",40,40);g.clear();
+
+    // Vendedor do centro: boné, caixa de mercadoria e camiseta.
+    g.fillStyle(0x22272a);g.fillRoundedRect(7,11,27,27,6);
+    g.fillStyle(0xe0a06c);g.fillCircle(20,13,10);
+    g.fillStyle(0x365b8b);g.fillRoundedRect(8,4,24,8,3);g.fillRect(5,10,30,3);
+    g.fillStyle(0xf08b45);g.fillRoundedRect(7,22,27,15,4);
+    g.fillStyle(0xf6d16b);g.fillRect(10,25,21,8);
+    g.fillStyle(0x6c482b);g.fillRect(12,28,17,2);
+    g.fillStyle(0x25211d);g.fillCircle(16,14,1.5);g.fillCircle(24,14,1.5);
+    g.generateTexture("vendor",40,40);g.clear();
+
+    // Capivara: focinho, orelhas e corpo robusto.
+    g.fillStyle(0x28251f);g.fillEllipse(20,24,33,22);
+    g.fillStyle(0x9b7047);g.fillEllipse(20,21,30,20);
+    g.fillStyle(0x684a32);g.fillEllipse(20,27,19,9);
+    g.fillStyle(0xb98959);g.fillCircle(9,12,5);g.fillCircle(30,12,5);
+    g.fillStyle(0x3a2c23);g.fillEllipse(20,25,12,7);
+    g.fillStyle(0x191714);g.fillCircle(14,17,2);g.fillCircle(26,17,2);
+    g.fillStyle(0x30231b);g.fillEllipse(20,29,5,2);
+    g.generateTexture("capybara",40,40);g.clear();
+
+    // Cachorro caramelo: orelhas caídas, focinho claro e coleira.
+    g.fillStyle(0x3a261d);g.fillEllipse(20,23,29,23);
+    g.fillStyle(0xc88745);g.fillEllipse(20,21,25,22);
+    g.fillStyle(0x9d5d32);g.fillEllipse(8,14,9,15);g.fillEllipse(32,14,9,15);
+    g.fillStyle(0xe8bb83);g.fillEllipse(20,27,13,9);
+    g.fillStyle(0x24201c);g.fillCircle(15,19,2);g.fillCircle(25,19,2);g.fillEllipse(20,26,3,2);
+    g.fillStyle(0x3975b8);g.fillRect(9,31,22,3);g.fillStyle(0xf4d56b);g.fillRect(18,31,4,4);
+    g.generateTexture("caramelo",40,40);g.clear();
+
+    // Pernilongo: pernas, asas translúcidas e probóscide.
+    g.lineStyle(2,0xb9d4d6,.9);g.lineBetween(15,15,3,7);g.lineBetween(22,15,36,6);g.lineBetween(15,24,4,34);g.lineBetween(20,25,14,38);g.lineBetween(24,24,35,35);
+    g.fillStyle(0x9fc8cb,.55);g.fillEllipse(11,12,17,8);g.fillEllipse(28,12,17,8);
+    g.fillStyle(0x273744);g.fillEllipse(20,22,8,20);g.fillCircle(20,10,6);
+    g.fillStyle(0xd9e6dc);g.fillCircle(18,9,1);g.fillCircle(22,9,1);
+    g.lineStyle(2,0xe3c6a1);g.lineBetween(20,14,30,4);
+    g.generateTexture("mosquito",40,40);g.clear();
+
+    // Motoboy do grau: capacete, viseira e mochila de entrega.
+    g.fillStyle(0x222a32);g.fillRoundedRect(6,17,29,21,6);
+    g.fillStyle(0xe4b184);g.fillCircle(20,15,9);
+    g.fillStyle(0xffd04f);g.fillRoundedRect(8,4,25,14,7);
+    g.fillStyle(0x263747);g.fillRoundedRect(9,12,23,5,2);
+    g.fillStyle(0x263747);g.fillRoundedRect(27,20,10,15,3);
+    g.fillStyle(0xf15b42);g.fillRect(29,23,6,3);
+    g.fillStyle(0xeff2e9);g.fillCircle(16,17,1.5);g.fillCircle(24,17,1.5);
+    g.fillStyle(0x397e55);g.fillRect(11,29,18,4);
+    g.generateTexture("motoboy",40,40);g.clear();
+
+    // Tio do churrasco: avental, boné e espeto.
+    g.fillStyle(0x25211f);g.fillRoundedRect(5,16,30,23,7);
+    g.fillStyle(0xd39a6b);g.fillCircle(20,14,10);
+    g.fillStyle(0x9a3d2e);g.fillRoundedRect(8,4,24,8,3);g.fillRect(7,10,26,3);
+    g.fillStyle(0xe9e1d0);g.fillRoundedRect(9,22,22,15,3);
+    g.fillStyle(0xb94f32);g.fillRect(12,25,16,9);
+    g.fillStyle(0x28211b);g.fillCircle(16,14,1.5);g.fillCircle(24,14,1.5);
+    g.lineStyle(2,0xd6d2c4);g.lineBetween(31,20,39,6);
+    g.generateTexture("churrasco",40,40);g.clear();
+
+    // Fiscal do Pix: chefe de terno, gravata e visor vermelho.
+    g.fillStyle(0x1c1722);g.fillRoundedRect(4,7,48,46,10);
+    g.fillStyle(0x6b263b);g.fillRoundedRect(7,4,42,47,8);
+    g.fillStyle(0xd8a06d);g.fillCircle(28,19,13);
+    g.fillStyle(0x20202a);g.fillRoundedRect(13,4,30,10,4);
+    g.fillStyle(0xe9d7b0);g.fillRect(12,29,32,19);
+    g.fillStyle(0x9e293e);g.fillTriangle(28,30,22,47,34,47);
+    g.fillStyle(0x25212a);g.fillRect(15,17,10,4);g.fillRect(31,17,10,4);
+    g.fillStyle(0xffd15b);g.fillCircle(20,19,2);g.fillCircle(36,19,2);
+    g.fillStyle(0x28212a);g.fillRect(21,24,14,3);
+    g.generateTexture("boss",56,56);g.clear();
+
+    // Baú de churrasco com tampa, ferragens e brilho.
+    g.fillStyle(0x35251d);g.fillRoundedRect(3,12,34,25,4);
+    g.fillStyle(0x9b5c31);g.fillRoundedRect(4,7,32,15,5);
+    g.fillStyle(0xd79a4f);g.fillRect(5,17,30,5);
+    g.fillStyle(0xf3d17a);g.fillRect(17,9,6,27);
+    g.fillStyle(0x5a3422);g.fillRect(15,20,10,8);
+    g.fillStyle(0xffe6a0);g.fillCircle(20,24,2);
+    g.generateTexture("chest",40,40);g.clear();
+
+    g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.lineStyle(2,0xd5ffe8);g.strokeCircle(6,6,4);g.generateTexture("orb",12,12);g.clear();
+    g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.fillStyle(0xff9d42);g.fillCircle(6,6,2);g.generateTexture("bullet",12,12);g.destroy();
   }
   drawArena(){
-    const bg=this.add.graphics().setDepth(0);bg.fillStyle(0x121a29);bg.fillRect(0,0,W,H);
-    bg.lineStyle(1,0x243047,.65);for(let x=0;x<W;x+=40)bg.lineBetween(x,0,x,H);for(let y=0;y<H;y+=40)bg.lineBetween(0,y,W,y);
-    bg.lineStyle(2,0x35435a,.8);bg.strokeRect(8,8,W-16,H-16);
-    const deco=this.add.graphics().setDepth(1);for(let i=0;i<24;i++){const x=Phaser.Math.Between(25,W-25),y=Phaser.Math.Between(25,H-25);deco.fillStyle(0x2c3a4c,.55);deco.fillCircle(x,y,Phaser.Math.Between(1,3));}
+    const bg=this.add.graphics().setDepth(0);
+    bg.fillStyle(0x263b38);bg.fillRect(0,0,W,H);
+    // Quadras e asfalto com textura discreta, sem grade de protótipo.
+    bg.fillStyle(0x52604d);bg.fillRect(0,0,W,72);bg.fillRect(0,H-70,W,70);
+    bg.fillStyle(0x303a39);bg.fillRect(0,72,W,H-142);
+    bg.fillStyle(0x394544);bg.fillRect(0,80,W,7);bg.fillRect(0,H-78,W,7);
+    // Calçadas, guias e faixas de pedestre.
+    bg.fillStyle(0x9a927c);bg.fillRect(0,67,W,7);bg.fillRect(0,H-74,W,7);
+    bg.fillStyle(0xe4d6ad,.7);for(let i=0;i<8;i++)bg.fillRect(410+i*19,72,10,34);
+    bg.fillStyle(0xd9d1b8,.45);for(let i=0;i<8;i++)bg.fillRect(410+i*19,H-106,10,34);
+    // Fachadas de comércio brasileiro nas bordas superiores e inferiores.
+    const shops=[{x:22,w:150,c:0xc66c43},{x:202,w:128,c:0x527d70},{x:360,w:154,c:0xd1a65f},{x:548,w:135,c:0x6d8290},{x:715,w:210,c:0xb75c48}];
+    for(const s of shops){
+      bg.fillStyle(0x202a2b);bg.fillRoundedRect(s.x,9,s.w,53,4);
+      bg.fillStyle(s.c);bg.fillRect(s.x+4,13,s.w-8,45);
+      bg.fillStyle(0xf2d99b);bg.fillRect(s.x+9,20,s.w-18,5);
+      bg.fillStyle(0x263b3b);bg.fillRect(s.x+12,31,s.w-24,23);
+      bg.fillStyle(0x9ec0ad);for(let x=s.x+17;x<s.x+s.w-18;x+=26)bg.fillRect(x,34,17,17);
+      bg.fillStyle(0x332b25);bg.fillRect(s.x+5,57,s.w-10,5);
+      bg.fillStyle(0xf0c56b);bg.fillRect(s.x+8,14,s.w-16,3);
+    }
+    // Casas e quiosques no lado de baixo, mantendo a área central livre.
+    const stalls=[{x:35,w:125,c:0x8f4b34},{x:230,w:150,c:0x376b5a},{x:580,w:145,c:0xb67a3f},{x:790,w:130,c:0x42677c}];
+    for(const s of stalls){
+      bg.fillStyle(0x202929);bg.fillRect(s.x,H-65,s.w,54);
+      bg.fillStyle(s.c);bg.fillRect(s.x+4,H-61,s.w-8,46);
+      bg.fillStyle(0xe8c47d);bg.fillRect(s.x,H-65,s.w,8);
+      bg.fillStyle(0x293c3a);bg.fillRect(s.x+12,H-48,s.w-24,28);
+      bg.fillStyle(0x9dc5b1);bg.fillRect(s.x+17,H-45,18,17);
+      bg.fillStyle(0x40352b);bg.fillRect(s.x+4,H-15,s.w-8,4);
+    }
+    // Postes, árvores, bancos, bueiros e marcas de rua.
+    const deco=this.add.graphics().setDepth(1);
+    for(let i=0;i<18;i++){
+      const x=18+i*54;
+      deco.fillStyle(0x1d2927);deco.fillCircle(x,91+(i%2)*12,12);
+      deco.fillStyle(0x49724f);deco.fillCircle(x-3,87+(i%2)*12,10);
+      deco.fillStyle(0x77583b);deco.fillRect(x-2,98+(i%2)*12,4,10);
+      if(i%3===0){deco.fillStyle(0x202a2b);deco.fillRect(x+17,104,3,32);deco.fillStyle(0xf3c56b);deco.fillCircle(x+18,103,4);}
+    }
+    for(let i=0;i<7;i++){
+      const x=95+i*125,y=H/2+(i%2?54:-58);
+      deco.fillStyle(0x1c2525);deco.fillEllipse(x,y,31,15);
+      deco.lineStyle(2,0x77827a,.7);deco.strokeEllipse(x,y,31,15);
+      deco.fillStyle(0x69736a);deco.fillCircle(x,y,3);
+    }
+    // Linhas de pista e pequenos detalhes urbanos.
+    deco.lineStyle(2,0xb5a77e,.45);
+    for(let x=25;x<W;x+=95){deco.lineBetween(x,270,x+42,270);deco.lineBetween(x,282,x+42,282);}
+    deco.fillStyle(0xe6d6a8,.55);deco.fillCircle(480,270,3);
+    deco.lineStyle(2,0x152321,.8);deco.strokeRect(7,7,W-14,H-14);
   }
   resetRun(){
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;
@@ -102,7 +240,7 @@ class Arena extends Phaser.Scene {
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
-    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.8);boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName="Fiscal do Pix";boss.hp=24+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=38;boss.damage=25;this.enemies.push(boss);this.updateHud();
+    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.45);boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName="Fiscal do Pix";boss.hp=24+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=38;boss.damage=25;this.enemies.push(boss);this.updateHud();
   }
   moveEnemies(){for(const e of this.enemies){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
   autoShoot(){
