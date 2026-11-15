@@ -1,11 +1,29 @@
 #!/usr/bin/env python3
 """Gera spritesheets pixel art para BRASIL: MEME SURVIVORS. Requer Pillow."""
-from PIL import Image,ImageDraw
+from PIL import Image,ImageDraw,ImageChops,ImageFilter
 from pathlib import Path
 import json
 ROOT=Path(__file__).resolve().parents[1]
 C=ROOT/"assets/sprites/characters";B=ROOT/"assets/sprites/bosses";E=ROOT/"assets/sprites/enemies"
 C.mkdir(parents=True,exist_ok=True);B.mkdir(parents=True,exist_ok=True);E.mkdir(parents=True,exist_ok=True)
+def polish_sprite(im):
+ # Contorno escuro de um pixel e realces de luz para leitura em movimento.
+ alpha=im.getchannel("A")
+ expanded=alpha.filter(ImageFilter.MaxFilter(3))
+ edge=ImageChops.subtract(expanded,alpha)
+ outline=Image.new("RGBA",im.size,(24,29,28,255));outline.putalpha(edge)
+ result=Image.new("RGBA",im.size,(0,0,0,0));result.alpha_composite(outline);result.alpha_composite(im)
+ px=result.load();src=im.load();w,h=im.size
+ for y in range(h):
+  for x in range(w):
+   r,g,b,a=src[x,y]
+   if not a: continue
+   top=y==0 or src[x,y-1][3]==0
+   left=x==0 or src[x-1,y][3]==0
+   if top or left:
+    px[x,y]=(min(255,r+22),min(255,g+22),min(255,b+18),a)
+ return result
+
 def frame(kind,act,n,boss=False):
  size=40 if boss else 24; im=Image.new("RGBA",(size,size),(0,0,0,0));d=ImageDraw.Draw(im);bob=(0,-1,0,1)[n]
  if boss:
@@ -43,7 +61,7 @@ def frame(kind,act,n,boss=False):
 def build(kind,boss=False):
  size=80 if boss else 48;out=Image.new("RGBA",(size*4,size*3),(0,0,0,0))
  for row,act in enumerate(("idle","walk","attack")):
-  for n in range(4):out.alpha_composite(frame(kind,act,n,boss),(n*size,row*size))
+  for n in range(4):out.alpha_composite(polish_sprite(frame(kind,act,n,boss)),(n*size,row*size))
  return out
 
 ENEMY_PALETTES={"pigeon":("#8998a5","#34414b","#2b9b8c"),"caramelo":("#c88745","#8f522d","#e8bb83"),"capybara":("#9b7047","#684a32","#d2ad7d"),"mosquito":("#91bfc4","#273744","#d9e6dc"),"vendor":("#e0a06c","#365b8b","#f08b45"),"motoboy":("#e4b184","#263747","#ffd04f"),"churrasco":("#d39a6b","#9a3d2e","#e9e1d0"),"saci":("#b8784b","#28221f","#c93632"),"boi_bumba":("#e3bd54","#315e9b","#d64c45"),"ze_gotinha":("#72c9ed","#f5f5e9","#2f8c62"),"et_varginha":("#789b82","#252d31","#141c20")}
@@ -92,7 +110,7 @@ def enemy_frame(kind,n,act):
 def build_enemy(kind):
  out=Image.new("RGBA",(160,120),(0,0,0,0))
  for row,act in enumerate(("idle","walk","attack")):
-  for n in range(4):out.alpha_composite(enemy_frame(kind,n,act),(n*40,row*40))
+  for n in range(4):out.alpha_composite(polish_sprite(enemy_frame(kind,n,act)),(n*40,row*40))
  return out
 
 meta={"frameWidth":48,"frameHeight":48,"columns":4,"animations":{"idle":{"row":0,"frames":4,"frameRate":5,"repeat":-1},"walk":{"row":1,"frames":4,"frameRate":9,"repeat":-1},"attack":{"row":2,"frames":4,"frameRate":12,"repeat":0}}}
@@ -104,4 +122,4 @@ enemy_meta={"frameWidth":40,"frameHeight":40,"columns":4,"animations":{"idle":{"
 for name in ENEMY_PALETTES:
  build_enemy(name).save(E/(name+".png"),optimize=True)
  (E/(name+".json")).write_text(json.dumps(enemy_meta,ensure_ascii=False,indent=2)+"\n",encoding="utf-8")
-print("Spritesheets geradas: 6 personagens, 3 chefes e 11 inimigos.")
+print("Spritesheets geradas e polidas: contorno pixelado, realces de luz, 6 personagens, 3 chefes e 11 inimigos.")

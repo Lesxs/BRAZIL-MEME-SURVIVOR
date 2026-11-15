@@ -36,9 +36,9 @@ const upgrades = [
 class Arena extends Phaser.Scene {
   constructor(){super("arena");this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.nextBossAt=90;this.bossCount=0;this.selectedCharacter=metaProgress.selectedCharacter;this.abilityCooldown=0;this.playerStats={};this.enemies=[];this.bullets=[];this.orbs=[];this.keys={};this.touch={up:false,down:false,left:false,right:false};}
   preload(){
-    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.7",{frameWidth:48,frameHeight:48});
-    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.7",{frameWidth:80,frameHeight:80});
-    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.7",{frameWidth:40,frameHeight:40});
+    for(const id of ["sobrevivente","motoboy","capivara","saci","curupira","boto"])this.load.spritesheet("char_"+id,"assets/sprites/characters/"+id+".png?v=0.10.8",{frameWidth:48,frameHeight:48});
+    for(const id of ["fiscal-do-pix","boitata","mula-sem-cabeca"])this.load.spritesheet("boss_"+id,"assets/sprites/bosses/"+id+".png?v=0.10.8",{frameWidth:80,frameHeight:80});
+    for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])this.load.spritesheet("enemy_"+id,"assets/sprites/enemies/"+id+".png?v=0.10.8",{frameWidth:40,frameHeight:40});
   }
   create(){
     this.makeTextures();this.createSpriteAnimations();this.drawArena();
@@ -306,11 +306,34 @@ class Arena extends Phaser.Scene {
       streetArt.fillStyle(0xe7c47a);streetArt.fillRect(x+3,45,18,2);
       streetArt.fillStyle(0xd96e4e,.9);streetArt.fillRect(x+5,48,5,2);
     }
+    // Identidade da primeira fase: Quebrada Brasileira.
+    // Vielas, escadarias, muros pintados e quadra comunitária nas bordas da arena.
+    streetArt.fillStyle(0x263b35,.95);streetArt.fillRoundedRect(14,116,112,40,3);
+    streetArt.fillStyle(0xe6c27c,.9);streetArt.fillRect(20,121,100,4);
+    streetArt.fillStyle(0x9d5542,.9);streetArt.fillRect(22,130,37,20);
+    streetArt.fillStyle(0x315d50,.9);streetArt.fillRect(64,130,50,20);
+    streetArt.fillStyle(0xd6b77b,.85);streetArt.fillRect(27,135,27,3);
+    streetArt.fillStyle(0xe5a34f,.9);streetArt.fillCircle(43,143,3);
+    streetArt.fillStyle(0x263b35,.95);streetArt.fillRoundedRect(W-126,H-160,112,42,3);
+    streetArt.fillStyle(0xd7bd83,.9);streetArt.fillRect(W-120,H-154,100,4);
+    streetArt.fillStyle(0x8d4c42,.9);streetArt.fillRect(W-116,H-144,42,19);
+    streetArt.fillStyle(0x376b58,.9);streetArt.fillRect(W-69,H-144,43,19);
+    // Escadarias de concreto e degraus gastos, sem invadir o centro jogável.
+    streetArt.fillStyle(0x77796d,.75);
+    for(let i=0;i<5;i++){streetArt.fillRect(18+i*7,169+i*5,44-i*5,3);streetArt.fillRect(W-62-i*7,H-192+i*5,44-i*5,3);}
+    // Marcações discretas de uma quadra de futebol de bairro.
+    streetArt.lineStyle(2,0xb8b18e,.22);streetArt.strokeRect(350,205,260,132);
+    streetArt.strokeCircle(480,271,31);streetArt.lineBetween(480,205,480,337);
+    streetArt.strokeRect(350,235,30,72);streetArt.strokeRect(580,235,30,72);
+    streetArt.lineStyle(3,0x26302b,.85);
+    streetArt.lineBetween(12,190,12,340);streetArt.lineBetween(948,190,948,340);
+    streetArt.lineBetween(12,190,28,190);streetArt.lineBetween(932,190,948,190);
     // Faixas da pista e contorno de segurança.
     streetArt.lineStyle(2,0xb5a77e,.45);
     for(let x=25;x<W;x+=95){streetArt.lineBetween(x,270,x+42,270);streetArt.lineBetween(x,282,x+42,282);}
     streetArt.fillStyle(0xe6d6a8,.55);streetArt.fillCircle(480,270,3);
     streetArt.lineStyle(2,0x152321,.8);streetArt.strokeRect(7,7,W-14,H-14);
+    this.add.text(18,86,"QUEBRADA BRASILEIRA  /  ZONA 01",{fontFamily:"Arial",fontSize:"10px",fontStyle:"bold",color:"#f0d59a",stroke:"#1b2925",strokeThickness:3,letterSpacing:1}).setDepth(1.2).setAlpha(.88);
   }
   resetRun(){
     this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=90;this.bossCount=0;
