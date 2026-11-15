@@ -58,6 +58,10 @@ assert.ok(game.includes("Postes, árvores, bancos, bueiros"), "Elementos de ambi
 assert.ok(!game.includes("bg.lineStyle(1,0x243047,.65)"), "Grade genérica do cenário antigo ainda está presente");
 assert.ok(game.includes("weaponLevel:1"), "Nível inicial da arma não encontrado");
 assert.ok(game.includes("count=level===1?1:level===2?3:5"), "Disparos evolutivos não encontrados");
+assert.ok(game.includes('generateTexture("bullet_espeto",14,16)'), "Projétil de espeto não encontrado");
+assert.ok(game.includes('generateTexture("bullet_rojao",16,18)'), "Projétil de rojão não encontrado");
+assert.ok(game.includes('generateTexture("bullet_fogos",16,16)'), "Projétil de fogos de artifício não encontrado");
+assert.ok(game.includes('const projectile=level===1?"bullet_espeto":level===2?"bullet_rojao":"bullet_fogos"'), "Seleção visual de projéteis por evolução não encontrada");
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
