@@ -15,3 +15,6 @@
 
 /* Barra de vida do chefe: aparece somente durante o combate. */
 .boss-wrap{flex-basis:100%;min-width:100%;padding-top:2px}.boss-wrap.hidden{display:none}.boss-track{height:9px;border-radius:8px;background:#49313a;overflow:hidden}.boss-track div{height:100%;width:100%;background:linear-gradient(90deg,#a8324a,#ff657a);border-radius:8px;transition:width .15s}
+
+/* Recompensas dos baús brasileiros */
+.upgrade-card small{display:block;font-size:8px;font-weight:900;letter-spacing:.16em;margin-bottom:7px;color:#c4cad8}.upgrade-card.rarity-raro{border-color:#58a9ed;background:linear-gradient(145deg,#20374d,#20283a)}.upgrade-card.rarity-raro small,.upgrade-card.rarity-raro b{color:#72c0ff}.upgrade-card.rarity-epico{border-color:#c18bff;background:linear-gradient(145deg,#3b2852,#24233d);box-shadow:inset 0 0 18px #a65cff18}.upgrade-card.rarity-epico small,.upgrade-card.rarity-epico b{color:#d4a4ff}
