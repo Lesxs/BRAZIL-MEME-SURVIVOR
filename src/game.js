@@ -429,7 +429,7 @@ function selectCharacter(id){
 document.querySelector("#start-btn").addEventListener("click",()=>{scene().startRun();});
 document.querySelector("#restart-btn").addEventListener("click",()=>{ui.gameover.classList.add("hidden");scene().startRun();});
 const touch={up:false,down:false,left:false,right:false};scene().touch=touch;scene().renderMetaShop();ui.abilityButton.addEventListener("click",()=>scene().triggerAbility());
-document.querySelector(".character-options").addEventListener("click",event=>{const button=event.target.closest("[data-character]");if(!button)return;event.preventDefault();selectCharacter(button.dataset.character);});
+document.querySelectorAll("[data-character]").forEach(button=>{const choose=event=>{event.preventDefault();selectCharacter(button.dataset.character);};button.addEventListener("pointerdown",choose,{passive:false});button.addEventListener("click",event=>{if(event.detail===0)choose(event);});});
 selectCharacter(metaProgress.selectedCharacter);
 document.querySelectorAll("[data-meta-upgrade]").forEach(button=>button.addEventListener("click",()=>scene().buyMetaUpgrade(button.dataset.metaUpgrade)));
 document.querySelectorAll("[data-key]").forEach(btn=>{

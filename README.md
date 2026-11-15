@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.8.0 — Boto-cor-de-rosa, encanto amazônico**
+**Versão 0.9.1 — seleção de personagens reforçada**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -110,3 +110,10 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Indicador visível do personagem ativo, estados acessíveis e suporte a toque.
 - Salvamento protegido caso o navegador bloqueie o armazenamento local.
 - JavaScript e CSS com versão na URL para evitar cache antigo.
+
+
+## Versão 0.9.1
+- Seleção dos seis personagens conectada diretamente a cada cartão.
+- Suporte reforçado a mouse, toque e teclado.
+- Arte de fundo sem captura de eventos e cartões com prioridade de interação.
+- Escolha continua sendo salva quando o armazenamento local está disponível.
