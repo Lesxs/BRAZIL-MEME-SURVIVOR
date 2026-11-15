@@ -60,3 +60,6 @@ assert.ok(game.includes("weaponLevel:1"), "Nível inicial da arma não encontrad
 assert.ok(game.includes("count=level===1?1:level===2?3:5"), "Disparos evolutivos não encontrados");
 assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma não encontrada");
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
+assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
+assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
+assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recompensa imediata de moedas do baú não encontrada");
