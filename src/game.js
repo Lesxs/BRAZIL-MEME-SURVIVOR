@@ -10,7 +10,7 @@ const ui = {
 const chestUpgrades = [
   {name:"ESPETO DE AÇO",desc:"+35% de dano nos ataques.",rarity:"COMUM",apply:p=>p.damage*=1.35},
   {name:"CALDO DE CANA",desc:"+30% de velocidade de movimento.",rarity:"COMUM",apply:p=>p.speed*=1.3},
-  {name:"FARofa REFORÇADA",desc:"+35 de vida máxima e recupera 35.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
+  {name:"FAROFA REFORÇADA",desc:"+35 de vida máxima e recupera 35.",rarity:"COMUM",apply:p=>{p.maxHp+=35;p.hp=Math.min(p.maxHp,p.hp+35)}},
   {name:"CHURRASCO DE RESPEITO",desc:"+60% de dano nos ataques.",rarity:"RARO",apply:p=>p.damage*=1.6},
   {name:"GÁS DO BOTIJÃO",desc:"+45% de velocidade de ataque.",rarity:"RARO",apply:p=>p.fireRate*=.55},
   {name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}},
@@ -146,7 +146,10 @@ class Arena extends Phaser.Scene {
     g.generateTexture("chest",40,40);g.clear();
 
     g.fillStyle(0x65e6a3);g.fillCircle(6,6,6);g.lineStyle(2,0xd5ffe8);g.strokeCircle(6,6,4);g.generateTexture("orb",12,12);g.clear();
-    g.fillStyle(0xffed8a);g.fillCircle(6,6,6);g.fillStyle(0xff9d42);g.fillCircle(6,6,2);g.generateTexture("bullet",12,12);g.destroy();
+    // Projéteis brasileiros: espeto, rojão e explosão de festa junina.
+    g.fillStyle(0x5b3924);g.fillRoundedRect(5,1,4,14,2);g.fillStyle(0xe5bd78);g.fillRect(6,3,2,9);g.fillStyle(0xf1dfb0);g.fillTriangle(7,0,4,4,10,4);g.generateTexture("bullet_espeto",14,16);g.clear();
+    g.fillStyle(0x27313a);g.fillRoundedRect(5,3,6,11,2);g.fillStyle(0xd94b38);g.fillRect(5,5,6,4);g.fillStyle(0xffd36a);g.fillTriangle(8,0,4,5,12,5);g.fillStyle(0xffa34d);g.fillTriangle(8,16,4,12,12,12);g.generateTexture("bullet_rojao",16,18);g.clear();
+    g.fillStyle(0xffd66e);g.fillCircle(8,8,3);g.lineStyle(2,0xffa34d);for(let a=0;a<8;a++){const angle=a*Math.PI/4;g.lineBetween(8+Math.cos(angle)*4,8+Math.sin(angle)*4,8+Math.cos(angle)*8,8+Math.sin(angle)*8);}g.fillStyle(0xfff0a0);g.fillCircle(8,8,2);g.generateTexture("bullet_fogos",16,16);g.destroy();
   }
   drawArena(){
     const bg=this.add.graphics().setDepth(0);
@@ -249,9 +252,11 @@ class Arena extends Phaser.Scene {
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
     const spread=level===2 ? 0.18 : 0.16;
+    const projectile=level===1?"bullet_espeto":level===2?"bullet_rojao":"bullet_fogos";
     for(let i=0;i<count;i++){
       const angle=base+(i-(count-1)/2)*spread;
-      const b=this.bulletGroup.create(this.player.x,this.player.y,"bullet").setDepth(2);
+      const b=this.bulletGroup.create(this.player.x,this.player.y,projectile).setDepth(2);
+      b.setRotation(angle+Math.PI/2);
       this.physics.velocityFromRotation(angle,this.playerStats.bulletSpeed,b.body.velocity);
       b.damage=this.playerStats.damage;this.time.delayedCall(1800,()=>{if(b.active)b.destroy();});
     }
