@@ -154,7 +154,7 @@ assert.ok(!game.includes('button.addEventListener("pointerdown",choose'),"Listen
 for(const id of ["pigeon","caramelo","capybara","mosquito","vendor","motoboy","churrasco","saci","boi_bumba","ze_gotinha","et_varginha"])assert.ok(existsSync(`assets/sprites/enemies/${id}.png`),`Spritesheet ${id} ausente`);
 assert.ok(game.includes('this.load.spritesheet("enemy_"+id'));
 assert.ok(game.includes('this.enemyGroup.create(x,y,"enemy_"+kind)'));
-assert.ok(game.includes("Math.max(950,1900-this.elapsed*3.5)"));
+assert.ok(game.includes("Math.max(820,1900-this.elapsed*3.2-difficultyTier*45)"));
 assert.ok(game.includes('roll<25?"ÉPICO":roll<75?"RARO":"COMUM"'));
 
 assert.ok(game.includes('name:"ÁGUA DE COCO GELADA"') && game.includes("p.maxHp*.3"),"Melhoria de recuperação de vida ausente");
