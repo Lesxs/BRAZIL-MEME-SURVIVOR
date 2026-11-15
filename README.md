@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.7.0 — Curupira, guardião da mata**
+**Versão 0.8.0 — Boto-cor-de-rosa, encanto amazônico**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -51,11 +51,13 @@ O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages ap
 
 Jogue em: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
 
-## Personagens jogáveis — versão 0.5.0
+## Personagens jogáveis — versão 0.8.0
 - **Sobrevivente:** personagem equilibrado, com Espeto de Aço.
 - **Motoboy do Grau:** mais veloz, com Chinelo como arma inicial.
 - **Capivara Braba:** mais vida e dano, com Estilingue como arma inicial.
 - **Saci-pererê:** pouca vida, velocidade muito alta e Redemoinho como arma inicial.
+- **Curupira:** regenera 2 pontos de vida a cada 8 segundos.
+- **Boto-cor-de-rosa:** recebe 20% mais experiência e usa a Onda como arma inicial.
 - As armas iniciais evoluem para rojões no nível 2 e fogos no nível 3.
 
 ## Progressão permanente
@@ -76,7 +78,7 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 ## Novidades da versão 0.5.0
 - Quarto personagem jogável: Saci-pererê, com sprite próprio, 85 pontos de vida, velocidade 270, dano 0,88 e disparo mais rápido.
 - Nova arma inicial: Redemoinho, projétil visual de vento e folhas exclusivo do Saci no primeiro estágio.
-- Menu de personagens reorganizado em quatro colunas no desktop e duas no celular.
+- Menu de personagens reorganizado em três colunas no desktop e duas no celular.
 - A seleção do Saci é salva junto com a progressão local existente.
 
 
@@ -94,3 +96,9 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Sprite procedural próprio com cabelos vermelhos, roupa verde e pés voltados para trás.
 - Passiva exclusiva: recupera 2 pontos de vida a cada 8 segundos, sem ultrapassar a vida máxima.
 - Seleção reorganizada em três colunas no desktop e duas no celular.
+
+## Novidades da versão 0.8.0
+- Sexto personagem jogável: **Boto-cor-de-rosa**, inspirado no folclore amazônico.
+- Sprite pixel art procedural próprio e arma inicial exclusiva **Onda**.
+- Passiva exclusiva: coleta 20% mais experiência em cada esfera.
+- Correção do relógio de regeneração do Curupira e reinício da recarga do Grito da Torcida entre partidas.

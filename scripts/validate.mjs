@@ -81,7 +81,7 @@ assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE
 assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+8 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
 assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?8:15'), "Recompensa imediata de moedas do baú não encontrada");
 
-assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"'), "Seleção dos cinco personagens jogáveis não encontrada");
+assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"') && html.includes('data-character="boto"'), "Seleção dos seis personagens jogáveis não encontrada");
 assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não encontrados");
 assert.ok(game.includes("this.player.setTexture(profile.texture)"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
@@ -105,7 +105,7 @@ assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontr
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.7.0'), 'Versão do jogo não foi atualizada para 0.5.0');
+assert.ok(html.includes('VERSÃO 0.8.0'), 'Versão do jogo não foi atualizada para 0.5.0');
 
 assert.ok(game.includes('damage:1.08'), "Passiva de dano do Sobrevivente não encontrada");
 assert.ok(game.includes('coinBonus:1'), "Bônus de moedas do Motoboy não encontrado");
@@ -115,8 +115,8 @@ assert.ok(game.includes('coinBonus:profile.coinBonus||0'), "Passivas não são c
 assert.ok(game.includes('Math.random()<this.playerStats.dodgeChance'), "Esquiva do Saci não está aplicada ao receber dano");
 assert.ok(game.includes('e.damage*(1-(this.playerStats.damageReduction||0))'), "Redução de dano da Capivara não está aplicada");
 assert.ok(html.includes('+8% dano · Espeto') && html.includes('+1 moeda por eliminação · Chinelo') && html.includes('20% menos dano · Estilingue') && html.includes('15% de esquiva · Redemoinho'), "Passivas não estão descritas nos cartões");
-assert.ok(html.includes('VERSÃO 0.7.0'), "Versão não foi atualizada para 0.7.0");
-console.log("Versão 0.7.0: passivas exclusivas dos quatro personagens conferidas.");
+assert.ok(html.includes('VERSÃO 0.8.0'), "Versão não foi atualizada para 0.8.0");
+console.log("Versão 0.8.0: passivas exclusivas dos seis personagens conferidas.");
 
 assert.ok(game.includes("this.invuln=.45;this.spawnHitEffect(this.player.x,this.player.y,0x9ed8b0)"), "Esquiva não concede breve proteção contra colisões repetidas");
 
@@ -126,8 +126,14 @@ assert.ok(game.includes("regen:profile.regen||0"), "Regeneração não é carreg
 assert.ok(game.includes("this.playerStats.regen>=0") || game.includes("this.playerStats.regen>0&&this.regenClock>=8"), "Regeneração periódica não foi implementada");
 assert.ok(game.includes("this.playerStats.hp+=healed"), "Cura periódica não é aplicada à vida do jogador");
 assert.ok(html.includes('data-character="curupira"') && html.includes('Recupera 2 de vida a cada 8s'), "Curupira não aparece corretamente na seleção");
-assert.ok(html.includes('VERSÃO 0.7.0'), "Versão 0.7.0 não aparece no HTML");
+assert.ok(html.includes('VERSÃO 0.8.0'), "Versão 0.8.0 não aparece no HTML");
 assert.ok(css.includes("grid-template-columns:repeat(3,minmax(0,1fr))"), "Grade desktop de três colunas não foi configurada");
-console.log("Versão 0.7.0: Curupira, sprite, seleção e regeneração periódica conferidos.");
+console.log("Versão 0.8.0: Curupira, sprite, seleção e regeneração periódica conferidos.");
 
-assert.ok(game.includes("this.shotClock=0;this.regenClock=0;this.invuln=0"), "Relógio de regeneração não é reiniciado no início da partida");
+const resetRunBody=game.slice(game.indexOf("  resetRun(){"),game.indexOf("  renderMetaShop(){"));
+assert.ok(resetRunBody.includes("this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;"), "Relógios de regeneração, invulnerabilidade e habilidade não são reiniciados em nova partida");
+assert.ok(game.includes('boto:{name:"Boto-cor-de-rosa",texture:"boto"') && game.includes("xpMultiplier:1.2"), "Personagem Boto-cor-de-rosa e bônus de XP não encontrados");
+assert.ok(game.includes('g.generateTexture("boto",40,40)') && game.includes('g.generateTexture("bullet_onda",24,24)'), "Sprites do Boto e da Onda não encontrados");
+assert.ok(game.includes("xpMultiplier:profile.xpMultiplier||1") && game.includes("this.xp+=o.value*(this.playerStats.xpMultiplier||1)"), "Bônus de experiência não está conectado à coleta de orbes");
+assert.ok(game.includes('this.playerStats.startingWeapon==="onda"?"bullet_onda"'), "Arma Onda não está conectada ao disparo");
+assert.ok(html.includes('+20% de XP · Onda'), "Passiva do Boto não aparece no cartão");

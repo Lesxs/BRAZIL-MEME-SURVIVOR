@@ -8,7 +8,7 @@ const ui = {
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
 const META_KEY="brasil-meme-survivors-meta-v1";
-const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."},curupira:{name:"Curupira",texture:"curupira",hp:110,speed:230,damage:.95,fireRate:620,weapon:"espeto",regen:2,desc:"Guardião da mata: recupera 2 de vida a cada 8 segundos."}};
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1.08,fireRate:650,weapon:"espeto",desc:"Equilibrado: +8% de dano e Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",coinBonus:1,desc:"Rápido: +1 moeda por eliminação e Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",damageReduction:.2,desc:"Resistente: recebe 20% menos dano e usa Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",dodgeChance:.15,desc:"Muito veloz: 15% de chance de esquivar e Redemoinho."},curupira:{name:"Curupira",texture:"curupira",hp:110,speed:230,damage:.95,fireRate:620,weapon:"espeto",regen:2,desc:"Guardião da mata: recupera 2 de vida a cada 8 segundos."},boto:{name:"Boto-cor-de-rosa",texture:"boto",hp:105,speed:245,damage:.94,fireRate:600,weapon:"onda",xpMultiplier:1.2,desc:"Encanto amazônico: recebe 20% mais experiência e ataca com Ondas."}};
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
@@ -174,6 +174,18 @@ class Arena extends Phaser.Scene {
     g.fillStyle(0x6b452b);g.fillRect(10,34,8,4);g.fillRect(22,34,8,4);
     g.fillStyle(0xd4b27a);g.fillTriangle(9,37,3,39,13,39);g.fillTriangle(31,37,37,39,27,39);
     g.generateTexture("curupira",40,40);g.clear();
+    // Boto-cor-de-rosa: golfinho amazônico em estilo pixel art.
+    g.fillStyle(0x70414c);g.fillEllipse(20,24,32,18);
+    g.fillStyle(0xd77f91);g.fillEllipse(19,21,29,16);
+    g.fillStyle(0xf2c5c9);g.fillEllipse(15,27,16,7);
+    g.fillStyle(0xc9667d);g.fillTriangle(7,20,1,10,14,17);g.fillTriangle(28,19,38,12,33,24);
+    g.fillStyle(0xe99baa);g.fillEllipse(31,18,14,10);
+    g.fillStyle(0x3a2630);g.fillCircle(30,15,1.7);g.fillStyle(0xffe8df);g.fillCircle(30.5,14.5,.7);
+    g.generateTexture("boto",40,40);g.clear();
+    // Onda amazônica: projétil exclusivo do Boto-cor-de-rosa.
+    g.lineStyle(3,0x7ce0e5,.95);g.lineBetween(2,13,7,7);g.lineBetween(7,7,12,13);g.lineBetween(12,13,17,7);g.lineBetween(17,7,22,13);
+    g.lineStyle(2,0xc3f4ed,.95);g.lineBetween(2,19,7,15);g.lineBetween(7,15,12,19);g.lineBetween(12,19,17,15);g.lineBetween(17,15,22,19);
+    g.generateTexture("bullet_onda",24,24);g.clear();
     // Boi-bumbá: corpo robusto, chifres e manta de festa popular.
     g.fillStyle(0x282321);g.fillEllipse(20,24,34,24);g.fillStyle(0x315e9b);g.fillEllipse(20,22,29,20);g.fillStyle(0xe3bd54);g.fillTriangle(7,14,2,3,14,10);g.fillTriangle(26,10,38,3,33,16);g.fillStyle(0xd64c45);g.fillRect(7,19,26,6);g.fillStyle(0xf4d76b);g.fillCircle(12,22,3);g.fillCircle(28,22,3);g.fillStyle(0xe7e0c8);g.fillEllipse(20,30,17,9);g.fillStyle(0x211c1a);g.fillCircle(16,14,2);g.fillCircle(25,14,2);g.fillStyle(0xf0d9a3);g.fillEllipse(20,33,7,3);g.generateTexture("boi_bumba",40,40);g.clear();
     // Zé Gotinha: mascote brasileiro da vacinação, com gota e jaleco.
@@ -246,10 +258,10 @@ class Arena extends Phaser.Scene {
     deco.lineStyle(2,0x152321,.8);deco.strokeRect(7,7,W-14,H-14);
   }
   resetRun(){
-    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.invuln=0;this.nextBossAt=60;this.bossCount=0;
+    this.active=false;this.level=1;this.xp=0;this.xpNeed=5;this.kills=0;this.coins=0;this.elapsed=0;this.spawnClock=0;this.shotClock=0;this.regenClock=0;this.invuln=0;this.abilityCooldown=0;this.nextBossAt=60;this.bossCount=0;
     const profile=characterProfiles[this.selectedCharacter]||characterProfiles.sobrevivente,permanent=metaProgress.upgrades;
     const maxHp=profile.hp+permanent.hp*8;
-    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,weaponLevel:1,startingWeapon:profile.weapon};
+    this.playerStats={hp:maxHp,maxHp,speed:profile.speed*(1+permanent.speed*.04),damage:profile.damage*(1+permanent.damage*.06),fireRate:profile.fireRate,bulletSpeed:430,coinBonus:profile.coinBonus||0,damageReduction:profile.damageReduction||0,dodgeChance:profile.dodgeChance||0,regen:profile.regen||0,xpMultiplier:profile.xpMultiplier||1,weaponLevel:1,startingWeapon:profile.weapon};
     this.player.setTexture(profile.texture).setPosition(W/2,H/2).setAlpha(1);
     [this.enemyGroup,this.bulletGroup,this.orbGroup,this.chestGroup].forEach(g=>g.clear(true,true));
     this.enemies=[];this.bullets=[];this.orbs=[];this.updateHud();this.updateAbilityButton();
@@ -318,7 +330,7 @@ class Arena extends Phaser.Scene {
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
     const spread=level===2 ? 0.18 : 0.16;
-    const starter=this.playerStats.startingWeapon==="chinelo"?"bullet_chinelo":this.playerStats.startingWeapon==="estilingue"?"bullet_estilingue":this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho":"bullet_espeto";
+    const starter=this.playerStats.startingWeapon==="chinelo"?"bullet_chinelo":this.playerStats.startingWeapon==="estilingue"?"bullet_estilingue":this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho":this.playerStats.startingWeapon==="onda"?"bullet_onda":"bullet_espeto";
     const projectile=level===1?starter:level===2?"bullet_rojao":"bullet_fogos";
     for(let i=0;i<count;i++){
       const angle=base+(i-(count-1)/2)*spread;
@@ -381,7 +393,7 @@ class Arena extends Phaser.Scene {
     for(const item of choices){const btn=document.createElement("button");const rarityClass=item.rarity==="ÉPICO"?"epico":item.rarity==="RARO"?"raro":"comum";btn.className="upgrade-card rarity-"+rarityClass;btn.innerHTML=`<small>${item.rarity}</small><b>${item.name}</b><span>${item.desc}</span>`;btn.addEventListener("click",()=>{item.apply(this.playerStats);if(item.name==="PIX DO MILHÃO"||item.name==="MALA DE DINHEIRO")this.coins+=item.name==="PIX DO MILHÃO"?8:15;ui.levelScreen.classList.add("hidden");heading.textContent="SUBIU DE NÍVEL!";description.textContent="Escolha uma melhoria:";this.updateHud();this.active=true;this.physics.resume();},{once:true});ui.upgrades.append(btn);}
     this.updateHud();
   }
-  collectOrb(p,o){if(!o.active)return;this.xp+=o.value;o.destroy();this.processLevelUps();this.updateHud();}
+  collectOrb(p,o){if(!o.active)return;this.xp+=o.value*(this.playerStats.xpMultiplier||1);o.destroy();this.processLevelUps();this.updateHud();}
   processLevelUps(){if(this.xp<this.xpNeed)return;this.xp-=this.xpNeed;this.level++;this.xpNeed=Math.ceil(this.xpNeed*1.38+2);this.showLevelUp();}
   moveBullets(){this.bulletGroup.children.each(b=>{if(b.active&&(b.x<0||b.x>W||b.y<0||b.y>H))b.destroy();});}
   moveOrbs(d){this.orbGroup.children.each(o=>{if(!o.active)return;const dist=Phaser.Math.Distance.Between(o.x,o.y,this.player.x,this.player.y);if(dist<105)this.physics.moveToObject(o,this.player,210);});}
