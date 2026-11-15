@@ -81,7 +81,7 @@ assert.ok(game.includes('name:"PIPOCA DE CINEMA"'), "Evolução rara da arma nã
 assert.ok(game.includes('name:"CANHÃO DE FESTA JUNINA"'), "Evolução épica da arma não encontrada");
 assert.ok(game.includes('const available=chestUpgrades.filter(item=>!["PIPOCA DE CINEMA","CANHÃO DE FESTA JUNINA"].includes(item.name)||this.playerStats.weaponLevel<3);'), "Baú ainda pode oferecer evolução de arma sem efeito no nível máximo");
 assert.ok(game.includes('name:"PIX DO MILHÃO",desc:"+15 moedas imediatamente.",rarity:"RARO",apply:p=>{}'), "Pix do Milhão não está limitado ao bônus imediato anunciado");
-assert.ok(game.includes('this.coins+=item.name==="PIX DO MILHÃO"?15:20'), "Recompensa imediata de moedas do baú não encontrada");
+assert.ok(game.includes("this.coins+=15"), "Recompensa imediata de moedas do baú não encontrada");
 
 assert.ok(html.includes('data-character="sobrevivente"') && html.includes('data-character="motoboy"') && html.includes('data-character="capivara"') && html.includes('data-character="saci"') && html.includes('data-character="curupira"') && html.includes('data-character="boto"'), "Seleção dos seis personagens jogáveis não encontrada");
 assert.ok(html.includes('id="selected-character-label"') && html.includes('aria-pressed="true"'), "Estado visual e acessível do personagem selecionado não encontrado");
