@@ -91,7 +91,12 @@ assert.ok(html.includes('data-meta-upgrade="hp"') && html.includes('data-meta-up
 assert.ok(game.includes("localStorage.setItem(META_KEY"), "Salvamento local da progressão permanente não encontrado");
 assert.ok(game.includes("metaProgress.coins+=earned"), "Recompensa permanente ao fim da partida não encontrada");
 assert.ok(game.includes('generateTexture("boitata",60,42)'), "Sprite do chefe Boitatá não encontrado");
-assert.ok(game.includes('isBoitata?"boitata":"boss"'), "Rotação entre chefes brasileiros não encontrada");
+assert.ok(game.includes('const bossType=this.bossCount%3') && game.includes('name:"Mula-sem-cabeça"'), "Rotação entre os três chefes brasileiros não encontrada");
+assert.ok(game.includes('generateTexture("mula",64,48)'), "Sprite da Mula-sem-cabeça não encontrado");
+assert.ok(game.includes('generateTexture("ze_gotinha",40,40)') && game.includes('generateTexture("et_varginha",40,40)'), "Novos inimigos brasileiros não encontrados");
+assert.ok(game.includes("this.damageEnemy(e,e.hp)"), "Colisão não concede recompensas de eliminação");
 assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontrado");
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
+
+assert.ok(html.includes('VERSÃO 0.4.0'), 'Versão do jogo não foi atualizada para 0.4.0');

@@ -162,7 +162,22 @@ class Arena extends Phaser.Scene {
     // Saci-pererê: gorro vermelho, corpo escuro e uma perna só.
     g.fillStyle(0x28221f);g.fillRoundedRect(7,14,26,23,8);g.fillStyle(0xb8784b);g.fillCircle(20,13,9);g.fillStyle(0xc93632);g.fillTriangle(10,10,29,10,21,0);g.fillRect(10,9,20,4);g.fillStyle(0x181b1b);g.fillCircle(17,13,1.5);g.fillCircle(24,13,1.5);g.fillStyle(0x5c3828);g.fillRect(18,34,5,5);g.fillStyle(0xd8b17a);g.fillRect(15,38,12,2);g.generateTexture("saci",40,40);g.clear();
     // Boi-bumbá: corpo robusto, chifres e manta de festa popular.
-    g.fillStyle(0x282321);g.fillEllipse(20,24,34,24);g.fillStyle(0x315e9b);g.fillEllipse(20,22,29,20);g.fillStyle(0xe3bd54);g.fillTriangle(7,14,2,3,14,10);g.fillTriangle(26,10,38,3,33,16);g.fillStyle(0xd64c45);g.fillRect(7,19,26,6);g.fillStyle(0xf4d76b);g.fillCircle(12,22,3);g.fillCircle(28,22,3);g.fillStyle(0xe7e0c8);g.fillEllipse(20,30,17,9);g.fillStyle(0x211c1a);g.fillCircle(16,14,2);g.fillCircle(25,14,2);g.fillStyle(0xf0d9a3);g.fillEllipse(20,33,7,3);g.generateTexture("boi_bumba",40,40);g.destroy();
+    g.fillStyle(0x282321);g.fillEllipse(20,24,34,24);g.fillStyle(0x315e9b);g.fillEllipse(20,22,29,20);g.fillStyle(0xe3bd54);g.fillTriangle(7,14,2,3,14,10);g.fillTriangle(26,10,38,3,33,16);g.fillStyle(0xd64c45);g.fillRect(7,19,26,6);g.fillStyle(0xf4d76b);g.fillCircle(12,22,3);g.fillCircle(28,22,3);g.fillStyle(0xe7e0c8);g.fillEllipse(20,30,17,9);g.fillStyle(0x211c1a);g.fillCircle(16,14,2);g.fillCircle(25,14,2);g.fillStyle(0xf0d9a3);g.fillEllipse(20,33,7,3);g.generateTexture("boi_bumba",40,40);g.clear();
+    // Zé Gotinha: mascote brasileiro da vacinação, com gota e jaleco.
+    g.fillStyle(0x243c58);g.fillEllipse(20,25,25,23);g.fillStyle(0xf5f5e9);g.fillRoundedRect(9,19,22,18,5);
+    g.fillStyle(0x72c9ed);g.fillCircle(20,13,9);g.fillTriangle(20,1,11,14,29,14);
+    g.fillStyle(0x1d2935);g.fillCircle(17,12,1.5);g.fillCircle(23,12,1.5);g.fillStyle(0x2f8c62);g.fillRect(18,22,4,10);
+    g.generateTexture("ze_gotinha",40,40);g.clear();
+    // ET de Varginha: criatura de cabeça grande e olhos escuros.
+    g.fillStyle(0x252d31);g.fillEllipse(20,21,29,33);g.fillStyle(0x789b82);g.fillEllipse(20,19,24,29);
+    g.fillStyle(0x141c20);g.fillEllipse(13,17,8,12);g.fillEllipse(27,17,8,12);
+    g.fillStyle(0xc7e0c5);g.fillCircle(11,14,2);g.fillCircle(25,14,2);g.fillStyle(0x4a6c59);g.fillEllipse(20,29,7,3);
+    g.generateTexture("et_varginha",40,40);g.clear();
+    // Mula-sem-cabeça: chefe folclórico com crina e labaredas.
+    g.fillStyle(0x28211f);g.fillEllipse(30,31,48,23);g.fillStyle(0x8b3c2c);g.fillEllipse(28,27,39,19);
+    g.fillStyle(0xe45a2e);g.fillTriangle(8,20,1,2,19,14);g.fillTriangle(25,16,24,0,36,14);
+    g.fillStyle(0xffc34f);g.fillTriangle(42,24,59,2,54,31);g.fillTriangle(13,31,2,12,17,22);
+    g.fillStyle(0xf5d47b);g.fillEllipse(47,20,13,8);g.generateTexture("mula",64,48);g.destroy();
   }
   drawArena(){
     const bg=this.add.graphics().setDepth(0);
@@ -257,18 +272,18 @@ class Arena extends Phaser.Scene {
   }
   spawnEnemy(){
     const side=Phaser.Math.Between(0,3);let x=side===0?15:side===1?W-15:Phaser.Math.Between(15,W-15),y=side===2?15:side===3?H-15:Phaser.Math.Between(15,H-15);
-    const roll=Math.random();const kind=this.elapsed>50&&roll<.09?"boi_bumba":this.elapsed>40&&roll<.18?"saci":this.elapsed>35&&roll<.28?"vendor":this.elapsed>28&&roll<.40?"motoboy":this.elapsed>22&&roll<.50?"churrasco":this.elapsed>18&&roll<.60?"mosquito":this.elapsed>12&&roll<.72?"capybara":roll<.86?"caramelo":"pigeon";
-    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";
-    e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":e.isSaci?"Saci-pererê":e.isBoiBumba?"Boi-bumbá":"Pombo ladrão";
-    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isBoiBumba?5+Math.floor(this.elapsed/30):e.isSaci?2+Math.floor(this.elapsed/65):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/80):e.isMotoboy?3+Math.floor(this.elapsed/65):1+Math.floor(this.elapsed/70);
-    e.speed=e.isVendor?48:e.isBoiBumba?Phaser.Math.Between(34,44):e.isSaci?Phaser.Math.Between(112,142):e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
-    e.damage=e.isVendor?22:e.isBoiBumba?23:e.isSaci?16:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor?1.15:e.isBoiBumba?1.28:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);e.baseScale=e.scaleX;
+    const roll=Math.random();const kind=this.elapsed>55&&roll<.08?"et_varginha":this.elapsed>50&&roll<.16?"boi_bumba":this.elapsed>45&&roll<.24?"saci":this.elapsed>40&&roll<.34?"ze_gotinha":this.elapsed>35&&roll<.44?"vendor":this.elapsed>28&&roll<.54?"motoboy":this.elapsed>22&&roll<.64?"churrasco":this.elapsed>18&&roll<.72?"mosquito":this.elapsed>12&&roll<.80?"capybara":roll<.90?"caramelo":"pigeon";
+    const e=this.enemyGroup.create(x,y,kind).setDepth(2);e.isVendor=kind==="vendor";e.isCapybara=kind==="capybara";e.isMosquito=kind==="mosquito";e.isCaramelo=kind==="caramelo";e.isMotoboy=kind==="motoboy";e.isChurrasco=kind==="churrasco";e.isSaci=kind==="saci";e.isBoiBumba=kind==="boi_bumba";e.isZeGotinha=kind==="ze_gotinha";e.isEt=kind==="et_varginha";
+    e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":e.isSaci?"Saci-pererê":e.isBoiBumba?"Boi-bumbá":e.isZeGotinha?"Zé Gotinha":e.isEt?"ET de Varginha":"Pombo ladrão";
+    e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isEt?4+Math.floor(this.elapsed/32):e.isBoiBumba?5+Math.floor(this.elapsed/30):e.isSaci?2+Math.floor(this.elapsed/65):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/80):e.isMotoboy?3+Math.floor(this.elapsed/65):1+Math.floor(this.elapsed/70);
+    e.speed=e.isVendor?48:e.isEt?Phaser.Math.Between(72,92):e.isZeGotinha?Phaser.Math.Between(58,78):e.isBoiBumba?Phaser.Math.Between(34,44):e.isSaci?Phaser.Math.Between(112,142):e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
+    e.damage=e.isVendor?22:e.isEt?20:e.isBoiBumba?23:e.isSaci?16:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor||e.isEt?1.15:e.isBoiBumba?1.28:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);e.baseScale=e.scaleX;
     this.enemies.push(e);
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
-    const isBoitata=this.bossCount%2===1;this.bossCount++;
-    const boss=this.enemyGroup.create(x,y,isBoitata?"boitata":"boss").setDepth(2).setScale(isBoitata?1.35:1.45);boss.baseScale=isBoitata?1.35:1.45;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=isBoitata?"Boitatá":"Fiscal do Pix";boss.hp=(isBoitata?34:24)+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=isBoitata?52:38;boss.damage=isBoitata?29:25;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
+    const bossType=this.bossCount%3;this.bossCount++;const bossData=[{texture:"boss",name:"Fiscal do Pix",hp:24,speed:38,damage:25,scale:1.45},{texture:"boitata",name:"Boitatá",hp:34,speed:52,damage:29,scale:1.35},{texture:"mula",name:"Mula-sem-cabeça",hp:40,speed:44,damage:31,scale:1.5}][bossType];
+    const boss=this.enemyGroup.create(x,y,bossData.texture).setDepth(2).setScale(bossData.scale);boss.baseScale=bossData.scale;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName=bossData.name;boss.hp=bossData.hp+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=bossData.speed;boss.damage=bossData.damage;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
   }
   moveEnemies(){
     for(const e of this.enemies){
@@ -305,7 +320,7 @@ class Arena extends Phaser.Scene {
   }
   damageEnemy(e,damage){
     if(!e.active)return;e.hp-=damage;e.setTintFill(0xffffff);this.time.delayedCall(65,()=>{if(e.active)e.clearTint();});if(e.isBoss)this.updateHud();
-    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco||e.isSaci||e.isBoiBumba?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco||e.isSaci||e.isBoiBumba||e.isEt?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   triggerAbility(){
     if(!this.active||this.abilityCooldown>0)return;
@@ -330,7 +345,7 @@ class Arena extends Phaser.Scene {
   }
   hitPlayer(p,e){
     if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
-    if(!e.isBoss){this.spawnHitEffect(e.x,e.y,0xffa45c);e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);}
+    if(!e.isBoss){this.damageEnemy(e,e.hp);}
     if(this.playerStats.hp<=0)this.endRun();
   }
   spawnChest(x,y){const chest=this.chestGroup.create(x,y,"chest").setDepth(2).setScale(1.25);chest.setImmovable(true);chest.opened=false;this.time.delayedCall(30000,()=>{if(chest.active)chest.destroy();});}

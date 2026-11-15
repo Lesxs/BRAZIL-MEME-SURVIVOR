@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.3.0 — Expansão Brasileira**
+**Versão 0.4.0 — Folclore e Memes Brasileiros**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -13,6 +13,8 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 ## Elenco brasileiro
 - **Saci-pererê:** criatura folclórica veloz, aparece após 40 segundos.
 - **Boi-bumbá:** inimigo pesado inspirado nas festas populares do Norte, aparece após 50 segundos.
+- **Zé Gotinha:** mascote brasileiro da vacinação, surge como inimigo de suporte.
+- **ET de Varginha:** criatura veloz inspirada no caso ufológico brasileiro.
 - **Pombo ladrão:** inimigo comum.
 - **Cachorro caramelo:** resistente e equilibrado.
 - **Capivara braba:** resistente e mais lenta.
@@ -20,7 +22,7 @@ Roguelite de sobrevivência em arena com identidade brasileira: memes, personage
 - **Motoboy do grau:** veloz e perigoso.
 - **Tio do churrasco:** resistente e pesado.
 - **Vendedor do centro:** inimigo especial, forte e resistente.
-- **Fiscal do Pix:** chefe que aparece a cada 60 segundos, possui barra de vida própria e oferece recompensa especial. Apenas um Fiscal do Pix pode ficar ativo por vez.
+- **Fiscal do Pix, Boitatá e Mula-sem-cabeça:** chefes brasileiros que se alternam a cada aparição, com barra de vida própria e recompensa especial. Apenas um chefe pode ficar ativo por vez.
 - **Baú do churrasco:** surge quando um chefe é derrotado. Aproxime-se para escolher uma entre três recompensas de raridade comum, rara ou épica. O baú desaparece após 30 segundos se não for coletado.
 - **Evolução de arma:** a arma começa disparando um espeto; a Pipoca de Cinema libera três rojões por disparo; o Canhão de Festa Junina libera cinco disparos com efeito visual de fogos. As evoluções podem ser encontradas nos baús e são cumulativas até o nível máximo. O baú não oferece evoluções de arma quando ela já está no nível máximo; o Pix do Milhão concede oito moedas imediatamente.
 
@@ -49,7 +51,7 @@ O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages ap
 
 Jogue em: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
 
-## Personagens jogáveis — versão 0.3.0
+## Personagens jogáveis — versão 0.4.0
 - **Sobrevivente:** personagem equilibrado, com Espeto de Aço.
 - **Motoboy do Grau:** mais veloz, com Chinelo como arma inicial.
 - **Capivara Braba:** mais vida e dano, com Estilingue como arma inicial.
@@ -59,6 +61,12 @@ Jogue em: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
 Ao terminar uma partida, fichas são calculadas com base nas moedas da rodada, no tempo sobrevivido e nas eliminações. O saldo e os níveis de melhoria são salvos localmente no navegador. A loja permite melhorar vida máxima, dano e velocidade, cada atributo até cinco níveis.
 
 ## Rotação de chefes
-O Fiscal do Pix e o Boitatá alternam nas aparições de chefe. Cada um possui sprite, vida e velocidade próprios, e ambos deixam o Baú do Churrasco ao serem derrotados.
+O Fiscal do Pix, o Boitatá e a Mula-sem-cabeça alternam nas aparições de chefe. Cada um possui sprite, vida e velocidade próprios, e todos deixam o Baú do Churrasco ao serem derrotados.
 
 A progressão permanente usa o armazenamento local do navegador; ela fica vinculada ao navegador/dispositivo utilizado e não sincroniza entre aparelhos.
+
+
+## Novidades da versão 0.4.0
+- Dois novos inimigos brasileiros: Zé Gotinha e ET de Varginha.
+- Terceiro chefe na rotação: Mula-sem-cabeça.
+- Inimigos eliminados por colisão agora concedem as recompensas normais de eliminação, moedas e experiência.
