@@ -86,6 +86,12 @@ assert.ok(game.includes("const characterProfiles="), "Perfis de personagens não
 assert.ok(game.includes("this.player.setTexture(profile.texture)"), "Troca de aparência por personagem não encontrada");
 assert.ok(game.includes('generateTexture("bullet_chinelo",18,32)'), "Arma Chinelo do Motoboy não encontrada");
 assert.ok(game.includes('generateTexture("bullet_estilingue",28,28)'), "Arma Estilingue da Capivara não encontrada");
+assert.ok(game.includes('generateTexture("bullet_redemoinho",24,24)'), "Projétil Redemoinho do Saci não encontrado");
+assert.ok(game.includes('saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho"'), "Perfil jogável do Saci não encontrado");
+assert.ok(game.includes('this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho"'), "Arma inicial do Saci não está conectada ao disparo");
+assert.ok(html.includes('data-character="saci"'), "Cartão de seleção do Saci não encontrado");
+assert.ok(css.includes(".character-options{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))"), "Grade desktop para quatro personagens não encontrada");
+assert.ok(css.includes(".character-options{grid-template-columns:repeat(2,minmax(0,1fr))"), "Grade mobile de duas colunas não encontrada");
 assert.ok(game.includes("startingWeapon"), "Arma inicial por personagem não encontrada");
 assert.ok(html.includes('data-meta-upgrade="hp"') && html.includes('data-meta-upgrade="damage"') && html.includes('data-meta-upgrade="speed"'), "Loja de melhorias permanentes não encontrada");
 assert.ok(game.includes("localStorage.setItem(META_KEY"), "Salvamento local da progressão permanente não encontrado");
@@ -99,4 +105,4 @@ assert.ok(html.includes('id="boss-name"'), "Nome dinâmico do chefe não encontr
 assert.ok(css.includes(".character-card.selected") && css.includes(".meta-shop-options"), "Estilos da seleção de personagem e loja não encontrados");
 console.log("Mega atualização 0.3.0: personagens, armas exclusivas, loja permanente e rotação de chefes conferidos.");
 
-assert.ok(html.includes('VERSÃO 0.4.0'), 'Versão do jogo não foi atualizada para 0.4.0');
+assert.ok(html.includes('VERSÃO 0.5.0'), 'Versão do jogo não foi atualizada para 0.5.0');

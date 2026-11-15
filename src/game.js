@@ -8,7 +8,7 @@ const ui = {
   final: document.querySelector("#final-stats"), bossWrap: document.querySelector("#boss-wrap"), bossHp: document.querySelector("#boss-hp"), bossFill: document.querySelector("#boss-fill"), bossName: document.querySelector("#boss-name"), abilityButton: document.querySelector("#ability-btn"), abilityCooldown: document.querySelector("#ability-cooldown"), metaCoins: document.querySelector("#meta-coins"), metaShop: document.querySelector("#meta-shop")
 };
 const META_KEY="brasil-meme-survivors-meta-v1";
-const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1,fireRate:650,weapon:"espeto",desc:"Equilibrado: começa com Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",desc:"Muito rápido: começa arremessando Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",desc:"Resistente: começa com Estilingue."}};
+const characterProfiles={sobrevivente:{name:"Sobrevivente",texture:"player",hp:100,speed:220,damage:1,fireRate:650,weapon:"espeto",desc:"Equilibrado: começa com Espeto de Aço."},motoboy:{name:"Motoboy do Grau",texture:"motoboy",hp:90,speed:255,damage:.9,fireRate:590,weapon:"chinelo",desc:"Muito rápido: começa arremessando Chinelo."},capivara:{name:"Capivara Braba",texture:"capybara",hp:145,speed:185,damage:1.2,fireRate:760,weapon:"estilingue",desc:"Resistente: começa com Estilingue."},saci:{name:"Saci-pererê",texture:"saci",hp:85,speed:270,damage:.88,fireRate:540,weapon:"redemoinho",desc:"Muito veloz: começa com Redemoinho."}};
 function loadMetaProgress(){try{const saved=JSON.parse(localStorage.getItem(META_KEY)||"{}");return {coins:Math.max(0,Number(saved.coins)||0),selectedCharacter:characterProfiles[saved.selectedCharacter]?saved.selectedCharacter:"sobrevivente",upgrades:{hp:Math.max(0,Math.min(5,Number(saved.upgrades?.hp)||0)),damage:Math.max(0,Math.min(5,Number(saved.upgrades?.damage)||0)),speed:Math.max(0,Math.min(5,Number(saved.upgrades?.speed)||0))}};}catch{return {coins:0,selectedCharacter:"sobrevivente",upgrades:{hp:0,damage:0,speed:0}};}}
 const metaProgress=loadMetaProgress();
 const chestUpgrades = [
@@ -157,6 +157,8 @@ class Arena extends Phaser.Scene {
     // Chinelo e estilingue como armas iniciais de personagens selecionáveis.
     g.fillStyle(0x263b32);g.fillRoundedRect(3,5,12,25,6);g.fillStyle(0xf2b64e);g.fillRoundedRect(5,7,8,19,4);g.fillStyle(0x4a3024);g.fillRect(7,8,4,15);g.generateTexture("bullet_chinelo",18,32);g.clear();
     g.lineStyle(3,0x80552f);g.lineBetween(5,23,9,5);g.lineBetween(23,23,19,5);g.lineStyle(2,0xd7b37a);g.lineBetween(9,5,19,5);g.lineStyle(2,0xe7d7b5);g.lineBetween(9,5,14,15);g.lineBetween(19,5,14,15);g.fillStyle(0x9a6139);g.fillCircle(14,16,4);g.generateTexture("bullet_estilingue",28,28);g.clear();
+    // Redemoinho do Saci: espiral de vento com folhas verdes.
+    g.lineStyle(3,0x9ed8b0,.95);g.strokeCircle(12,12,8);g.lineStyle(2,0xd7edc6,.95);g.strokeCircle(12,12,4);g.lineBetween(12,12,22,4);g.lineBetween(5,18,1,22);g.fillStyle(0x8bbf68);g.fillTriangle(3,4,9,2,6,9);g.generateTexture("bullet_redemoinho",24,24);g.clear();
     // Boitatá: serpente de fogo para o segundo chefe da rotação.
     g.fillStyle(0x40251e);g.fillEllipse(28,30,46,18);g.fillStyle(0xe45b2d);g.fillEllipse(28,27,42,14);g.fillStyle(0xffc34f);g.fillEllipse(28,24,35,9);g.fillStyle(0xffe69a);g.fillCircle(10,20,7);g.fillStyle(0x24201d);g.fillCircle(8,19,2);g.fillStyle(0xff8d39);g.fillTriangle(47,20,55,27,46,30);g.generateTexture("boitata",60,42);g.clear();
     // Saci-pererê: gorro vermelho, corpo escuro e uma perna só.
@@ -305,7 +307,7 @@ class Arena extends Phaser.Scene {
     const target=alive[0],base=Phaser.Math.Angle.Between(this.player.x,this.player.y,target.x,target.y);
     const level=Math.min(3,this.playerStats.weaponLevel||1),count=level===1?1:level===2?3:5;
     const spread=level===2 ? 0.18 : 0.16;
-    const starter=this.playerStats.startingWeapon==="chinelo"?"bullet_chinelo":this.playerStats.startingWeapon==="estilingue"?"bullet_estilingue":"bullet_espeto";
+    const starter=this.playerStats.startingWeapon==="chinelo"?"bullet_chinelo":this.playerStats.startingWeapon==="estilingue"?"bullet_estilingue":this.playerStats.startingWeapon==="redemoinho"?"bullet_redemoinho":"bullet_espeto";
     const projectile=level===1?starter:level===2?"bullet_rojao":"bullet_fogos";
     for(let i=0;i<count;i++){
       const angle=base+(i-(count-1)/2)*spread;

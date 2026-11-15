@@ -1,6 +1,6 @@
 # BRASIL: MEME SURVIVORS
 
-**Versão 0.4.0 — Folclore e Memes Brasileiros**
+**Versão 0.5.0 — O Saci entra na arena**
 
 Roguelite de sobrevivência em arena com identidade brasileira: memes, personagens e situações reconhecíveis do cotidiano do Brasil. Desenvolvido em Phaser 3.
 
@@ -51,10 +51,11 @@ O workflow em `.github/workflows/pages.yml` publica o projeto no GitHub Pages ap
 
 Jogue em: https://lesxs.github.io/BRAZIL-MEME-SURVIVOR/
 
-## Personagens jogáveis — versão 0.4.0
+## Personagens jogáveis — versão 0.5.0
 - **Sobrevivente:** personagem equilibrado, com Espeto de Aço.
 - **Motoboy do Grau:** mais veloz, com Chinelo como arma inicial.
 - **Capivara Braba:** mais vida e dano, com Estilingue como arma inicial.
+- **Saci-pererê:** pouca vida, velocidade muito alta e Redemoinho como arma inicial.
 - As armas iniciais evoluem para rojões no nível 2 e fogos no nível 3.
 
 ## Progressão permanente
@@ -70,3 +71,10 @@ A progressão permanente usa o armazenamento local do navegador; ela fica vincul
 - Dois novos inimigos brasileiros: Zé Gotinha e ET de Varginha.
 - Terceiro chefe na rotação: Mula-sem-cabeça.
 - Inimigos eliminados por colisão agora concedem as recompensas normais de eliminação, moedas e experiência.
+
+
+## Novidades da versão 0.5.0
+- Quarto personagem jogável: Saci-pererê, com sprite próprio, 85 pontos de vida, velocidade 270, dano 0,88 e disparo mais rápido.
+- Nova arma inicial: Redemoinho, projétil visual de vento e folhas exclusivo do Saci no primeiro estágio.
+- Menu de personagens reorganizado em quatro colunas no desktop e duas no celular.
+- A seleção do Saci é salva junto com a progressão local existente.
