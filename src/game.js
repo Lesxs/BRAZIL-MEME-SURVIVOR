@@ -228,6 +228,9 @@ class Arena extends Phaser.Scene {
     if(k.W.isDown||k.UP.isDown||this.touch.up)y--;if(k.S.isDown||k.DOWN.isDown||this.touch.down)y++;
     if(x&&y){x*=.707;y*=.707;}
     this.player.setVelocity(x*this.playerStats.speed,y*this.playerStats.speed);
+    const moving=Boolean(x||y),breath=Math.sin(this.elapsed*(moving?17:3.2));
+    this.player.setScale(1+(moving?breath*.035:breath*.018));
+    this.player.setRotation(moving?Math.sin(this.elapsed*13)*.025:0);
     if(x)this.player.setFlipX(x<0);
     if(this.invuln>0)this.player.setAlpha(Math.floor(this.invuln*12)%2?.35:1);else this.player.setAlpha(1);
   }
@@ -238,14 +241,27 @@ class Arena extends Phaser.Scene {
     e.enemyName=e.isVendor?"Vendedor do centro":e.isCapybara?"Capivara braba":e.isMosquito?"Pernilongo de madrugada":e.isCaramelo?"Cachorro caramelo":e.isMotoboy?"Motoboy do grau":e.isChurrasco?"Tio do churrasco":"Pombo ladrão";
     e.hp=e.isVendor?4+Math.floor(this.elapsed/30):e.isCapybara?2+Math.floor(this.elapsed/55):e.isMosquito?1+Math.floor(this.elapsed/85):e.isCaramelo||e.isChurrasco?2+Math.floor(this.elapsed/80):e.isMotoboy?3+Math.floor(this.elapsed/65):1+Math.floor(this.elapsed/70);
     e.speed=e.isVendor?48:e.isCapybara||e.isChurrasco?Phaser.Math.Between(38,52):e.isMosquito?Phaser.Math.Between(105,135):e.isMotoboy?Phaser.Math.Between(100,125):e.isCaramelo?Phaser.Math.Between(68,92):Phaser.Math.Between(62,88)+Math.min(45,this.elapsed*.4);
-    e.damage=e.isVendor?22:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor?1.15:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);
+    e.damage=e.isVendor?22:e.isCapybara?18:e.isMosquito?9:e.isCaramelo?14:e.isMotoboy?17:e.isChurrasco?19:12;e.setScale(e.isVendor?1.15:e.isCapybara||e.isChurrasco?1.2:e.isCaramelo?1.12:1);e.baseScale=e.scaleX;
     this.enemies.push(e);
   }
   spawnBoss(){
     const side=Phaser.Math.Between(0,3);const x=side===0?22:side===1?W-22:Phaser.Math.Between(22,W-22);const y=side===2?22:side===3?H-22:Phaser.Math.Between(22,H-22);
-    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.45);boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName="Fiscal do Pix";boss.hp=24+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=38;boss.damage=25;this.enemies.push(boss);this.updateHud();
+    const boss=this.enemyGroup.create(x,y,"boss").setDepth(2).setScale(1.45);boss.baseScale=1.45;boss.isBoss=true;boss.isVendor=false;boss.isCapybara=false;boss.enemyName="Fiscal do Pix";boss.hp=24+Math.floor(this.elapsed/12);boss.maxHp=boss.hp;boss.speed=38;boss.damage=25;this.enemies.push(boss);this.cameras.main.shake(260,.004);this.updateHud();
   }
-  moveEnemies(){for(const e of this.enemies){if(!e.active)continue;this.physics.moveToObject(e,this.player,e.speed);}}
+  moveEnemies(){
+    for(const e of this.enemies){
+      if(!e.active)continue;
+      this.physics.moveToObject(e,this.player,e.speed);
+      const phase=this.elapsed*(e.isMosquito?15:e.isBoss?4:6)+e.x*.035;
+      const pulse=Math.sin(phase);
+      e.setScale(e.baseScale*(1+(e.isBoss?pulse*.045:e.isMosquito?pulse*.055:pulse*.025)));
+      e.setRotation(e.isMosquito?Math.sin(phase*.7)*.13:e.isBoss?Math.sin(phase*.45)*.025:Math.sin(phase*.5)*.035);
+    }
+  }
+  spawnHitEffect(x,y,color=0xffd16b){
+    const spark=this.add.circle(x,y,7,color,.8).setDepth(5);
+    this.tweens.add({targets:spark,scale:2.8,alpha:0,duration:190,ease:"Cubic.Out",onComplete:()=>spark.destroy()});
+  }
   autoShoot(){
     const alive=this.enemies.filter(e=>e.active);if(!alive.length)return;
     alive.sort((a,b)=>Phaser.Math.Distance.Between(this.player.x,this.player.y,a.x,a.y)-Phaser.Math.Distance.Between(this.player.x,this.player.y,b.x,b.y));
@@ -262,12 +278,12 @@ class Arena extends Phaser.Scene {
     }
   }
   hitEnemy(b,e){
-    if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;if(e.isBoss)this.updateHud();
-    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss)this.spawnChest(x,y);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
+    if(!b.active||!e.active)return;b.destroy();e.hp-=b.damage;e.setTintFill(0xffffff);this.time.delayedCall(65,()=>{if(e.active)e.clearTint();});if(e.isBoss)this.updateHud();
+    if(e.hp<=0){const x=e.x,y=e.y;if(e.isBoss){this.spawnChest(x,y);this.cameras.main.shake(360,.007);}this.spawnHitEffect(x,y,e.isBoss?0xff5574:e.isVendor?0xffa45c:0xffd16b);this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);this.kills++;this.coins+=(e.isBoss?5:1)+this.playerStats.coinBonus;const orb=this.orbGroup.create(x,y,"orb").setDepth(2);orb.value=e.isBoss?8:e.isVendor?3:e.isCapybara||e.isCaramelo||e.isMotoboy||e.isChurrasco?2:1;orb.body.setCircle(6);this.updateHud();}
   }
   hitPlayer(p,e){
-    if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.updateHud();
-    if(!e.isBoss){e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);}
+    if(!this.active||this.invuln>0||!e.active)return;this.playerStats.hp-=e.damage;this.invuln=0.75;this.cameras.main.shake(150,.003);this.updateHud();
+    if(!e.isBoss){this.spawnHitEffect(e.x,e.y,0xffa45c);e.hp=0;this.enemyGroup.killAndHide(e);e.body.enable=false;this.enemies=this.enemies.filter(v=>v!==e);}
     if(this.playerStats.hp<=0)this.endRun();
   }
   spawnChest(x,y){const chest=this.chestGroup.create(x,y,"chest").setDepth(2).setScale(1.25);chest.setImmovable(true);chest.opened=false;this.time.delayedCall(30000,()=>{if(chest.active)chest.destroy();});}
